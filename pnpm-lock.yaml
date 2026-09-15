@@ -115,6 +115,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@packages/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@packages/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -223,6 +226,31 @@ importers:
         version: 8.60.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
 
   configs/typescript: {}
+
+  packages/client:
+    dependencies:
+      '@packages/validator':
+        specifier: workspace:*
+        version: link:../validator
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@configs/eslint':
+        specifier: workspace:*
+        version: link:../../configs/eslint
+      '@configs/typescript':
+        specifier: workspace:*
+        version: link:../../configs/typescript
+      '@types/node':
+        specifier: ^20
+        version: 20.19.41
+      eslint:
+        specifier: ^9
+        version: 9.39.4(jiti@2.7.0)
+      typescript:
+        specifier: ^5
+        version: 5.9.3
 
   packages/db:
     dependencies:

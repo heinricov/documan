@@ -9,7 +9,7 @@
     },
     "lint": {
       "dependsOn": ["^lint"],
-      "env": ["DATABASE_URL", "NODE_ENV"]
+      "env": ["DATABASE_URL", "NODE_ENV", "NEXT_PUBLIC_API_URL"]
     },
     "format": {
       "dependsOn": ["^format"]
