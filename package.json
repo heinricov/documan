@@ -16,8 +16,8 @@
     "git:push": "node scripts/git-push.mjs"
   },
   "devDependencies": {
-    "@workspace/eslint-config": "workspace:*",
-    "@workspace/typescript-config": "workspace:*",
+    "@configs/eslint": "workspace:*",
+    "@configs/typescript": "workspace:*",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "turbo": "^2.9.18",

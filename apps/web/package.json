@@ -24,8 +24,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@workspace/eslint-config": "workspace:^",
-    "@workspace/typescript-config": "workspace:*",
+    "@configs/eslint": "workspace:^",
+    "@configs/typescript": "workspace:*",
     "eslint": "^9",
     "typescript": "^5"
   }
