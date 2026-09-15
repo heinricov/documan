@@ -25,7 +25,6 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs"
 import { resolve, join } from "node:path"
 import { execSync } from "node:child_process"
-import { parseArgs } from "node:util"
 
 const ROOT = resolve(import.meta.dirname, "..")
 const WORKSPACE_YAML = join(ROOT, "pnpm-workspace.yaml")
@@ -310,37 +309,69 @@ function addPackages({ packages, workspaces, isDev, dryRun }) {
 
 // ====================== CLI Entry ======================
 
-const { values, positionals } = parseArgs({
-  args: process.argv.slice(2),
-  options: {
-    use: { type: "string", multiple: true, short: "u" },
-    dev: { type: "boolean", short: "D", default: false },
-    list: { type: "boolean", short: "l", default: false },
-    "dry-run": { type: "boolean", default: false },
-    help: { type: "boolean", short: "h", default: false },
-  },
-  allowPositionals: true,
-  strict: true,
-})
+// Manual parsing karena parseArgs tidak bisa handle
+// "pnpm catalog:add react-icons --use apps/web packages/ui"
+// di mana "packages/ui" adalah workspace, bukan package
 
-if (values.help) {
+const rawArgs = process.argv.slice(2)
+const packages = []
+const workspaces = []
+let isDev = false
+let dryRun = false
+let showListFlag = false
+let showHelpFlag = false
+
+let mode = null // null = parsing packages, "use" = parsing workspaces
+
+for (let i = 0; i < rawArgs.length; i++) {
+  const arg = rawArgs[i]
+
+  if (arg === "--use" || arg === "-u") {
+    mode = "use"
+    continue
+  }
+  if (arg === "--dev" || arg === "-D") {
+    isDev = true
+    continue
+  }
+  if (arg === "--list" || arg === "-l") {
+    showListFlag = true
+    continue
+  }
+  if (arg === "--dry-run") {
+    dryRun = true
+    continue
+  }
+  if (arg === "--help" || arg === "-h") {
+    showHelpFlag = true
+    continue
+  }
+
+  // Skip '--' separator
+  if (arg === "--") {
+    continue
+  }
+
+  if (mode === "use") {
+    workspaces.push(arg)
+  } else {
+    packages.push(parsePackageArg(arg))
+  }
+}
+
+if (showHelpFlag) {
   showHelp()
   process.exit(0)
 }
 
-if (values.list) {
+if (showListFlag) {
   listCatalog()
   process.exit(0)
 }
 
-if (positionals.length === 0) {
+if (packages.length === 0) {
   showHelp()
   process.exit(1)
 }
-
-const packages = positionals.map(parsePackageArg)
-const workspaces = values.use ?? []
-const isDev = values.dev
-const dryRun = values["dry-run"]
 
 addPackages({ packages, workspaces, isDev, dryRun })

@@ -24,7 +24,6 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs"
 import { resolve, join } from "node:path"
 import { execSync } from "node:child_process"
-import { parseArgs } from "node:util"
 
 const ROOT = resolve(import.meta.dirname, "..")
 const WORKSPACE_YAML = join(ROOT, "pnpm-workspace.yaml")
@@ -236,35 +235,64 @@ function removePackages({ names, dirs, dryRun }) {
 
 // ====================== CLI Entry ======================
 
-const { values, positionals } = parseArgs({
-  args: process.argv.slice(2),
-  options: {
-    dir: { type: "string", multiple: true, short: "d" },
-    list: { type: "boolean", short: "l", default: false },
-    "dry-run": { type: "boolean", default: false },
-    help: { type: "boolean", short: "h", default: false },
-  },
-  allowPositionals: true,
-  strict: true,
-})
+// Manual parsing karena parseArgs tidak bisa handle
+// "pnpm catalog:remove react-icons --dir apps/web packages/ui"
+// di mana "packages/ui" adalah workspace, bukan package
 
-if (values.help) {
+const rawArgs = process.argv.slice(2)
+const names = []
+const dirs = []
+let dryRun = false
+let showListFlag = false
+let showHelpFlag = false
+
+let mode = null // null = parsing packages, "dir" = parsing directories
+
+for (let i = 0; i < rawArgs.length; i++) {
+  const arg = rawArgs[i]
+
+  if (arg === "--dir" || arg === "-d") {
+    mode = "dir"
+    continue
+  }
+  if (arg === "--list" || arg === "-l") {
+    showListFlag = true
+    continue
+  }
+  if (arg === "--dry-run") {
+    dryRun = true
+    continue
+  }
+  if (arg === "--help" || arg === "-h") {
+    showHelpFlag = true
+    continue
+  }
+
+  // Skip '--' separator
+  if (arg === "--") {
+    continue
+  }
+
+  if (mode === "dir") {
+    dirs.push(arg)
+  } else {
+    names.push(arg)
+  }
+}
+
+if (showHelpFlag) {
   showHelp()
   process.exit(0)
 }
 
-if (values.list) {
+if (showListFlag) {
   listCatalog()
   process.exit(0)
 }
 
-if (positionals.length === 0) {
+if (names.length === 0) {
   showHelp()
   process.exit(1)
 }
-
-const names = positionals
-const dirs = values.dir ?? []
-const dryRun = values["dry-run"]
 
 removePackages({ names, dirs, dryRun })

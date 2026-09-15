@@ -7,3 +7,6 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   msw: false
+
+catalog:
+  react-icons: ^5.7.0
