@@ -48,6 +48,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^12.0.1
         version: 12.0.2(@nestjs/common@12.0.2(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.0.2)
+      '@packages/validator':
+        specifier: workspace:*
+        version: link:../../packages/validator
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -115,6 +118,9 @@ importers:
       '@packages/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@packages/validator':
+        specifier: workspace:*
+        version: link:../../packages/validator
       lucide-react:
         specifier: ^1.46.0
         version: 1.46.0(react@19.2.4)
@@ -308,6 +314,28 @@ importers:
       tailwindcss:
         specifier: ^4
         version: 4.3.0
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
+  packages/validator:
+    dependencies:
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@configs/eslint':
+        specifier: workspace:*
+        version: link:../../configs/eslint
+      '@configs/typescript':
+        specifier: workspace:*
+        version: link:../../configs/typescript
+      '@types/node':
+        specifier: ^20
+        version: 20.19.41
+      eslint:
+        specifier: ^9
+        version: 9.39.4(jiti@2.7.0)
       typescript:
         specifier: ^5
         version: 5.9.3

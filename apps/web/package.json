@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@packages/ui": "workspace:*",
+    "@packages/validator": "workspace:*",
     "lucide-react": "^1.46.0",
     "next": "16.3.3",
     "next-themes": "^0.4.6",
