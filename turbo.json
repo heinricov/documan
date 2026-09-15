@@ -9,7 +9,7 @@
     },
     "lint": {
       "dependsOn": ["^lint"],
-      "env": ["DATABASE_URL", "NODE_ENV", "NEXT_PUBLIC_API_URL"]
+      "env": ["DATABASE_URL", "NODE_ENV", "NEXT_PUBLIC_API_URL", "LOG_LEVEL", "JWT_SECRET", "JWT_EXPIRES_IN", "JWT_ISSUER"]
     },
     "format": {
       "dependsOn": ["^format"]
