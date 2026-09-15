@@ -178,7 +178,7 @@ Membuat **shared package** baru di dalam folder `packages/` dengan setup dasar y
 packages/<name>/
 ├── src/
 │   └── index.ts
-├── package.json          # name: @workspace/<name>
+├── package.json          # name: @packages/<name>
 └── tsconfig.json         # extends @configs/typescript
 ```
 
@@ -206,14 +206,14 @@ pnpm packages:add config --dry-run
 
 ```bash
 # Install dependency ke package tersebut
-pnpm add drizzle-orm --filter @workspace/db
+pnpm add drizzle-orm --filter @packages/db
 
 # Atau pakai catalog
 pnpm catalog:add drizzle-orm --use packages/db
 
 # Pakai di app lain
-# package.json → "@workspace/db": "workspace:*"
-# kode       → import { ... } from "@workspace/db"
+# package.json → "@packages/db": "workspace:*"
+# kode       → import { ... } from "@packages/db"
 ```
 
 ---
@@ -300,4 +300,4 @@ pnpm catalog:remove react-icons --dir apps/web packages/ui
 - Semua script dijalankan dari **root** monorepo.
 - Script catalog mengandalkan fitur resmi **pnpm catalog**.
 - Script `apps:add` menggunakan `pnpm dlx` (tidak perlu install CLI global).
-- Package baru memakai scope `@workspace/<name>` agar konsisten dengan `@packages/ui`.
+- Package baru memakai scope `@packages/<name>` agar konsisten dengan `@packages/ui`.

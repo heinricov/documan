@@ -67,7 +67,7 @@ const COMMANDS = [
     items: [
       {
         cmd: "pnpm packages:add <name> [options]",
-        desc: "Buat shared package baru di packages/ (@workspace/<name>)",
+        desc: "Buat shared package baru di packages/ (@packages/<name>)",
         examples: [
           "pnpm packages:add db",
           "pnpm packages:add auth --description \"Auth utilities\"",

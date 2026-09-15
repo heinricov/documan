@@ -73,7 +73,7 @@ function write(filePath, content) {
 // ====================== Templates ======================
 
 function createPackageJson({ name, description, isDev }) {
-  const scopedName = `@workspace/${name}`
+  const scopedName = `@packages/${name}`
 
   const pkg = {
     name: scopedName,
@@ -122,11 +122,11 @@ function createTsConfig() {
 
 function createSrcIndex(name) {
   return `/**
- * @workspace/${name}
+ * @packages/${name}
  */
 
 export function hello() {
-  return "Hello from @workspace/${name}"
+  return "Hello from @packages/${name}"
 }
 `
 }
@@ -167,7 +167,7 @@ ${colors.cyan("Yang dibuat:")}
   ├── tsconfig.json
   └── eslint.config.js   (opsional, jika diperlukan)
 
-${colors.dim("Package akan memakai scope @workspace/<name>")}
+${colors.dim("Package akan memakai scope @packages/<name>")}
 `)
 }
 
@@ -207,7 +207,7 @@ function main() {
     error(`Folder packages/${name} sudah ada.`)
   }
 
-  log(`Membuat package ${colors.bold(`@workspace/${name}`)}...`)
+  log(`Membuat package ${colors.bold(`@packages/${name}`)}...`)
 
   if (dryRun) {
     log(`[dry-run] mkdir packages/${name}/src`)
@@ -239,7 +239,7 @@ function main() {
   log("Menjalankan pnpm install...")
   run("pnpm install")
 
-  success(`Package ${colors.bold(`@workspace/${name}`)} berhasil dibuat!`)
+  success(`Package ${colors.bold(`@packages/${name}`)} berhasil dibuat!`)
   console.log(`
 ${colors.dim("Struktur:")}
   packages/${name}/
@@ -250,13 +250,13 @@ ${colors.dim("Struktur:")}
 
 ${colors.dim("Cara pakai di app lain:")}
   // package.json
-  "@workspace/${name}": "workspace:*"
+  "@packages/${name}": "workspace:*"
 
   // kode
-  import { hello } from "@workspace/${name}"
+  import { hello } from "@packages/${name}"
 
 ${colors.dim("Jalankan typecheck:")}
-  pnpm --filter @workspace/${name} typecheck
+  pnpm --filter @packages/${name} typecheck
 `)
 }
 
