@@ -85,6 +85,19 @@ const COMMANDS = [
       },
     ],
   },
+  {
+    group: "Git",
+    items: [
+      {
+        cmd: 'pnpm git:push "pesan commit" [options]',
+        desc: "git add . → git commit → git push dalam satu perintah",
+        examples: [
+          'pnpm git:push "feat: add catalog scripts"',
+          'pnpm git:push "chore: update deps" --no-push',
+        ],
+      },
+    ],
+  },
 ]
 
 function showList() {

@@ -13,7 +13,8 @@ Pastikan script sudah terdaftar di root `package.json`:
     "catalog:remove": "node scripts/catalog-remove.mjs",
     "apps:add": "node scripts/apps-add.mjs",
     "packages:add": "node scripts/packages-add.mjs",
-    "scripts:list": "node scripts/scripts-list.mjs"
+    "scripts:list": "node scripts/scripts-list.mjs",
+    "git:push": "node scripts/git-push.mjs"
   }
 }
 ```
@@ -60,13 +61,13 @@ pnpm catalog:add react-icons --use apps/web --dry-run
 
 #### Options
 
-| Flag            | Short | Keterangan                                           |
-| --------------- | ----- | ---------------------------------------------------- |
-| `--use <ws...>` | `-u`  | Workspace yang akan memakai package via `"catalog:"` |
-| `--dev`         | `-D`  | Install sebagai `devDependency`                      |
-| `--list`        | `-l`  | Tampilkan isi catalog saat ini                       |
-| `--dry-run`     |       | Simulasi tanpa mengubah file                         |
-| `--help`        | `-h`  | Tampilkan bantuan                                    |
+| Flag | Short | Keterangan |
+|------|-------|----------|
+| `--use <ws...>` | `-u` | Workspace yang akan memakai package via `"catalog:"` |
+| `--dev` | `-D` | Install sebagai `devDependency` |
+| `--list` | `-l` | Tampilkan isi catalog saat ini |
+| `--dry-run` | | Simulasi tanpa mengubah file |
+| `--help` | `-h` | Tampilkan bantuan |
 
 ---
 
@@ -102,12 +103,12 @@ pnpm catalog:remove react-icons --dir apps/web --dry-run
 
 #### Options
 
-| Flag            | Short | Keterangan                                         |
-| --------------- | ----- | -------------------------------------------------- |
-| `--dir <ws...>` | `-d`  | Workspace yang `package.json`-nya akan dibersihkan |
-| `--list`        | `-l`  | Tampilkan isi catalog saat ini                     |
-| `--dry-run`     |       | Simulasi tanpa mengubah file                       |
-| `--help`        | `-h`  | Tampilkan bantuan                                  |
+| Flag | Short | Keterangan |
+|------|-------|----------|
+| `--dir <ws...>` | `-d` | Workspace yang `package.json`-nya akan dibersihkan |
+| `--list` | `-l` | Tampilkan isi catalog saat ini |
+| `--dry-run` | | Simulasi tanpa mengubah file |
+| `--help` | `-h` | Tampilkan bantuan |
 
 ---
 
@@ -118,14 +119,14 @@ Prompt interaktif dari CLI akan muncul seperti biasa.
 
 **Framework yang didukung:**
 
-| Framework | Generator         | Contoh                                           |
-| --------- | ----------------- | ------------------------------------------------ |
-| `nest`    | `@nestjs/cli`     | `pnpm apps:add nest new my-api`                  |
-| `next`    | `create-next-app` | `pnpm apps:add next my-web`                      |
-| `expo`    | `create-expo-app` | `pnpm apps:add expo my-mobile`                   |
-| `remix`   | `create-remix`    | `pnpm apps:add remix`                            |
-| `vite`    | `create-vite`     | `pnpm apps:add vite my-app`                      |
-| `custom`  | Perintah bebas    | `pnpm apps:add custom npx some-generator my-app` |
+| Framework | Generator | Contoh |
+|-----------|-----------|--------|
+| `nest` | `@nestjs/cli` | `pnpm apps:add nest new my-api` |
+| `next` | `create-next-app` | `pnpm apps:add next my-web` |
+| `expo` | `create-expo-app` | `pnpm apps:add expo my-mobile` |
+| `remix` | `create-remix` | `pnpm apps:add remix` |
+| `vite` | `create-vite` | `pnpm apps:add vite my-app` |
+| `custom` | Perintah bebas | `pnpm apps:add custom npx some-generator my-app` |
 
 #### Contoh
 
@@ -150,9 +151,9 @@ pnpm apps:add custom npx create-something my-app
 
 #### Options
 
-| Flag     | Short | Keterangan        |
-| -------- | ----- | ----------------- |
-| `--help` | `-h`  | Tampilkan bantuan |
+| Flag | Short | Keterangan |
+|------|-------|----------|
+| `--help` | `-h` | Tampilkan bantuan |
 
 > Semua argumen setelah nama framework akan diteruskan langsung ke CLI generator.
 
@@ -195,11 +196,11 @@ pnpm packages:add config --dry-run
 
 #### Options
 
-| Flag                   | Short | Keterangan                  |
-| ---------------------- | ----- | --------------------------- |
-| `--description <text>` | `-d`  | Deskripsi package           |
-| `--dry-run`            |       | Simulasi tanpa membuat file |
-| `--help`               | `-h`  | Tampilkan bantuan           |
+| Flag | Short | Keterangan |
+|------|-------|----------|
+| `--description <text>` | `-d` | Deskripsi package |
+| `--dry-run` | | Simulasi tanpa membuat file |
+| `--help` | `-h` | Tampilkan bantuan |
 
 #### Setelah dibuat
 
@@ -228,6 +229,39 @@ pnpm scripts:list
 ```
 
 Script ini juga menandai mana saja perintah yang sudah terdaftar di root `package.json` (●) dan mana yang belum (○).
+
+---
+
+### `pnpm git:push`
+
+Menjalankan `git add .` → `git commit` → `git push` dalam satu perintah.
+
+#### Contoh
+
+```bash
+# Commit + push
+pnpm git:push "feat: add catalog scripts"
+
+# Hanya commit, tanpa push
+pnpm git:push "chore: update deps" --no-push
+
+# Simulasi
+pnpm git:push "test commit" --dry-run
+```
+
+#### Options
+
+| Flag | Keterangan |
+|------|----------|
+| `--no-push` | Hanya `git add` + `git commit`, tanpa `git push` |
+| `--dry-run` | Simulasi tanpa menjalankan perintah git |
+| `--help`, `-h` | Tampilkan bantuan |
+
+#### Catatan
+
+- Pesan commit **wajib** diisi.
+- Jika tidak ada perubahan, script akan berhenti dengan pesan yang jelas.
+- Harus dijalankan di dalam git repository.
 
 ---
 

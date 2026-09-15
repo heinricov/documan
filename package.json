@@ -12,7 +12,8 @@
     "catalog:remove": "node scripts/catalog-remove.mjs",
     "apps:add": "node scripts/apps-add.mjs",
     "packages:add": "node scripts/packages-add.mjs",
-    "scripts:list": "node scripts/scripts-list.mjs"
+    "scripts:list": "node scripts/scripts-list.mjs",
+    "git:push": "node scripts/git-push.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
