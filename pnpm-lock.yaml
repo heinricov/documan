@@ -117,6 +117,24 @@ importers:
 
   configs/typescript: {}
 
+  packages/db:
+    devDependencies:
+      '@configs/eslint':
+        specifier: workspace:*
+        version: link:../../configs/eslint
+      '@configs/typescript':
+        specifier: workspace:*
+        version: link:../../configs/typescript
+      '@types/node':
+        specifier: ^20
+        version: 20.19.41
+      eslint:
+        specifier: ^9
+        version: 9.39.4(jiti@2.7.0)
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
   packages/ui:
     dependencies:
       '@base-ui/react':
