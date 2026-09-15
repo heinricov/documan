@@ -179,7 +179,7 @@ packages/<name>/
 ├── src/
 │   └── index.ts
 ├── package.json          # name: @workspace/<name>
-└── tsconfig.json         # extends @workspace/typescript-config
+└── tsconfig.json         # extends @configs/typescript
 ```
 
 #### Contoh

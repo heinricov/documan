@@ -91,8 +91,8 @@ function createPackageJson({ name, description, isDev }) {
       "./*": "./src/*.ts",
     },
     devDependencies: {
-      "@workspace/eslint-config": "workspace:*",
-      "@workspace/typescript-config": "workspace:*",
+      "@configs/eslint": "workspace:*",
+      "@configs/typescript": "workspace:*",
       "@types/node": "^20",
       eslint: "^9",
       typescript: "^5",
@@ -107,7 +107,7 @@ function createPackageJson({ name, description, isDev }) {
 
 function createTsConfig() {
   return `{
-  "extends": "@workspace/typescript-config/base.json",
+  "extends": "@configs/typescript/base.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
@@ -132,16 +132,10 @@ export function hello() {
 }
 
 function createEslintConfig() {
-  return `/** @type {import("eslint").Linter.Config} */
-module.exports = {
-  root: true,
-  extends: ["@workspace/eslint-config/library.js"],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: true,
-  },
-  ignorePatterns: ["dist/", "node_modules/"],
-}
+  return `import { config } from "@configs/eslint/react-internal"
+
+/** @type {import("eslint").Linter.Config} */
+export default config
 `
 }
 
@@ -200,7 +194,7 @@ function main() {
     error("Nama package tidak valid. Gunakan huruf, angka, dan tanda hubung saja.")
   }
 
-  if (name === "ui" || name === "eslint-config" || name === "typescript-config") {
+  if (name === "ui" || name === "eslint" || name === "typescript") {
     warn(`Nama "${name}" sudah dipakai oleh package internal. Lanjutkan dengan hati-hati.`)
   }
 
