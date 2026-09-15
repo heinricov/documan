@@ -1,7 +1,8 @@
 /**
  * @packages/db
+ *
+ * Prisma database client for the monorepo
  */
 
-export function hello() {
-  return "Hello from @packages/db"
-}
+export { prisma } from "./client.js"
+export type * from "./client.js"

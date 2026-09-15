@@ -6,17 +6,29 @@
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
+  "dependencies": {
+    "@configs/environment": "workspace:*",
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "pg": "^8.13.0"
+  },
   "devDependencies": {
     "@configs/eslint": "workspace:*",
     "@configs/typescript": "workspace:*",
     "@types/node": "^20",
+    "@types/pg": "^8.11.0",
     "eslint": "^9",
+    "prisma": "^7.0.0",
     "typescript": "^5"
   }
 }

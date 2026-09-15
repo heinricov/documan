@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Role {
+  id          String  @id @default(uuid()) @db.Uuid
+  title       String  @unique
+  description String?
+
+  @@map("roles")
+}
