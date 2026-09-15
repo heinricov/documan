@@ -300,4 +300,4 @@ pnpm catalog:remove react-icons --dir apps/web packages/ui
 - Semua script dijalankan dari **root** monorepo.
 - Script catalog mengandalkan fitur resmi **pnpm catalog**.
 - Script `apps:add` menggunakan `pnpm dlx` (tidak perlu install CLI global).
-- Package baru memakai scope `@workspace/<name>` agar konsisten dengan `@workspace/ui`.
+- Package baru memakai scope `@workspace/<name>` agar konsisten dengan `@packages/ui`.
