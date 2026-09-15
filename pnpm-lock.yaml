@@ -168,7 +168,17 @@ importers:
         specifier: ^5
         version: 5.9.3
 
-  configs/environment: {}
+  configs/environment:
+    devDependencies:
+      '@configs/typescript':
+        specifier: workspace:*
+        version: link:../typescript
+      '@types/node':
+        specifier: ^22.13.10
+        version: 22.20.2
+      typescript:
+        specifier: ^5
+        version: 5.9.3
 
   configs/eslint:
     devDependencies:
@@ -2054,6 +2064,9 @@ packages:
 
   '@types/node@20.19.41':
     resolution: {integrity: sha512-ECymXOukMnOoVkC2bb1Vc/w/836DXncOg5m8Xj1RH7xSHZJWNYY6Zh7EH477vcnD5egKNNfy2RpNOmuChhFPgQ==}
+
+  '@types/node@22.20.2':
+    resolution: {integrity: sha512-xlvWf4Vs9n1PEVYwP1n4vvG07M6y8WgvJ2t0vbrWTmijsIHp1cS+uJ2kMIRdY3nHZK0nCYKrPeD171+SzF4/zw==}
 
   '@types/node@24.13.4':
     resolution: {integrity: sha512-YJ7EqCstVTzIr0fMr7qul/977en+pQHrfmuKIo6Zr9i75Be21dr3MovcfvGtyvi2HAUrRerWps5sMO9I7WaxDw==}
@@ -6691,6 +6704,10 @@ snapshots:
   '@types/methods@1.1.4': {}
 
   '@types/node@20.19.41':
+    dependencies:
+      undici-types: 6.21.0
+
+  '@types/node@22.20.2':
     dependencies:
       undici-types: 6.21.0
 
