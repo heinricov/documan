@@ -20,7 +20,29 @@ export interface CreateLoggerOptions {
   pretty?: boolean
   /** Context tambahan yang selalu disertakan di semua log */
   baseContext?: Record<string, unknown>
+  /**
+   * Daftar properti yang di-redact (disensor) saat log.
+   * Default: path sensitif umum (password, token, authorization, cookie, dll).
+   * Format mengikuti pino redact (mis. "*.password", "authorization").
+   */
+  redact?: string[]
 }
+
+/**
+ * Path default yang disensor agar secret tidak bocor ke log.
+ */
+const DEFAULT_REDACT: string[] = [
+  "*.password",
+  "*.secret",
+  "*.token",
+  "authorization",
+  "cookie",
+  "set-cookie",
+  "x-api-key",
+  "apiKey",
+  "JWT_SECRET",
+  "DATABASE_URL",
+]
 
 /**
  * ============================================================
@@ -44,6 +66,7 @@ export function createLogger(options: CreateLoggerOptions = {}) {
     level = process.env.LOG_LEVEL ?? "info",
     pretty,
     baseContext,
+    redact = DEFAULT_REDACT,
   } = options
 
   const isPretty = pretty ?? process.env.NODE_ENV !== "production"
@@ -52,6 +75,7 @@ export function createLogger(options: CreateLoggerOptions = {}) {
     level,
     base: baseContext ?? {},
     timestamp: pino.stdTimeFunctions.isoTime,
+    redact,
   }
 
   // Set service di base jika disediakan

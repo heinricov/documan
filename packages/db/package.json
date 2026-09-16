@@ -10,6 +10,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx scripts/seed.ts",
     "db:studio": "prisma studio"
   },
   "exports": {
@@ -29,6 +30,7 @@
     "@types/pg": "^8.11.0",
     "eslint": "^9",
     "prisma": "^7.0.0",
+    "tsx": "^4.20.0",
     "typescript": "^5"
   }
 }

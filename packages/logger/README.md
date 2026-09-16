@@ -230,6 +230,17 @@ export class LoggingInterceptor implements NestInterceptor {
 | `level` | `string` | `env.LOG_LEVEL ?? "info"` | Level minimum (trace/debug/info/warn/error/fatal) |
 | `pretty` | `boolean` | `NODE_ENV !== "production"` | Pretty output untuk development |
 | `baseContext` | `Record<string, unknown>` | `{}` | Context yang selalu disertakan |
+| `redact` | `string[]` | Default list sensitif | Properti yang disensor sebelum dicetak |
+
+**Redaction bawaan** (disensor otomatis):
+
+| Path | Contoh disensor |
+|------|----------------|
+| `*.password` | `create.data.password` |
+| `*.secret`, `*.token` | `confirm.payload.token` |
+| `authorization`, `x-api-key` | header auth |
+| `cookie`, `set-cookie` | cookie response |
+| `apiKey`, `JWT_SECRET`, `DATABASE_URL` | konfigurasi |
 
 ### `logger`
 

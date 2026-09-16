@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core"
 import helmet from "helmet"
 import type { Request, Response, NextFunction } from "express"
-import { loadEnv } from "@configs/environment"
+import { loadEnv, validateEnv } from "@configs/environment"
 import { setupSwagger } from "@packages/documentation"
 import {
   buildHttpContext,
@@ -30,7 +30,19 @@ async function bootstrap() {
   // Load .env dari root monorepo (cari pnpm-workspace.yaml)
   loadEnv()
 
+  // Fail-fast: tolak konfigurasi tidak aman sebelum server hidup
+  for (const warning of validateEnv({
+    required: ["DATABASE_URL"],
+    jwt: { minLength: 32 },
+    cors: true,
+  })) {
+    logger.warn(warning)
+  }
+
   const app = await NestFactory.create(AppModule)
+
+  // Matikan proses secara graceful pada SIGTERM/SIGINT
+  app.enableShutdownHooks()
 
   // Satu hop di belakang proxy agar IP benar (dipakai rate limiter)
   const expressApp = app.getHttpAdapter().getInstance() as {
@@ -40,8 +52,12 @@ async function bootstrap() {
 
   // Logger terpusat (pino) + request context
   app.useLogger(new NestLoggerAdapter(logger))
-  app.use((req: Request, _res: Response, next: NextFunction) => {
-    void withLogContext(buildHttpContext(req), () => next())
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const context = buildHttpContext(req)
+    if (context.requestId) {
+      res.setHeader("x-request-id", context.requestId)
+    }
+    void withLogContext(context, () => next())
   })
 
   // CORS

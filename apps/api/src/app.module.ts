@@ -1,9 +1,11 @@
-import { Module } from "@nestjs/common"
+import { Module, OnModuleDestroy } from "@nestjs/common"
 import { APP_GUARD } from "@nestjs/core"
+import { prisma } from "@packages/db"
+import { HealthModule } from "./health/health.module.js"
 import { RateLimitGuard } from "./common/guards/rate-limit.guard.js"
 
 @Module({
-  imports: [],
+  imports: [HealthModule],
   controllers: [],
   providers: [
     {
@@ -12,4 +14,8 @@ import { RateLimitGuard } from "./common/guards/rate-limit.guard.js"
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements OnModuleDestroy {
+  async onModuleDestroy(): Promise<void> {
+    await prisma.$disconnect()
+  }
+}
