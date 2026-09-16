@@ -533,7 +533,9 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const RoleScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  description: 'description'
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
@@ -580,6 +582,20 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 

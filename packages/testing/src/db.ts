@@ -82,12 +82,14 @@ export async function seedRole(
   db: Db = defaultPrisma
 ): Promise<Role> {
   const data = createRoleFixture(overrides)
-  return db.role.create({
-    data: {
-      title: data.title,
-      description: data.description ?? undefined,
-    },
-  })
+  return serializeRole(
+    await db.role.create({
+      data: {
+        title: data.title,
+        description: data.description ?? undefined,
+      },
+    })
+  )
 }
 
 /**
@@ -109,14 +111,38 @@ export async function seedRoles(
   const fixtures = items.length > 0 ? items : [{}]
   const data = fixtures.map((fixture) => createRoleFixture(fixture))
 
-  return db.$transaction(
-    data.map((role) =>
-      db.role.create({
-        data: {
-          title: role.title,
-          description: role.description ?? undefined,
-        },
-      })
+  return serializeRoleList(
+    await db.$transaction(
+      data.map((role) =>
+        db.role.create({
+          data: {
+            title: role.title,
+            description: role.description ?? undefined,
+          },
+        })
+      )
     )
   )
+}
+
+type RoleRecord = {
+  id: string
+  title: string
+  description: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializeRole(role: RoleRecord): Role {
+  return {
+    id: role.id,
+    title: role.title,
+    description: role.description,
+    createdAt: role.createdAt.toISOString(),
+    updatedAt: role.updatedAt.toISOString(),
+  }
+}
+
+function serializeRoleList(roles: RoleRecord[]): Role[] {
+  return roles.map(serializeRole)
 }

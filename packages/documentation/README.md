@@ -65,6 +65,16 @@ import { CreateRoleSchema, RoleSchema } from "@packages/validator"
 async create(@Body() body: CreateRole) { ... }
 ```
 
+Untuk respons list terpaginasi, pakai `paginatedOpenApiResponse(itemSchema)` — membungkus `{ success, data: [item], meta }`:
+
+```typescript
+import { paginatedOpenApiResponse, zodToOpenApi } from "@packages/documentation"
+import { ApiOkResponse } from "@nestjs/swagger"
+
+@ApiOkResponse({ schema: paginatedOpenApiResponse(zodToOpenApi(RoleSchema)) })
+async findAll(@Query() query: unknown) { ... }
+```
+
 **Tipe yang didukung:**
 
 | zod | OpenAPI JSON Schema |
@@ -127,6 +137,7 @@ Wrapper `setupSwagger` yang melakukan semuanya: build config → create document
 | `setupSwagger(app, options?)` | `INestApplication`, `SwaggerConfigOptions` | `void` |
 | `buildSwaggerConfig(options?)` | `SwaggerConfigOptions` | `Omit<OpenAPIObject, "paths">` |
 | `zodToOpenApi(schema)` | `z.ZodType` | `OpenApiSchema` (JSON Schema object) |
+| `paginatedOpenApiResponse(itemSchema)` | `OpenApiSchema` | `OpenApiSchema` (JSON Schema object) |
 
 ---
 

@@ -8,6 +8,8 @@ export const RoleSchema = z.object({
   id: z.string().uuid(),
   title: z.string().min(1).max(100),
   description: z.string().nullable().optional(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 })
 
 /**

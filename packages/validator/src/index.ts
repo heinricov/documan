@@ -5,6 +5,19 @@
  * Single source of truth untuk validasi & type antara web ↔ api.
  */
 
+// ====================== Common ======================
+export {
+  IdParamsSchema,
+  PaginationMetaSchema,
+  paginatedResponseSchema,
+} from "./schemas/common.js"
+
+export type {
+  IdParams,
+  PaginationMeta,
+  PaginatedResponseSchema,
+} from "./schemas/common.js"
+
 // ====================== Schemas ======================
 export {
   RoleSchema,

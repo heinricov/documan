@@ -73,7 +73,9 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const RoleScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  description: 'description'
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]

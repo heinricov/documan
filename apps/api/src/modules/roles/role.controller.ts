@@ -7,12 +7,13 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger"
-import { z } from "zod"
 import {
   CreateRoleSchema,
+  IdParamsSchema,
   RoleQuerySchema,
   UpdateRoleSchema,
   type CreateRole,
+  type IdParams,
   type RoleQuery,
   type UpdateRole,
 } from "@packages/validator"
@@ -24,10 +25,6 @@ import {
   updateRoleSchema,
 } from "./role.swagger.js"
 import { RoleService } from "./role.service.js"
-
-const roleIdParams = z.object({
-  id: z.string().uuid("ID role tidak valid"),
-})
 
 /**
  * ============================================================
@@ -71,7 +68,7 @@ export class RoleController {
   @ApiOkResponse({ description: "Detail role", schema: roleSchema })
   @ApiResponse({ status: 400, description: "ID tidak valid" })
   @ApiResponse({ status: 404, description: "Role tidak ditemukan" })
-  findOne(@ZodParams({ zod: roleIdParams }) params: { id: string }) {
+  findOne(@ZodParams({ zod: IdParamsSchema }) params: IdParams) {
     return this.roleService.findById(params.id)
   }
 
@@ -84,7 +81,7 @@ export class RoleController {
   @ApiResponse({ status: 404, description: "Role tidak ditemukan" })
   @ApiResponse({ status: 409, description: "Title role sudah ada" })
   update(
-    @ZodParams({ zod: roleIdParams }) params: { id: string },
+    @ZodParams({ zod: IdParamsSchema }) params: IdParams,
     @ZodBody({ zod: UpdateRoleSchema }) body: UpdateRole
   ) {
     return this.roleService.update(params.id, body)
@@ -96,7 +93,7 @@ export class RoleController {
   @ApiOkResponse({ description: "Role dihapus", schema: roleSchema })
   @ApiResponse({ status: 400, description: "ID tidak valid" })
   @ApiResponse({ status: 404, description: "Role tidak ditemukan" })
-  remove(@ZodParams({ zod: roleIdParams }) params: { id: string }) {
+  remove(@ZodParams({ zod: IdParamsSchema }) params: IdParams) {
     return this.roleService.remove(params.id)
   }
 }

@@ -90,7 +90,7 @@ Semua respons melewati pipeline global (interceptor + filter), bentuk **standar 
 
 ```jsonc
 // sukses
-{ "success": true, "data": { "id": "...", "title": "admin" }, "meta": { "page": 1, "limit": 10, "total": 3, "totalPages": 1, "hasNext": false, "hasPrevious": false } }
+{ "success": true, "data": { "id": "...", "title": "admin", "createdAt": "2026-09-16T03:27:52.024Z", "updatedAt": "2026-09-16T03:27:52.048Z" }, "meta": { "page": 1, "limit": 10, "total": 3, "totalPages": 1, "hasNext": false, "hasPrevious": false } }
 
 // error
 { "success": false, "error": { "code": "NOT_FOUND", "message": "Role not found", "details": { "fieldErrors": { "title": ["..."] } } } }
@@ -116,7 +116,8 @@ export const UserQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(10),
 })
 export type CreateUser = z.output<typeof CreateUserSchema>
-// + UpdateUserSchema, IdParamSchema = z.object({ id: z.string().uuid() })
+// + UpdateUserSchema. Untuk param :id pakai shared IdParamsSchema dari validator
+//   (bukan definisikan ulang: @ZodParams({ zod: IdParamsSchema })).
 ```
 
 ### 2. Buat folder feature `src/modules/users/`
@@ -132,25 +133,28 @@ export type CreateUser = z.output<typeof CreateUserSchema>
 export class UsersModule {}
 ```
 
-**`user.service.ts`** — pakai `@packages/db` + error dari `@packages/core`:
+**`user.service.ts`** — pakai `@packages/db` + error dari `@packages/core`, dan helper pagination core:
 
 ```ts
 @Injectable()
 export class UserService {
   async findAll(query: UserQuery): Promise<PaginatedResponse<User>> {
+    const { page, limit, offset } = parseOffsetPagination(query)
+    const { skip, take } = toPrismaArgs({ page, limit, offset })
     const [items, total] = await Promise.all([
-      prisma.user.findMany({ skip: (query.page - 1) * query.limit, take: query.limit }),
+      prisma.user.findMany({ skip, take }),
       prisma.user.count(),
     ])
-    return paginatedResponse(items, { page: query.page, limit: query.limit, total })
+    return paginatedResponse(serializeList(items), { page, limit, total })
   }
   async create(data: CreateUser): Promise<User> {
-    return prisma.user.create({ data }) // duplikat → ConflictError
+    return serialize(await prisma.user.create({ data })) // duplikat → ConflictError
   }
 }
+// serialize(): map Record DB (Date) → DTO (ISO string) agar match schema validator.
 ```
 
-**`user.controller.ts`** — dekorator validasi **WAJIB** bentuk `{ zod: Schema }`:
+**`user.controller.ts`** — dekorator validasi **WAJIB** bentuk `{ zod: Schema }`; param `:id` pakai `IdParamsSchema`:
 
 ```ts
 @Controller("users")
@@ -169,7 +173,7 @@ export class UserController {
   }
 
   @Get(":id")
-  findOne(@ZodParams({ zod: IdParamSchema }) params: { id: string }) {
+  findOne(@ZodParams({ zod: IdParamsSchema }) params: IdParams) {
     return this.userService.findById(params.id)
   }
   // PATCH/DELETE mengikuti pola yang sama
@@ -180,7 +184,7 @@ export class UserController {
 
 `src/app.module.ts` → `imports: [HealthModule, RolesModule, UsersModule]`.
 
-> Swagger otomatis: tambahkan `@ApiOperation`, `@ApiOkResponse` (+ schema via `zodToOpenApi`), dan `@ApiResponse` untuk error. Respons paginasi (`{ success, data, meta }`) dideklarasikan inline di file swagger feature — lihat `role.swagger.ts`.
+> Swagger otomatis: tambahkan `@ApiOperation`, `@ApiOkResponse` (+ schema via `zodToOpenApi`), dan `@ApiResponse` untuk error. Respons paginasi memakai helper generik `paginatedOpenApiResponse(zodToOpenApi(ItemSchema))` dari `@packages/documentation` — lihat `role.swagger.ts`.
 
 Verifikasi: `pnpm --filter api typecheck && pnpm --filter api lint`, lalu jalankan + curl.
 

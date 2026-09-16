@@ -17,3 +17,6 @@ export type { SwaggerConfigOptions } from "./config.js"
 export { zodToOpenApi } from "./zod-openapi.js"
 
 export type { OpenApiSchema } from "./zod-openapi.js"
+
+// ====================== Pagination ======================
+export { paginatedOpenApiResponse } from "./pagination.js"

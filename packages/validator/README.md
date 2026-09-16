@@ -178,6 +178,34 @@ export function RoleForm() {
 
 ## Schemas
 
+### Common Schemas
+
+#### `IdParamsSchema`
+
+Schema param path `:id` — dipakai SEMUA endpoint yang menerima `{ id: uuid }`:
+
+```typescript
+import { IdParamsSchema } from "@packages/validator"
+
+const params = IdParamsSchema.parse({ id: "550e8400-e29b-41d4-a716-446655440000" })
+// { id: string }
+```
+
+#### `PaginationMetaSchema`
+
+Meta pagination standar: `{ page, limit, total, totalPages, hasNext, hasPrevious }`.
+
+#### `paginatedResponseSchema(itemSchema)`
+
+Bangun schema respons list terpaginasi generik dari schema item:
+
+```typescript
+import { paginatedResponseSchema, RoleSchema } from "@packages/validator"
+
+const RoleListSchema = paginatedResponseSchema(RoleSchema)
+// { success: true, data: Role[], meta: PaginationMeta }
+```
+
 ### Role Schema
 
 #### `RoleSchema`
@@ -190,10 +218,12 @@ import { RoleSchema } from "@packages/validator"
 const role = RoleSchema.parse({
   id: "550e8400-e29b-41d4-a716-446655440000",
   title: "Admin",
-  description: "Administrator role"
+  description: "Administrator role",
+  createdAt: "2026-09-16T03:27:52.024Z",
+  updatedAt: "2026-09-16T03:27:52.048Z"
 })
 
-// role: { id: string, title: string, description?: string | null }
+// role: { id, title, description?: string | null, createdAt: string, updatedAt: string }
 ```
 
 | Field         | Type             | Validasi         |
@@ -201,6 +231,10 @@ const role = RoleSchema.parse({
 | `id`          | `string`         | UUID format      |
 | `title`       | `string`         | 1-100 characters |
 | `description` | `string \| null` | Optional         |
+| `createdAt`   | `string`         | ISO date-time    |
+| `updatedAt`   | `string`         | ISO date-time    |
+
+> Note: `createdAt`/`updatedAt` direpresentasikan sebagai **ISO string** (serialisasi dari `Date` milik database) — konsisten antara API response, klien web, dan schema.
 
 #### `CreateRoleSchema`
 
@@ -282,7 +316,7 @@ import type {
 
 | Type         | Deskripsi                                                                       |
 | ------------ | ------------------------------------------------------------------------------- |
-| `Role`       | `{ id: string, title: string, description?: string \| null }`                   |
+| `Role`       | `{ id: string, title: string, createdAt: string, updatedAt: string, description?: string \| null }` |
 | `CreateRole` | `{ title: string, description?: string \| null }`                               |
 | `UpdateRole` | `{ title?: string, description?: string \| null }`                              |
 | `RoleQuery`  | `{ id?: string, title?: string, page: number, limit: number, search?: string }` |
@@ -396,9 +430,11 @@ Schema validator dirancang untuk kompatibel dengan Prisma models:
 ```typescript
 // packages/db/prisma/schema.prisma
 model Role {
-  id          String  @id @default(uuid()) @db.Uuid
-  title       String  @unique
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String   @unique
   description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("roles")
 }
@@ -408,18 +444,20 @@ model Role {
 // packages/validator/src/schemas/role.ts
 import { z } from "zod"
 
-// Schema harus match dengan Prisma model
+// Schema match dengan Prisma model; timestamps sebagai ISO string
 export const RoleSchema = z.object({
-  id: z.string().uuid(),        // UUID dari Prisma
-  title: z.string().min(1),     // String required
+  id: z.string().uuid(),           // UUID dari Prisma
+  title: z.string().min(1),        // String required
   description: z.string().nullable(), // Nullable string
+  createdAt: z.string().datetime(),  // dari Date → dipetakan ke ISO string di service
+  updatedAt: z.string().datetime(),  // dari Date → dipetakan ke ISO string di service
 })
 ```
 
 **Tips:**
 
 - Gunakan `z.string().uuid()` untuk UUID fields
-- Gunakan `z.coerce.date()` untuk DateTime fields
+- Gunakan `z.string().datetime()` untuk timestamp yang diserialisasi (API response) — service bertanggung jawab mapping `Date → ISO string`
 - Gunakan `z.string().nullable()` untuk nullable fields
 - Gunakan `z.number().int()` untuk Integer fields
 
