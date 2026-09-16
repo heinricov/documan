@@ -16,7 +16,21 @@ export class NestLoggerAdapter implements LoggerService {
   constructor(private readonly logger: Logger) {}
 
   log(message: unknown, ...optionalParams: unknown[]) {
-    this.logger.info(this.bindContext(optionalParams), this.toString(message))
+    const text = this.toString(message)
+    const extra = this.bindContext(optionalParams)
+
+    // RoutesResolver/RouterExplorer (route map) & InstanceLoader (module init)
+    // adalah noise saat startup → tampilkan sebagai debug agar tetap bersih.
+    if (
+      extra.context === "RouterExplorer" ||
+      extra.context === "RoutesResolver" ||
+      extra.context === "InstanceLoader"
+    ) {
+      this.logger.debug(extra, text)
+      return
+    }
+
+    this.logger.info(extra, text)
   }
 
   error(message: unknown, ...optionalParams: unknown[]) {

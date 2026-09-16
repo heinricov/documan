@@ -1,114 +1,208 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# @apps/api — Documan API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+REST API dari monorepo **documan**, dibangun dengan **NestJS 12** (+ Express), zod validation (SSOT di `@packages/validator`), Prisma (`@packages/db`), logging pino (`@packages/logger`), dan Swagger (`@packages/documentation`).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Semua logika bisnis dipecah per **feature module** di `src/modules/`. Referensi endpoint teladan: **roles**.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Struktur
 
-## Project setup
-
-```bash
-$ pnpm install
+```
+apps/api/
+├── src/
+│   ├── main.ts                 # bootstrap: env, logger, CORS, helmet, pipeline, swagger, shutdown
+│   ├── app.module.ts           # kumpulan semua feature modules + APP_GUARD global
+│   ├── common/                 # infrastruktur GLOBAL (tidak khusus satu feature)
+│   │   ├── guards/             #   rate-limit (mirip dengan JWT/roles nanti)
+│   │   ├── interceptors/       #   transform (bentuk respons standar)
+│   │   ├── filters/            #   http-exception (format error standar)
+│   │   ├── pipes/              #   zod-validation
+│   │   ├── logger/             #   adaptor Nest → pino
+│   │   └── zod.decorators.ts   # ♥ @ZodBody/@ZodQuery/@ZodParams
+│   ├── health/                 # liveness & readiness probes
+│   └── modules/
+│       └── roles/              # ♥ feature template (CRUD lengkap)
+│           ├── role.module.ts
+│           ├── role.controller.ts
+│           ├── role.service.ts
+│           └── role.swagger.ts
+├── test/                       # e2e (vitest + supertest)
+├── nest-cli.json
+└── package.json
 ```
 
-## Compile and run the project
+**Aturan penting:** schema & tipe bersama (request/response) TIDAK ditulis di `apps/api` — ditulis sekali di `@packages/validator`, supaya API client (`@packages/client`) tetap sinkron.
+
+---
+
+## Persiapan
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm install
+# seed database (membuat role admin/editor/viewer)
+pnpm --filter @packages/db db:seed
 ```
 
-## Run tests
+Dibutuhkan `.env` di root repo (lihat `.env.example`):
+
+| Variable          | Wajib | Keterangan                                        | Default         |
+| ----------------- | ----- | ------------------------------------------------- | --------------- |
+| `DATABASE_URL`    | ✅    | PostgreSQL connection string                      | —               |
+| `API_PORT`        | ❌    | Port HTTP                                         | `3001`          |
+| `CORS_ORIGIN`     | ❌    | Origin yang diizinkan (`*` di produksi = warning) | —               |
+| `RATE_LIMIT_TTL_MS` | ❌  | Jendela rate limit (ms)                           | `60000`         |
+| `RATE_LIMIT_MAX`  | ❌    | Maksimum request per jendela per IP               | `100`           |
+| `JWT_SECRET`      | ⚠️    | Ada nanti bersama module auth — wajib ≥ 32 char   | —               |
+
+Validasi dilakukan `validateEnv` di bootstrap; fatal (mis. `DATABASE_URL` kosong) → langsung berhenti, warning → log.
+
+---
+
+## Menjalankan
 
 ```bash
-# unit tests
-$ pnpm run test
+# development (watch)
+pnpm --filter api dev
 
-# e2e tests
-$ pnpm run test:e2e
+# produksi (transpiler-on-the-fly, lihat catatan)
+pnpm --filter api start:prod
 
-# test coverage
-$ pnpm run test:cov
+# build & validasi type (tsc)
+pnpm --filter api build
+pnpm --filter api typecheck
+pnpm --filter api lint
 ```
 
-## Deployment
+### Endpoint yang selalu ada
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+| Route          | Keterangan                          |
+| -------------- | ----------------------------------- |
+| `GET /health`  | Liveness probe                      |
+| `GET /health/ready` | Readiness probe (cek DB `SELECT 1`) |
+| `GET /docs`    | Swagger UI (hanya NODE_ENV=development) |
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
+
+## Format Respons
+
+Semua respons melewati pipeline global (interceptor + filter), bentuk **standar `@packages/core`**:
+
+```jsonc
+// sukses
+{ "success": true, "data": { "id": "...", "title": "admin" }, "meta": { "page": 1, "limit": 10, "total": 3, "totalPages": 1, "hasNext": false, "hasPrevious": false } }
+
+// error
+{ "success": false, "error": { "code": "NOT_FOUND", "message": "Role not found", "details": { "fieldErrors": { "title": ["..."] } } } }
+```
+
+Error yang dipakai aplikasi (di `@packages/core`): `ValidationError` (400), `UnauthorizedError` (401), `ForbiddenError` (403), `NotFoundError` (404, otomatis menambah `" not found"` dari nama resource), `ConflictError` (409), `RateLimitError` (429, + header `Retry-After`), `AppError` (lainnya → 500).
+
+---
+
+## Membuat Endpoint Baru (mis. `users`)
+
+### 1. Definisikan schema di `@packages/validator` (SSOT)
+
+`packages/validator/src/schemas/user.ts` → ekspor dari `index.ts`:
+
+```ts
+export const CreateUserSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(1).max(100),
+})
+export const UserQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1), // query HTTP = string!
+  limit: z.coerce.number().int().positive().max(100).default(10),
+})
+export type CreateUser = z.output<typeof CreateUserSchema>
+// + UpdateUserSchema, IdParamSchema = z.object({ id: z.string().uuid() })
+```
+
+### 2. Buat folder feature `src/modules/users/`
+
+**`user.module.ts`**
+
+```ts
+@Module({
+  controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService],
+})
+export class UsersModule {}
+```
+
+**`user.service.ts`** — pakai `@packages/db` + error dari `@packages/core`:
+
+```ts
+@Injectable()
+export class UserService {
+  async findAll(query: UserQuery): Promise<PaginatedResponse<User>> {
+    const [items, total] = await Promise.all([
+      prisma.user.findMany({ skip: (query.page - 1) * query.limit, take: query.limit }),
+      prisma.user.count(),
+    ])
+    return paginatedResponse(items, { page: query.page, limit: query.limit, total })
+  }
+  async create(data: CreateUser): Promise<User> {
+    return prisma.user.create({ data }) // duplikat → ConflictError
+  }
+}
+```
+
+**`user.controller.ts`** — dekorator validasi **WAJIB** bentuk `{ zod: Schema }`:
+
+```ts
+@Controller("users")
+@ApiTags("users")
+export class UserController {
+  constructor(@Inject(UserService) private readonly userService: UserService) {}
+
+  @Get()
+  findAll(@ZodQuery({ zod: UserQuerySchema }) query: UserQuery) {
+    return this.userService.findAll(query)
+  }
+
+  @Post()
+  create(@ZodBody({ zod: CreateUserSchema }) body: CreateUser) {
+    return this.userService.create(body)
+  }
+
+  @Get(":id")
+  findOne(@ZodParams({ zod: IdParamSchema }) params: { id: string }) {
+    return this.userService.findById(params.id)
+  }
+  // PATCH/DELETE mengikuti pola yang sama
+}
+```
+
+### 3. Daftarkan module
+
+`src/app.module.ts` → `imports: [HealthModule, RolesModule, UsersModule]`.
+
+> Swagger otomatis: tambahkan `@ApiOperation`, `@ApiOkResponse` (+ schema via `zodToOpenApi`), dan `@ApiResponse` untuk error. Respons paginasi (`{ success, data, meta }`) dideklarasikan inline di file swagger feature — lihat `role.swagger.ts`.
+
+Verifikasi: `pnpm --filter api typecheck && pnpm --filter api lint`, lalu jalankan + curl.
+
+---
+
+## ⚠️ Catatan Penting (NestJS 12)
+
+1. **`@ZodBody(schema)` langsung TIDAK akan bekerja.**
+   - ZodObject punya method `.transform()` → dianggap pipe; `{ schema }` terdeteksi sebagai `ParameterDecoratorOptions`. Keduanya membuat `data` menjadi `undefined`.
+   - Wajib: `@ZodBody({ zod: Schema })` (key netral `zod`).
+2. **DI memakai `@Inject(...)` eksplisit.** Runtime produksi (`tsx`/esbuild) tidak meng-emit `design:paramtypes`, jadi `constructor(private svc: X)` menghasilkan `undefined`. Pola: `constructor(@Inject(X) private readonly x: X)`.
+   - Service sendiri cukup `@Injectable()` (tidak perlu `@Inject`).
+3. **`z.coerce.number()` untuk query**: nilai HTTP selalu string; tanpa `coerce`, `page=1` akan gagal validasi.
+4. **`nest start` tidak kompatibel.** Nest CLI 12: `builder: "esbuild"` tidak didukung, `webpack` tidak mendukung ESM, `rspack` gagal membundle Prisma/pg. Karena workspace packages mengekspor source `.ts`, semua script run (`dev`, `start`, `start:prod`) memakai `tsx {watch} src/main.ts`. Rencana ke depan: build `@packages/*` ke `dist` + `node dist/main`.
+
+---
+
+## Testing
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm --filter api test        # unit (vitest)
+pnpm --filter api test:e2e    # e2e (vitest + supertest)
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Observability
-
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
-
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
-
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Bantuan test tersedia di `@packages/testing` (factories, `cleanDatabase`, `createTestToken`).

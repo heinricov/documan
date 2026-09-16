@@ -39,7 +39,9 @@ async function bootstrap() {
     logger.warn(warning)
   }
 
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    logger: new NestLoggerAdapter(logger),
+  })
 
   // Matikan proses secara graceful pada SIGTERM/SIGINT
   app.enableShutdownHooks()
@@ -50,8 +52,7 @@ async function bootstrap() {
   }
   expressApp.set("trust proxy", 1)
 
-  // Logger terpusat (pino) + request context
-  app.useLogger(new NestLoggerAdapter(logger))
+  // Request context (x-request-id)
   app.use((req: Request, res: Response, next: NextFunction) => {
     const context = buildHttpContext(req)
     if (context.requestId) {

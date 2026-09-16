@@ -143,7 +143,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
         "Unhandled error"
       )
     } else {
-      logger.warn({ ...summary, err: serializeError(exception) }, "Request error")
+      // 4xx (404, validasi, dsb) cukup ringkas — status + pesan saja
+      logger.warn(
+        {
+          ...summary,
+          message:
+            exception instanceof Error ? exception.message : String(exception),
+        },
+        "Request error"
+      )
     }
   }
 }

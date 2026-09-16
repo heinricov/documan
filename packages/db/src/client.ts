@@ -9,10 +9,27 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
+/**
+ * pg-connection-string memperingatkan bahwa 'prefer'/'require'/'verify-ca'
+ * diperlakukan sebagai alias 'verify-full', dan mem-banjiri log dengan
+ * SECURITY WARNING. Normalkan ke 'verify-full' secara eksplisit.
+ */
+function normalizeConnectionUrl(url: string): string {
+  try {
+    const parsed = new URL(url)
+    const sslmode = parsed.searchParams.get("sslmode")
+    if (sslmode && !["verify-full", "disable"].includes(sslmode)) {
+      parsed.searchParams.set("sslmode", "verify-full")
+    }
+    return parsed.href
+  } catch {
+    return url
+  }
+}
+
 function createPrismaClient() {
-  const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
-  })
+  const connectionString = normalizeConnectionUrl(process.env.DATABASE_URL!)
+  const adapter = new PrismaPg({ connectionString })
 
   return new PrismaClient({
     adapter,
