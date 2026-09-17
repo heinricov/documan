@@ -10,13 +10,13 @@ export {
   IdParamsSchema,
   PaginationMetaSchema,
   paginatedResponseSchema,
-} from "./schemas/common.js"
+} from "@packages/validator/schemas/common"
 
 export type {
   IdParams,
   PaginationMeta,
   PaginatedResponseSchema,
-} from "./schemas/common.js"
+} from "@packages/validator/schemas/common"
 
 // ====================== Schemas ======================
 export {
@@ -24,7 +24,7 @@ export {
   CreateRoleSchema,
   UpdateRoleSchema,
   RoleQuerySchema,
-} from "./schemas/role.js"
+} from "@packages/validator/schemas/role"
 
 // ====================== Types ======================
 export type {
@@ -32,4 +32,4 @@ export type {
   CreateRole,
   UpdateRole,
   RoleQuery,
-} from "./schemas/role.js"
+} from "@packages/validator/schemas/role"
