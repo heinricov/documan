@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation"
 
 import { api } from "@/lib/api"
 
+export const baseUrl = "/role"
+
 const columns: DataTableColumn<Role>[] = [
   ColumnSortDataTable<Role>({
     accessorKey: "title",
@@ -108,23 +110,25 @@ export function TableDataRole() {
           updatedAt: "Updated",
         }}
         noResultsMessage={
-          isLoading ? "Memuat roles..." : (loadError ?? "No roles match your search.")
+          isLoading
+            ? "Memuat roles..."
+            : (loadError ?? "No roles match your search.")
         }
         initialSorting={[{ id: "createdAt", desc: true }]}
         primaryAction={{
           title: "New Role",
-          onClick: () => router.push("/role/add"),
+          onClick: () => router.push(`${baseUrl}/add`),
         }}
         rowActions={(role) => [
           {
             label: "Edit",
             icon: <Pencil aria-hidden="true" />,
-            onClick: () => router.push(`/role/${role.id}/edit`),
+            onClick: () => router.push(`${baseUrl}/${role.id}/edit`),
           },
           {
             label: "View",
             icon: <Eye aria-hidden="true" />,
-            onClick: () => router.push(`/role/${role.id}/view`),
+            onClick: () => router.push(`${baseUrl}/${role.id}/view`),
           },
           {
             label: "Hapus",
