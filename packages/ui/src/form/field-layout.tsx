@@ -1,4 +1,4 @@
-import type { MouseEventHandler } from "react"
+import type { MouseEventHandler, ReactNode } from "react"
 
 import {
   Field,
@@ -7,6 +7,7 @@ import {
   FieldSet,
   FieldLabel,
   FieldSeparator,
+  FieldError,
 } from "@packages/ui/components/field"
 import { Button } from "@packages/ui/components/button"
 import { cn } from "cn"
@@ -18,26 +19,54 @@ export function FieldLayout({
   cancelOnclick,
   onSubmit,
   children,
+  isLoading = false,
+  disabled = false,
+  error,
   ...props
 }: React.ComponentProps<"form"> & {
   buttonLabel?: string
   cancelLabel?: string
   cancelOnclick?: MouseEventHandler
-  children: React.ReactNode
+  children: ReactNode
+  isLoading?: boolean
+  disabled?: boolean
+  error?: string | string[]
 }) {
+  const isDisabled = disabled || isLoading
+
   return (
     <div className={cn("mx-auto my-10 w-full max-w-xl", className)}>
       <form onSubmit={onSubmit} {...props}>
         <FieldGroup>
           {children}
-          <Field orientation="horizontal" className="flex justify-end">
-            <FieldSeparator />
+
+          {error ? (
+            <FieldError
+              errors={
+                Array.isArray(error)
+                  ? error.map((m) => ({ message: m }))
+                  : [{ message: error }]
+              }
+            />
+          ) : null}
+
+          <FieldSeparator />
+
+          <Field orientation="horizontal" className="flex justify-end gap-2">
             {cancelOnclick ? (
-              <Button type="button" variant="outline" onClick={cancelOnclick}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={cancelOnclick}
+                disabled={isDisabled}
+              >
                 {cancelLabel}
               </Button>
             ) : null}
-            <Button type="submit">{buttonLabel}</Button>
+
+            <Button type="submit" disabled={isDisabled}>
+              {isLoading ? "Menyimpan..." : buttonLabel}
+            </Button>
           </Field>
         </FieldGroup>
       </form>
@@ -48,7 +77,7 @@ export function FieldLayout({
 export function FieldSetLayout({
   className,
   legend = "Label FieldSet",
-  description = "Description FieldSet",
+  description,
   ...props
 }: React.ComponentProps<"fieldset"> & {
   legend?: string
@@ -57,7 +86,7 @@ export function FieldSetLayout({
   return (
     <FieldSet className={className} {...props}>
       <FieldLegend className="mb-2">{legend}</FieldLegend>
-      <FieldLabel>{description}</FieldLabel>
+      {description ? <FieldLabel>{description}</FieldLabel> : null}
       <FieldGroup>{props.children}</FieldGroup>
     </FieldSet>
   )
