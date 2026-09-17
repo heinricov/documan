@@ -77,7 +77,6 @@ export default function Page() {
         setErrors({})
         console.log({
           title,
-          roles,
           dueDate: dueDate?.toISOString(),
           description,
         })
