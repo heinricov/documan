@@ -18,22 +18,22 @@ import { FieldMultipleSelect } from "@packages/ui/form/field-multiple-select"
 
 ## Props
 
-| Prop | Tipe | Default | Keterangan |
-|------|------|---------|----------|
-| `label` | `string` | `"Label Multiple Select"` | Label field |
-| `description` | `string` | - | Teks bantuan di bawah select |
-| `placeholder` | `string` | `"Pilih opsi..."` | Placeholder pada input chips |
-| `emptyMessage` | `string` | `"Tidak ada item ditemukan."` | Pesan saat tidak ada hasil filter |
-| `options` | `Option[]` | `[]` | Daftar opsi. `Option = string \| { label: string; value: string }` |
-| `error` | `string \| string[]` | - | Menampilkan pesan error |
-| `required` | `boolean` | `false` | Menampilkan tanda `*` pada label |
-| `disabled` | `boolean` | `false` | Nonaktifkan field |
-| `id` | `string` | auto (`useId`) | Custom id (opsional) |
-| `name` | `string` | - | Nama field (untuk FormData) |
-| `value` | `string[]` | - | Controlled value (array) |
-| `defaultValue` | `string[]` | - | Uncontrolled default value (array) |
-| `onValueChange` | `(value: string[]) => void` | - | Callback saat value berubah |
-| `className` | `string` | - | Custom class pada chips container |
+| Prop            | Tipe                        | Default                       | Keterangan                                                         |
+| --------------- | --------------------------- | ----------------------------- | ------------------------------------------------------------------ |
+| `label`         | `string`                    | `"Label Multiple Select"`     | Label field                                                        |
+| `description`   | `string`                    | -                             | Teks bantuan di bawah select                                       |
+| `placeholder`   | `string`                    | `"Pilih opsi..."`             | Placeholder pada input chips                                       |
+| `emptyMessage`  | `string`                    | `"Tidak ada item ditemukan."` | Pesan saat tidak ada hasil filter                                  |
+| `options`       | `Option[]`                  | `[]`                          | Daftar opsi. `Option = string \| { label: string; value: string }` |
+| `error`         | `string \| string[]`        | -                             | Menampilkan pesan error                                            |
+| `required`      | `boolean`                   | `false`                       | Menampilkan tanda `*` pada label                                   |
+| `disabled`      | `boolean`                   | `false`                       | Nonaktifkan field                                                  |
+| `id`            | `string`                    | auto (`useId`)                | Custom id (opsional)                                               |
+| `name`          | `string`                    | -                             | Nama field (untuk FormData)                                        |
+| `value`         | `string[]`                  | -                             | Controlled value (array)                                           |
+| `defaultValue`  | `string[]`                  | -                             | Uncontrolled default value (array)                                 |
+| `onValueChange` | `(value: string[]) => void` | -                             | Callback saat value berubah                                        |
+| `className`     | `string`                    | -                             | Custom class pada chips container                                  |
 
 ---
 
