@@ -7,6 +7,7 @@ import { ColumnSortDataTable } from "@packages/ui/table/column-sortable"
 import { ColumnBasic } from "@packages/ui/table/column-basic"
 import { Button } from "@packages/ui/components/button"
 import { Archive, Eye, Pencil, Shield, Trash } from "lucide-react"
+import { redirect } from "next/navigation"
 
 type Role = {
   id: string
@@ -139,7 +140,7 @@ export function TableDataRole() {
         initialSorting={[{ id: "createdAt", desc: true }]}
         primaryAction={{
           title: "New Role",
-          onClick: () => console.log("new role"),
+          onClick: () => redirect("/role/add"),
         }}
         rowActions={(role) => [
           {

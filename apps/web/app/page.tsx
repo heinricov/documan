@@ -1,12 +1,12 @@
-import { FormRole } from "@/components/form-role"
-import { TableDataRole } from "@/components/table-role"
-import React from "react"
+import { Button } from "@packages/ui/components/button"
+import Link from "next/link"
 
 export default function page() {
   return (
-    <>
-      <FormRole />
-      <TableDataRole />
-    </>
+    <div className="w-full max-w-4xl">
+      <Button>
+        <Link href="/role">Role</Link>
+      </Button>
+    </div>
   )
 }

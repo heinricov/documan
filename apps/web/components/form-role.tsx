@@ -5,6 +5,7 @@ import { FieldLayout, FieldSetGroup } from "@packages/ui/form/field-layout"
 import { FieldInput } from "@packages/ui/form/field-input"
 import { FieldTextArea } from "@packages/ui/form/field-textarea"
 import { toast } from "@packages/ui/components/toast"
+import { redirect } from "next/navigation"
 
 export function FormRole() {
   const [isLoading, setIsLoading] = useState(false)
@@ -21,12 +22,7 @@ export function FormRole() {
       cancelLabel="Batal"
       isLoading={isLoading}
       error={formError}
-      cancelOnclick={() => {
-        if (lastToastId) toast.close(lastToastId)
-        setLastToastId(null)
-        setErrors({})
-        setFormError(undefined)
-      }}
+      cancelOnclick={() => redirect("/role")}
       onSubmit={async (event) => {
         event.preventDefault()
         setFormError(undefined)
