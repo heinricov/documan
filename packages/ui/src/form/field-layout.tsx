@@ -74,7 +74,7 @@ export function FieldLayout({
   )
 }
 
-export function FieldSetLayout({
+export function FieldSetGroup({
   className,
   legend = "Label FieldSet",
   description,

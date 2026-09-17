@@ -1,9 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { FieldLayout, FieldSetLayout } from "@packages/ui/form/field-layout"
+import { FieldLayout, FieldSetGroup } from "@packages/ui/form/field-layout"
 import { FieldInput } from "@packages/ui/form/field-input"
 import { FieldTextArea } from "@packages/ui/form/field-textarea"
+import { FieldSelect } from "@packages/ui/form/field-select"
+import { FieldDate } from "@packages/ui/form/field-date"
 import { toast } from "@packages/ui/components/toast"
 import { FaEnvelope } from "react-icons/fa"
 
@@ -14,8 +16,11 @@ export default function Page() {
   const [errors, setErrors] = useState<{
     title?: string
     email?: string | string[]
+    role?: string
+    dueDate?: string
     description?: string
   }>({})
+  const [dueDate, setDueDate] = useState<Date | undefined>()
 
   return (
     <FieldLayout
@@ -36,6 +41,7 @@ export default function Page() {
         const formData = new FormData(event.currentTarget)
         const title = (formData.get("title") as string)?.trim()
         const email = (formData.get("email") as string)?.trim()
+        const role = (formData.get("role") as string)?.trim()
         const description = (formData.get("description") as string)?.trim()
 
         const newErrors: typeof errors = {}
@@ -48,6 +54,10 @@ export default function Page() {
         } else if (!email.includes("@")) {
           newErrors.email = ["Format email tidak valid"]
         }
+        if (!role) {
+          newErrors.role = "Role wajib dipilih"
+        }
+        if (!dueDate) newErrors.dueDate = "Tanggal jatuh tempo wajib diisi"
         if (!description || description.length < 10) {
           newErrors.description = "Deskripsi minimal 10 karakter"
         }
@@ -58,6 +68,11 @@ export default function Page() {
         }
 
         setErrors({})
+        console.log({
+          title,
+          dueDate: dueDate?.toISOString(),
+          description,
+        })
         setIsLoading(true)
 
         try {
@@ -83,9 +98,9 @@ export default function Page() {
         }
       }}
     >
-      <FieldSetLayout
+      <FieldSetGroup
         legend="Input Roles"
-        description="Contoh penggunaan FieldLayout, FieldInput, dan FieldTextArea yang sudah diperbaiki"
+        description="Contoh penggunaan FieldLayout, FieldInput, FieldSelect, dan FieldTextArea"
       >
         <FieldInput
           name="title"
@@ -108,6 +123,30 @@ export default function Page() {
           error={errors.email}
         />
 
+        <FieldSelect
+          name="role"
+          label="Tipe Role"
+          description="Pilih tipe role"
+          required
+          options={[
+            { label: "Administrator", value: "admin" },
+            { label: "Editor", value: "editor" },
+            { label: "Viewer", value: "viewer" },
+          ]}
+          placeholder="Pilih tipe role"
+          error={errors.role}
+        />
+
+        <FieldDate
+          name="dueDate"
+          label="Tanggal Jatuh Tempo"
+          description="Batas waktu penyelesaian dokumen"
+          required
+          value={dueDate}
+          onValueChange={setDueDate}
+          error={errors.dueDate}
+        />
+
         <FieldTextArea
           name="description"
           label="Deskripsi Role"
@@ -118,7 +157,7 @@ export default function Page() {
           showCounter
           error={errors.description}
         />
-      </FieldSetLayout>
+      </FieldSetGroup>
     </FieldLayout>
   )
 }
