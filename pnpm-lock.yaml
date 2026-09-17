@@ -10,6 +10,11 @@ catalogs:
       specifier: ^5.7.0
       version: 5.7.0
 
+patchedDependencies:
+  next-themes@0.4.6:
+    hash: 983c334c944dfaa33add5c77deaeb2c555ad196455d97b6216f4d23f70806dff
+    path: patches/next-themes@0.4.6.patch
+
 importers:
 
   .:
@@ -156,7 +161,7 @@ importers:
         version: 16.3.3(@types/node@20.19.41)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next-themes:
         specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 0.4.6(patch_hash=983c334c944dfaa33add5c77deaeb2c555ad196455d97b6216f4d23f70806dff)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -465,7 +470,7 @@ importers:
         version: 1.46.0(react@19.2.4)
       next-themes:
         specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 0.4.6(patch_hash=983c334c944dfaa33add5c77deaeb2c555ad196455d97b6216f4d23f70806dff)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -9838,7 +9843,7 @@ snapshots:
     dependencies:
       content-type: 2.1.0
 
-  next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next-themes@0.4.6(patch_hash=983c334c944dfaa33add5c77deaeb2c555ad196455d97b6216f4d23f70806dff)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
