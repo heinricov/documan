@@ -152,17 +152,24 @@ export function createHttp(baseUrl: string): Http {
     const payload = unwrapResponse(rawData)
 
     // Deteksi error yang terbungkus di body meski status 200 (jarang, tapi aman)
+    const apiError = payload as {
+      __apiError?: unknown
+      message?: string
+      code?: string
+      details?: unknown
+    } | null
+
     if (
-      payload &&
-      typeof payload === "object" &&
-      (payload as any).__apiError === true
+      apiError &&
+      typeof apiError === "object" &&
+      apiError.__apiError === true
     ) {
-      const err = payload as {
-        message: string
-        code?: string
-        details?: unknown
-      }
-      throw new ApiError(response.status, err.message, rawData, err.code)
+      throw new ApiError(
+        response.status,
+        apiError.message ?? "Request failed",
+        rawData,
+        apiError.code
+      )
     }
 
     const result = schema.safeParse(payload)

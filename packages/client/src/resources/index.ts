@@ -1,6 +1,6 @@
-import type { Http } from "../http.js"
-import { createRolesResource } from "./roles.js"
-import type { RolesResource } from "./roles.js"
+import type { Http } from "../http"
+import { createRolesResource } from "./roles"
+import type { RolesResource } from "./roles"
 
 export interface Resources {
   roles: RolesResource
@@ -12,4 +12,4 @@ export function createResources(http: Http): Resources {
   }
 }
 
-export type { RolesResource } from "./roles.js"
+export type { RolesResource } from "./roles"

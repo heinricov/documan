@@ -1,6 +1,6 @@
-import { createHttp } from "./http.js"
-import { createResources } from "./resources/index.js"
-import type { Resources } from "./resources/index.js"
+import { createHttp } from "./http"
+import { createResources } from "./resources/index"
+import type { Resources } from "./resources/index"
 
 export interface ClientOptions {
   baseUrl?: string

@@ -5,12 +5,12 @@
  * Single source of truth untuk komunikasi web ↔ api menggunakan schemas dari @packages/validator.
  */
 
-import { createClient } from "./client.js"
+import { createClient } from "./client"
 
 export { createClient }
 export default createClient
 
-export type { Client, ClientOptions, Resources } from "./client.js"
-export type { RolesResource } from "./resources/index.js"
-export { ApiError, NetworkError, ValidationError } from "./http.js"
-export type { Http, HttpOptions } from "./http.js"
+export type { Client, ClientOptions, Resources } from "./client"
+export type { RolesResource } from "./resources/index"
+export { ApiError, NetworkError, ValidationError } from "./http"
+export type { Http, HttpOptions } from "./http"

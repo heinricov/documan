@@ -1,20 +1,17 @@
 import { z } from "zod"
-import type { Http } from "../http.js"
+import type { Http } from "../http"
 import {
   CreateRoleSchema,
   RoleSchema,
   RoleQuerySchema,
   UpdateRoleSchema,
-} from "@packages/validator"
-import type {
-  CreateRole,
-  Role,
-  RoleQuery,
-  UpdateRole,
-} from "@packages/validator"
+  type CreateRole,
+  type Role,
+  type UpdateRole,
+} from "@packages/validator/schemas/role"
 
 export interface RolesResource {
-  list(query?: RoleQuery): Promise<Role[]>
+  list(query?: z.input<typeof RoleQuerySchema>): Promise<Role[]>
   get(id: string): Promise<Role>
   create(data: CreateRole): Promise<Role>
   update(id: string, data: UpdateRole): Promise<Role>
