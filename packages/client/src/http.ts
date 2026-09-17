@@ -3,12 +3,14 @@ import { z } from "zod"
 export class ApiError extends Error {
   readonly status: number
   readonly data: unknown
+  readonly code?: string
 
-  constructor(status: number, message: string, data?: unknown) {
+  constructor(status: number, message: string, data?: unknown, code?: string) {
     super(message)
     this.name = "ApiError"
     this.status = status
     this.data = data
+    this.code = code
   }
 }
 
@@ -50,6 +52,36 @@ export interface Http {
   ): Promise<T>
 }
 
+/**
+ * Unwrap format standar @packages/core:
+ * - Sukses  → kembalikan `data`
+ * - Error   → throw ApiError dengan pesan dari `error.message`
+ */
+function unwrapResponse(raw: unknown): unknown {
+  if (raw === null || typeof raw !== "object") return raw
+
+  const obj = raw as Record<string, unknown>
+
+  // Format error standar
+  if (obj.success === false && obj.error && typeof obj.error === "object") {
+    const err = obj.error as Record<string, unknown>
+    const message =
+      typeof err.message === "string" ? err.message : "Request failed"
+    const code = typeof err.code === "string" ? err.code : undefined
+    // Kita throw di luar, jadi di sini cukup return null + biarkan caller handle
+    // Tapi lebih bersih throw langsung di request()
+    return { __apiError: true, message, code, details: err.details }
+  }
+
+  // Format sukses standar
+  if (obj.success === true && "data" in obj) {
+    return obj.data
+  }
+
+  // Fallback: response tidak berformat (misal health check)
+  return raw
+}
+
 export function createHttp(baseUrl: string): Http {
   function buildUrl(path: string, query?: Record<string, unknown>): string {
     const url = new URL(path, baseUrl)
@@ -77,6 +109,7 @@ export function createHttp(baseUrl: string): Http {
         method,
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
           ...headers,
         },
         body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -91,17 +124,51 @@ export function createHttp(baseUrl: string): Http {
 
     const rawData = await response.json().catch(() => null)
 
+    // Handle HTTP error status
     if (!response.ok) {
-      const message =
-        (rawData as Record<string, unknown> | null)?.message ??
-        `Request failed with status ${response.status}`
-      throw new ApiError(response.status, String(message), rawData)
+      // Coba ambil pesan dari format standar API
+      let message = `Request failed with status ${response.status}`
+      let code: string | undefined
+
+      if (rawData && typeof rawData === "object") {
+        const obj = rawData as Record<string, unknown>
+        if (
+          obj.success === false &&
+          obj.error &&
+          typeof obj.error === "object"
+        ) {
+          const err = obj.error as Record<string, unknown>
+          if (typeof err.message === "string") message = err.message
+          if (typeof err.code === "string") code = err.code
+        } else if (typeof obj.message === "string") {
+          message = obj.message
+        }
+      }
+
+      throw new ApiError(response.status, message, rawData, code)
     }
 
-    const result = schema.safeParse(rawData)
+    // Unwrap { success: true, data: ... }
+    const payload = unwrapResponse(rawData)
+
+    // Deteksi error yang terbungkus di body meski status 200 (jarang, tapi aman)
+    if (
+      payload &&
+      typeof payload === "object" &&
+      (payload as any).__apiError === true
+    ) {
+      const err = payload as {
+        message: string
+        code?: string
+        details?: unknown
+      }
+      throw new ApiError(response.status, err.message, rawData, err.code)
+    }
+
+    const result = schema.safeParse(payload)
 
     if (!result.success) {
-      throw new ValidationError(result.error.issues, rawData)
+      throw new ValidationError(result.error.issues, payload)
     }
 
     return result.data

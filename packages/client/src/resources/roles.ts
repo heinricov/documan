@@ -6,14 +6,19 @@ import {
   RoleQuerySchema,
   UpdateRoleSchema,
 } from "@packages/validator"
-import type { CreateRole, Role, RoleQuery, UpdateRole } from "@packages/validator"
+import type {
+  CreateRole,
+  Role,
+  RoleQuery,
+  UpdateRole,
+} from "@packages/validator"
 
 export interface RolesResource {
   list(query?: RoleQuery): Promise<Role[]>
   get(id: string): Promise<Role>
   create(data: CreateRole): Promise<Role>
   update(id: string, data: UpdateRole): Promise<Role>
-  remove(id: string): Promise<void>
+  remove(id: string): Promise<Role> // API mengembalikan role yang dihapus
 }
 
 export function createRolesResource(http: Http): RolesResource {
@@ -46,13 +51,14 @@ export function createRolesResource(http: Http): RolesResource {
       const parsed = UpdateRoleSchema.parse(data)
 
       return http.request(RoleSchema, `${path}/${id}`, {
-        method: "PUT",
+        method: "PATCH", // ← sebelumnya PUT
         body: parsed,
       })
     },
 
-    async remove(id) {
-      await http.request(z.nullable(z.unknown()), `${path}/${id}`, {
+    remove(id) {
+      // API mengembalikan role yang dihapus
+      return http.request(RoleSchema, `${path}/${id}`, {
         method: "DELETE",
       })
     },
