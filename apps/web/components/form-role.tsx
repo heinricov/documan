@@ -10,7 +10,7 @@ import {
   CreateRoleSchema,
   UpdateRoleSchema,
   type Role,
-} from "@packages/validator/schemas/role"
+} from "@packages/validator"
 
 import { api } from "@/lib/api"
 import { getErrorMessage } from "@/lib/errors"

@@ -8,7 +8,7 @@ import {
   type CreateRole,
   type Role,
   type UpdateRole,
-} from "@packages/validator/schemas/role"
+} from "@packages/validator"
 
 export interface RolesResource {
   list(query?: z.input<typeof RoleQuerySchema>): Promise<Role[]>

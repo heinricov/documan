@@ -10,7 +10,7 @@ import {
   FieldError,
 } from "@packages/ui/components/field"
 import { Button } from "@packages/ui/components/button"
-import { cn } from "cn"
+import { cn } from "@packages/ui/lib/utils"
 
 export function FieldLayout({
   className,
