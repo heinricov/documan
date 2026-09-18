@@ -14,7 +14,9 @@ import {
 
 import { api } from "@/lib/api"
 import { getErrorMessage } from "@/lib/errors"
-import { baseUrl } from "./table-role"
+import { ROUTES } from "@/lib/constants"
+
+const baseUrl = ROUTES.role
 
 export type FormRoleMode = "create" | "edit"
 

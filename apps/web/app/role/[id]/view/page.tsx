@@ -5,7 +5,9 @@ import { Button } from "@packages/ui/components/button"
 import { Shield, Pencil, ArrowLeft } from "lucide-react"
 
 import { useRole } from "@/hooks/use-role"
-import { baseUrl } from "@/components/table-role"
+import { ROUTES } from "@/lib/constants"
+
+const baseUrl = ROUTES.role
 
 function formatDate(value: string) {
   try {

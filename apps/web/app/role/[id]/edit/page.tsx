@@ -4,8 +4,10 @@ import { useParams, useRouter } from "next/navigation"
 import { Button } from "@packages/ui/components/button"
 
 import { FormRole } from "@/components/form-role"
-import { baseUrl } from "@/components/table-role"
 import { useRole } from "@/hooks/use-role"
+import { ROUTES } from "@/lib/constants"
+
+const baseUrl = ROUTES.role
 
 export default function EditRolePage() {
   const params = useParams<{ id: string }>()

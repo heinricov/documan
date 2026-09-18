@@ -11,8 +11,9 @@ import { useRouter } from "next/navigation"
 
 import { api } from "@/lib/api"
 import { getErrorMessage } from "@/lib/errors"
+import { ROUTES } from "@/lib/constants"
 
-export const baseUrl = "/role"
+const baseUrl = ROUTES.role
 
 const columns: DataTableColumn<Role>[] = [
   ColumnSortDataTable<Role>({
