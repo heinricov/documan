@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from "@nestjs/common"
+import { Controller, Get, Post, Inject } from "@nestjs/common"
 import {
   ApiBody,
   ApiOkResponse,
@@ -37,7 +37,7 @@ import { AuthService } from "./auth.service.js"
 @ApiTags("auth")
 export class AuthController {
   constructor(
-    private readonly authService: AuthService
+    @Inject(AuthService) private readonly authService: AuthService
   ) {}
 
   @Post("login")

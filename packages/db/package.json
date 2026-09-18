@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@configs/environment": "workspace:*",
+    "@packages/auth": "workspace:*",
     "@prisma/adapter-pg": "^7.0.0",
     "@prisma/client": "^7.0.0",
     "pg": "^8.13.0"

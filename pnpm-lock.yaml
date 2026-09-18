@@ -338,6 +338,9 @@ importers:
       '@configs/environment':
         specifier: workspace:*
         version: link:../../configs/environment
+      '@packages/auth':
+        specifier: workspace:*
+        version: link:../auth
       '@prisma/adapter-pg':
         specifier: ^7.0.0
         version: 7.10.0

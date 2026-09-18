@@ -18,6 +18,7 @@ import {
   type UpdateRole,
 } from "@packages/validator"
 import { ZodBody, ZodParams, ZodQuery } from "../../common/zod.decorators.js"
+import { Public } from "../../common/auth.js"
 import {
   createRoleSchema,
   paginatedRoleSchema,
@@ -43,6 +44,7 @@ export class RoleController {
   ) {}
 
   @Get()
+  @Public()
   @ApiOperation({ summary: "Daftar roles (paginasi)" })
   @ApiOkResponse({
     description: "Daftar roles terpaginasi",

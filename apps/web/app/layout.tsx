@@ -2,6 +2,7 @@ import { Geist_Mono, Oxanium } from "next/font/google"
 
 import "@packages/ui/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { AuthProvider } from "@/features/auth/hooks"
 import { Toaster } from "@packages/ui/components/toast"
 import { cn } from "@packages/ui/lib/utils"
 
@@ -29,7 +30,9 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
         <Toaster />
       </body>
     </html>

@@ -1,12 +1,12 @@
 "use client"
 
 import { useAuth } from "@/features/auth/hooks"
-import { LoginForm } from "@/features/auth/components/login-form"
+import { RegisterForm } from "@/features/auth/components/register-form"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { ROUTES } from "@/lib/constants"
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { user, isLoading } = useAuth()
   const router = useRouter()
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
-        <LoginForm />
+        <RegisterForm />
       </div>
     </div>
   )

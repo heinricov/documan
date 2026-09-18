@@ -1,12 +1,6 @@
-import { Button } from "@packages/ui/components/button"
-import Link from "next/link"
+import { redirect } from "next/navigation"
+import { ROUTES } from "@/lib/constants"
 
-export default function page() {
-  return (
-    <div className="w-full max-w-4xl">
-      <Button>
-        <Link href="/role">Role</Link>
-      </Button>
-    </div>
-  )
+export default function Page() {
+  redirect(ROUTES.role)
 }

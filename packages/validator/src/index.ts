@@ -65,3 +65,17 @@ export type {
   UpdateSubsidiary,
   SubsidiaryQuery,
 } from "@packages/validator/schemas/subsidiary"
+
+// ====================== Auth Schemas ======================
+export {
+  LoginSchema,
+  RegisterSchema,
+  AuthResponseSchema,
+} from "@packages/validator/schemas/auth"
+
+// ====================== Auth Types ======================
+export type {
+  LoginBody,
+  RegisterBody,
+  AuthResponse,
+} from "@packages/validator/schemas/auth"

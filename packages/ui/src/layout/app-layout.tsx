@@ -6,17 +6,21 @@ import { AppHeader } from "@packages/ui/layout/app-header"
 
 export function AppLayout({
   MenuContent,
+  FooterContent,
+  UserContent,
   children,
 }: {
   children: React.ReactNode
   MenuContent?: React.ReactNode
+  FooterContent?: React.ReactNode
+  UserContent?: React.ReactNode
 }) {
   return (
     <TooltipProvider>
       <SidebarProvider>
-        <AppSidebar MenuContent={MenuContent} />
+        <AppSidebar MenuContent={MenuContent} FooterContent={FooterContent} />
         <SidebarInset>
-          <AppHeader />
+          <AppHeader UserContent={UserContent} />
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
         </SidebarInset>
       </SidebarProvider>

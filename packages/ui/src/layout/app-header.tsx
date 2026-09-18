@@ -10,13 +10,13 @@ import { Separator } from "@packages/ui/components/separator"
 import { SidebarTrigger } from "@packages/ui/components/sidebar"
 import { NavUser } from "@packages/ui/layout/nav-user"
 
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
+const defaultUser = {
+  name: "User",
+  email: "user@documan.id",
+  avatar: "",
 }
 
-export function AppHeader() {
+export function AppHeader({ UserContent }: { UserContent?: React.ReactNode }) {
   return (
     <header className="sticky top-0 flex h-16 w-full shrink-0 items-center justify-between gap-2 border-b bg-background px-4">
       <div className="flex items-center gap-2 px-4">
@@ -37,7 +37,7 @@ export function AppHeader() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <NavUser user={user} />
+      {UserContent ?? <NavUser user={defaultUser} />}
     </header>
   )
 }

@@ -11,6 +11,7 @@ export { createClient }
 export default createClient
 
 export type { Client, ClientOptions, Resources } from "./client"
+export type { AuthResource, AuthResult } from "./resources/index"
 export type { RolesResource } from "./resources/index"
 export type { UsersResource } from "./resources/index"
 export type { SubsidiariesResource } from "./resources/index"

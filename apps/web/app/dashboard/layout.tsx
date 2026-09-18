@@ -1,5 +1,8 @@
+"use client"
+
 import { AppLayout } from "@packages/ui/layout/app-layout"
 import { NavMenu } from "@packages/ui/layout/nav-menu"
+import { AuthGuard, HeaderUser, UserNav } from "@/features/auth/components"
 
 import { BiData } from "react-icons/bi"
 import { FcDocument } from "react-icons/fc"
@@ -53,7 +56,7 @@ export const MenuUser = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <AuthGuard>
       <AppLayout
         MenuContent={
           <>
@@ -62,9 +65,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <NavMenu lable="User" items={MenuUser} />
           </>
         }
+        FooterContent={<UserNav />}
+        UserContent={<HeaderUser />}
       >
         {children}
       </AppLayout>
-    </>
+    </AuthGuard>
   )
 }

@@ -1,8 +1,9 @@
 import { prisma } from "../src/client.js"
+import { hashPassword } from "@packages/auth"
 
 /**
- * Seed dasar untuk tabel `roles`.
- * Idempotent — bisa dijalankan berulang kali (update/create by unique title).
+ * Seed dasar untuk tabel `roles` & `users`.
+ * Idempotent — bisa dijalankan berulang kali (update/create by unique field).
  *
  * Jalankan: pnpm --filter @packages/db db:seed
  */
@@ -11,6 +12,19 @@ const ROLES = [
   { title: "admin", description: "Full access" },
   { title: "editor", description: "Can manage content" },
   { title: "viewer", description: "Read-only access" },
+] as const
+
+/**
+ * User default untuk testing login.
+ * Password: admin1234
+ */
+const DEFAULT_USERS = [
+  {
+    username: "superadmin",
+    email: "superadmin@documan.id",
+    password: "admin1234",
+    roleTitle: "admin",
+  },
 ] as const
 
 async function seed(): Promise<void> {
@@ -39,8 +53,39 @@ async function seed(): Promise<void> {
     }
   }
 
+  // Seed default users (idempotent by email & username — keduanya unique)
+  let insertedUsers = 0
+  for (const user of DEFAULT_USERS) {
+    const byEmail = await prisma.user.findFirst({
+      where: { email: user.email },
+    })
+    const byUsername = await prisma.user.findFirst({
+      where: { username: user.username },
+    })
+
+    if (byEmail || byUsername) continue
+
+    const role = await prisma.role.findUnique({
+      where: { title: user.roleTitle },
+    })
+
+    if (!role) continue
+
+    const hashed = await hashPassword(user.password)
+
+    await prisma.user.create({
+      data: {
+        username: user.username,
+        email: user.email,
+        password: hashed,
+        roleId: role.id,
+      },
+    })
+    insertedUsers++
+  }
+
   process.stdout.write(
-    `Seed selesai: ${inserted} role dibuat, ${updated} role diperbarui.\n`
+    `Seed selesai: ${inserted} role dibuat, ${updated} role diperbarui, ${insertedUsers} user dibuat.\n`
   )
 }
 

@@ -24,9 +24,11 @@ export const MenuFooter = [
 
 export function AppSidebar({
   MenuContent,
+  FooterContent,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   MenuContent?: React.ReactNode
+  FooterContent?: React.ReactNode
 }) {
   return (
     <Sidebar collapsible="icon" variant="inset" {...props}>
@@ -37,7 +39,7 @@ export function AppSidebar({
         {MenuContent}
         <NavMenu items={MenuFooter} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>{/* footer side */}</SidebarFooter>
+      <SidebarFooter>{FooterContent}</SidebarFooter>
     </Sidebar>
   )
 }
