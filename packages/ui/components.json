@@ -14,7 +14,7 @@
     "utils": "@packages/ui/lib/utils",
     "hooks": "@packages/ui/hooks",
     "lib": "@packages/ui/lib",
-    "components": "@packages/ui/test",
+    "components": "@packages/ui/auth",
     "ui": "@packages/ui/components"
   },
   "rtl": false,

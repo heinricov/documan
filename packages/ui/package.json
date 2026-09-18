@@ -47,7 +47,8 @@
     "./form/*": "./src/form/*.tsx",
     "./table/*": "./src/table/*.tsx",
     "./layout/*": "./src/layout/*.tsx",
-    "./dashboard/*": "./src/dashboard/*.tsx"
+    "./dashboard/*": "./src/dashboard/*.tsx",
+    "./auth/*": "./src/auth/*.tsx"
   },
   "registries": {
     "@7ovr": "https://7ovr.com/r/{name}.json"
