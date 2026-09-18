@@ -3,8 +3,8 @@
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@packages/ui/components/button"
 
-import { FormRole } from "@/components/form-role"
-import { useRole } from "@/hooks/use-role"
+import { FormRole } from "@/features/role/components"
+import { useRole } from "@/features/role/hooks"
 import { ROUTES } from "@/lib/constants"
 
 const baseUrl = ROUTES.role

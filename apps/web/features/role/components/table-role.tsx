@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation"
 
 import { getErrorMessage } from "@/lib/errors"
 import { ROUTES } from "@/lib/constants"
-import { useRoles } from "@/hooks/use-roles"
+import { useRoles } from "../hooks/use-roles"
 
 const baseUrl = ROUTES.role
 

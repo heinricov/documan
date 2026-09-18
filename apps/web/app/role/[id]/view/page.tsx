@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation"
 import { Button } from "@packages/ui/components/button"
 import { Shield, Pencil, ArrowLeft } from "lucide-react"
 
-import { useRole } from "@/hooks/use-role"
+import { useRole } from "@/features/role/hooks"
 import { ROUTES } from "@/lib/constants"
 
 const baseUrl = ROUTES.role
