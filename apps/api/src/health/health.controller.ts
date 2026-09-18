@@ -2,6 +2,7 @@ import { Controller, Get, HttpStatus, Res } from "@nestjs/common"
 import type { Response } from "express"
 import { prisma } from "@packages/db"
 import { ErrorCode, errorResponse } from "@packages/core"
+import { Public } from "../common/auth.js"
 
 /**
  * ============================================================
@@ -11,10 +12,11 @@ import { ErrorCode, errorResponse } from "@packages/core"
  * `GET /health`       — liveness: proses hidup (tanpa menyentuh DB)
  * `GET /health/ready` — readiness: cek koneksi database
  *
- * Keduanya tidak butuh autentikasi.
+ * Keduanya tidak butuh autentikasi (diproteksi @Public()).
  */
 
 @Controller("health")
+@Public()
 export class HealthController {
   /** Liveness — server merespons */
   @Get()

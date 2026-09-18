@@ -4,6 +4,19 @@ import type { Resources } from "./resources/index"
 
 export interface ClientOptions {
   baseUrl?: string
+  /**
+   * Fungsi async yang mengembalikan JWT token.
+   * Jika diset, setiap request otomatis mengirim header
+   * `Authorization: Bearer <token>`.
+   *
+   * @example
+   * ```ts
+   * const client = createClient({
+   *   getToken: () => localStorage.getItem("token"),
+   * })
+   * ```
+   */
+  getToken?: () => Promise<string | null>
 }
 
 export interface Client {
@@ -22,7 +35,7 @@ export function createClient(options: ClientOptions = {}): Client {
     )
   }
 
-  const http = createHttp(baseUrl)
+  const http = createHttp(baseUrl, options.getToken)
   const resources = createResources(http)
 
   return { resources }

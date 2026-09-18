@@ -82,7 +82,10 @@ function unwrapResponse(raw: unknown): unknown {
   return raw
 }
 
-export function createHttp(baseUrl: string): Http {
+export function createHttp(
+  baseUrl: string,
+  getToken?: () => Promise<string | null>
+): Http {
   function buildUrl(path: string, query?: Record<string, unknown>): string {
     const url = new URL(path, baseUrl)
 
@@ -103,6 +106,15 @@ export function createHttp(baseUrl: string): Http {
   ): Promise<T> {
     const { method = "GET", body, headers, query, signal } = options
 
+    // Build auth header jika getToken tersedia
+    const authHeader: Record<string, string> = {}
+    if (getToken) {
+      const token = await getToken()
+      if (token) {
+        authHeader.Authorization = `Bearer ${token}`
+      }
+    }
+
     let response: Response
     try {
       response = await fetch(buildUrl(path, query), {
@@ -110,6 +122,7 @@ export function createHttp(baseUrl: string): Http {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          ...authHeader,
           ...headers,
         },
         body: body !== undefined ? JSON.stringify(body) : undefined,
