@@ -46,7 +46,8 @@
     "./components/*": "./src/components/*.tsx",
     "./form/*": "./src/form/*.tsx",
     "./table/*": "./src/table/*.tsx",
-    "./layout/*": "./src/layout/*.tsx"
+    "./layout/*": "./src/layout/*.tsx",
+    "./dashboard/*": "./src/dashboard/*.tsx"
   },
   "registries": {
     "@7ovr": "https://7ovr.com/r/{name}.json"
