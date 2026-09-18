@@ -1,6 +1,6 @@
 import { prisma as defaultPrisma } from "@packages/db"
-import type { Role } from "@packages/validator"
-import { createRoleFixture, type RoleOverrides } from "./factories.js"
+import type { Role, User } from "@packages/validator"
+import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides } from "./factories.js"
 
 /**
  * ============================================================
@@ -29,7 +29,7 @@ type Db = typeof defaultPrisma
  * Memakai `TRUNCATE ... RESTART IDENTITY CASCADE` untuk memastikan
  * tidak ada dangling FK & auto-increment di-reset.
  *
- * Default: semua tabel (["roles"]) agar aman untuk suite e2e.
+ * Default: semua tabel (["users", "roles"]) agar aman untuk suite e2e.
  *
  * @example
  * ```ts
@@ -43,7 +43,7 @@ type Db = typeof defaultPrisma
  * ```
  */
 export async function cleanDatabase(
-  tables: string[] = ["roles"],
+  tables: string[] = ["users", "roles"],
   db: Db = defaultPrisma
 ): Promise<void> {
   if (tables.length === 0) return
@@ -145,4 +145,98 @@ function serializeRole(role: RoleRecord): Role {
 
 function serializeRoleList(roles: RoleRecord[]): Role[] {
   return roles.map(serializeRole)
+}
+
+/**
+ * ============================================================
+ *  User Seed
+ * ============================================================
+ */
+
+/**
+ * Menyisipkan fixture User ke database dan mengembalikan record
+ * yang tersimpan (lengkap dengan `id` uuid) untuk referensi test.
+ *
+ * @example
+ * ```ts
+ * const role = await seedRole({ title: "admin" })
+ * const user = await seedUser({ roleId: role.id, username: "admin" })
+ * // { id: "0c5f...", username: "admin", email: "admin@test.com", roleId: "abc-123" }
+ * ```
+ */
+export async function seedUser(
+  overrides: UserOverrides = {},
+  db: Db = defaultPrisma
+): Promise<User> {
+  const data = createUserFixture(overrides)
+  return serializeUser(
+    await db.user.create({
+      data: {
+        username: data.username,
+        email: data.email,
+        password: "hashed-password-for-test",
+        roleId: data.roleId,
+      },
+    })
+  )
+}
+
+/**
+ * Menyisipkan banyak User sekaligus dalam satu transaction.
+ * Mengembalikan record yang tersimpan dalam urutan input.
+ *
+ * @example
+ * ```ts
+ * const role = await seedRole({ title: "admin" })
+ * const [user1, user2] = await seedUsers([
+ *   { roleId: role.id, username: "admin" },
+ *   { roleId: role.id, username: "editor" },
+ * ])
+ * ```
+ */
+export async function seedUsers(
+  items: UserOverrides[] = [],
+  db: Db = defaultPrisma
+): Promise<User[]> {
+  const fixtures = items.length > 0 ? items : [{}]
+  const data = fixtures.map((fixture) => createUserFixture(fixture))
+
+  return serializeUserList(
+    await db.$transaction(
+      data.map((user) =>
+        db.user.create({
+          data: {
+            username: user.username,
+            email: user.email,
+            password: "hashed-password-for-test",
+            roleId: user.roleId,
+          },
+        })
+      )
+    )
+  )
+}
+
+type UserRecord = {
+  id: string
+  username: string
+  email: string
+  roleId: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializeUser(user: UserRecord): User {
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    roleId: user.roleId,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
+  }
+}
+
+function serializeUserList(users: UserRecord[]): User[] {
+  return users.map(serializeUser)
 }

@@ -6,12 +6,12 @@
  */
 
 // ====================== Factories ======================
-export { createRoleFixture, resetRoleCounter } from "./factories.js"
+export { createRoleFixture, resetRoleCounter, createUserFixture, resetUserCounter } from "./factories.js"
 
-export type { RoleOverrides } from "./factories.js"
+export type { RoleOverrides, UserOverrides } from "./factories.js"
 
 // ====================== DB Helpers ======================
-export { cleanDatabase, seedRole, seedRoles } from "./db.js"
+export { cleanDatabase, seedRole, seedRoles, seedUser, seedUsers } from "./db.js"
 
 export type { PrismaClientLike } from "./db.js"
 

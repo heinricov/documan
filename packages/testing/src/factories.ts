@@ -1,4 +1,4 @@
-import type { CreateRole } from "@packages/validator"
+import type { CreateRole, CreateUser } from "@packages/validator"
 
 /**
  * ============================================================
@@ -41,4 +41,51 @@ export function createRoleFixture(overrides: RoleOverrides = {}): CreateRole {
  */
 export function resetRoleCounter(): void {
   roleCounter = 0
+}
+
+/**
+ * ============================================================
+ *  User Factory
+ * ============================================================
+ */
+
+let userCounter = 0
+
+export interface UserOverrides {
+  username?: string
+  email?: string
+  password?: string
+  roleId?: string
+}
+
+/**
+ * Membuat fixture data User yang valid (siap divalidasi `CreateUserSchema`).
+ * `username` & `email` digenerate unik otomatis jika tidak di-supply.
+ *
+ * @example
+ * ```ts
+ * const user = createUserFixture({ roleId: "abc-123" })
+ * // { username: "user-1-abc12345", email: "user-1-abc12345@test.com", password: "password123", roleId: "abc-123" }
+ *
+ * const admin = createUserFixture({ username: "admin", email: "admin@test.com", roleId: "abc-123" })
+ * // { username: "admin", email: "admin@test.com", password: "password123", roleId: "abc-123" }
+ * ```
+ */
+export function createUserFixture(overrides: UserOverrides = {}): CreateUser {
+  userCounter++
+  const unique = `${userCounter}-${crypto.randomUUID().slice(0, 8)}`
+
+  return {
+    username: overrides.username ?? `user-${unique}`,
+    email: overrides.email ?? `user-${unique}@test.com`,
+    password: overrides.password ?? "password123",
+    roleId: overrides.roleId ?? crypto.randomUUID(),
+  }
+}
+
+/**
+ * Reset user counter — berguna di `beforeAll` / `beforeEach`.
+ */
+export function resetUserCounter(): void {
+  userCounter = 0
 }
