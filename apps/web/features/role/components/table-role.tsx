@@ -20,6 +20,11 @@ const columns: DataTableColumn<Role>[] = [
     subtitleKey: "description",
   }),
   ColumnSortDataTable<Role>({
+    accessorKey: "userCount",
+    label: "Users",
+    align: "end",
+  }),
+  ColumnSortDataTable<Role>({
     accessorKey: "createdAt",
     label: "Created",
     align: "end",
@@ -76,6 +81,7 @@ export function TableDataRole() {
         searchPlaceholder="Search roles..."
         columnLabels={{
           title: "Role",
+          userCount: "Users",
           createdAt: "Created",
           updatedAt: "Updated",
         }}

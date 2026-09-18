@@ -109,6 +109,15 @@ export default function ViewRolePage() {
             </div>
 
             <div className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4">
+              <dt className="text-sm font-medium text-muted-foreground">
+                Jumlah User
+              </dt>
+              <dd className="text-sm sm:col-span-2 font-semibold">
+                {role.userCount ?? 0}
+              </dd>
+            </div>
+
+            <div className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium text-muted-foreground">ID</dt>
               <dd className="font-mono text-xs break-all sm:col-span-2">
                 {role.id}

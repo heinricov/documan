@@ -49,6 +49,7 @@ export class RoleService {
         skip,
         take,
         orderBy: { title: "asc" },
+        include: { _count: { select: { users: true } } },
       }),
       prisma.role.count({ where }),
     ])
@@ -57,7 +58,10 @@ export class RoleService {
   }
 
   async findById(id: string): Promise<Role> {
-    const role = await prisma.role.findUnique({ where: { id } })
+    const role = await prisma.role.findUnique({
+      where: { id },
+      include: { _count: { select: { users: true } } },
+    })
 
     if (!role) {
       throw new NotFoundError("Role")
@@ -78,12 +82,18 @@ export class RoleService {
     }
 
     return serializeRole(
-      await prisma.role.create({ data: { title, description: data.description } })
+      await prisma.role.create({
+        data: { title, description: data.description },
+        include: { _count: { select: { users: true } } },
+      })
     )
   }
 
   async update(id: string, data: UpdateRole): Promise<Role> {
-    const existing = await prisma.role.findUnique({ where: { id } })
+    const existing = await prisma.role.findUnique({
+      where: { id },
+      include: { _count: { select: { users: true } } },
+    })
 
     if (!existing) {
       throw new NotFoundError("Role")
@@ -113,12 +123,16 @@ export class RoleService {
             ? { description: data.description }
             : {}),
         },
+        include: { _count: { select: { users: true } } },
       })
     )
   }
 
   async remove(id: string): Promise<Role> {
-    const existing = await prisma.role.findUnique({ where: { id } })
+    const existing = await prisma.role.findUnique({
+      where: { id },
+      include: { _count: { select: { users: true } } },
+    })
 
     if (!existing) {
       throw new NotFoundError("Role")
@@ -132,11 +146,12 @@ function normalizeTitle(title: string): string {
   return title.trim()
 }
 
-function serializeRole(role: RoleRecord): Role {
+function serializeRole(role: RoleRecord & { _count?: { users: number } }): Role {
   return {
     id: role.id,
     title: role.title,
     description: role.description,
+    userCount: role._count?.users ?? 0,
     createdAt: role.createdAt.toISOString(),
     updatedAt: role.updatedAt.toISOString(),
   }
