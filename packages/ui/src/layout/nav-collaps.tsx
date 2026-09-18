@@ -18,8 +18,10 @@ import {
 import { ChevronRightIcon } from "lucide-react"
 
 export function NavCollaps({
+  lable,
   items,
 }: {
+  lable?: string
   items: {
     title: string
     url: string
@@ -33,7 +35,7 @@ export function NavCollaps({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>{lable}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           const hasChildren = item.items && item.items.length > 0

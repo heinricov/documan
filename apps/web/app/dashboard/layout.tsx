@@ -1,117 +1,29 @@
 import { AppLayout } from "@packages/ui/layout/app-layout"
 import { NavCollaps } from "@packages/ui/layout/nav-collaps"
-import { NavBasic } from "@packages/ui/layout/nav-basic"
 
-import {
-  TerminalSquareIcon,
-  BotIcon,
-  BookOpenIcon,
-  Settings2Icon,
-  LifeBuoyIcon,
-  SendIcon,
-  FrameIcon,
-  PieChartIcon,
-  MapIcon,
-} from "lucide-react"
+import { BiData } from "react-icons/bi"
+import { MdDashboard } from "react-icons/md"
 
 export const MenuCollaps = [
   {
-    title: "Playground",
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: <MdDashboard />,
+  },
+  {
+    title: "Data",
     url: "#",
-    icon: <TerminalSquareIcon />,
-    isActive: true,
+    icon: <BiData />,
     items: [
       {
-        title: "History",
-        url: "#",
+        title: "Role",
+        url: "/dashboard/role",
       },
       {
-        title: "Starred",
-        url: "#",
-      },
-      {
-        title: "Settings",
-        url: "#",
+        title: "User",
+        url: "/dashboard/user",
       },
     ],
-  },
-  {
-    title: "Models",
-    url: "#",
-    icon: <BotIcon />,
-    items: [
-      {
-        title: "Genesis",
-        url: "#",
-      },
-      {
-        title: "Explorer",
-        url: "#",
-      },
-      {
-        title: "Quantum",
-        url: "#",
-      },
-    ],
-  },
-  {
-    title: "Documentation",
-    url: "#",
-    icon: <BookOpenIcon />,
-    items: [
-      {
-        title: "Introduction",
-        url: "#",
-      },
-      {
-        title: "Get Started",
-        url: "#",
-      },
-      {
-        title: "Tutorials",
-        url: "#",
-      },
-      {
-        title: "Changelog",
-        url: "#",
-      },
-    ],
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: <Settings2Icon />,
-  },
-]
-
-export const MenuBasic = [
-  {
-    title: "Design Engineering",
-    url: "#",
-    icon: <FrameIcon />,
-  },
-  {
-    title: "Sales & Marketing",
-    url: "#",
-    icon: <PieChartIcon />,
-  },
-  {
-    title: "Travel",
-    url: "#",
-    icon: <MapIcon />,
-  },
-]
-
-export const MenuFooter = [
-  {
-    title: "Support",
-    url: "#",
-    icon: <LifeBuoyIcon />,
-  },
-  {
-    title: "Feedback",
-    url: "#",
-    icon: <SendIcon />,
   },
 ]
 
@@ -121,9 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <AppLayout
         MenuContent={
           <>
-            <NavCollaps items={MenuCollaps} />
-            <NavBasic menus={MenuBasic} />
-            <NavBasic menus={MenuFooter} className="mt-auto" />
+            <NavCollaps lable="Menu" items={MenuCollaps} />
           </>
         }
       >
