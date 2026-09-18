@@ -1,4 +1,5 @@
 import { z } from "zod"
+import type { PaginationMeta } from "@packages/core"
 
 /**
  * Schema param ID path — dipakai semua endpoint `:id`.
@@ -40,8 +41,8 @@ export function paginatedResponseSchema<TSchema extends z.ZodType>(
 
 // ====================== Types ======================
 
+export type { PaginationMeta }
 export type IdParams = z.infer<typeof IdParamsSchema>
-export type PaginationMeta = z.infer<typeof PaginationMetaSchema>
 export type PaginatedResponseSchema<TItem> = {
   success: true
   data: TItem[]
