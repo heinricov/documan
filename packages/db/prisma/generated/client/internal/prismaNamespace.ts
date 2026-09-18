@@ -398,7 +398,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Role: 'Role',
-  User: 'User'
+  User: 'User',
+  Subsidiary: 'Subsidiary'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "user"
+    modelProps: "role" | "user" | "subsidiary"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -566,6 +567,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Subsidiary: {
+      payload: Prisma.$SubsidiaryPayload<ExtArgs>
+      fields: Prisma.SubsidiaryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SubsidiaryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SubsidiaryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>
+        }
+        findFirst: {
+          args: Prisma.SubsidiaryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SubsidiaryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>
+        }
+        findMany: {
+          args: Prisma.SubsidiaryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>[]
+        }
+        create: {
+          args: Prisma.SubsidiaryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>
+        }
+        createMany: {
+          args: Prisma.SubsidiaryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SubsidiaryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>[]
+        }
+        delete: {
+          args: Prisma.SubsidiaryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>
+        }
+        update: {
+          args: Prisma.SubsidiaryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>
+        }
+        deleteMany: {
+          args: Prisma.SubsidiaryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SubsidiaryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SubsidiaryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>[]
+        }
+        upsert: {
+          args: Prisma.SubsidiaryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubsidiaryPayload>
+        }
+        aggregate: {
+          args: Prisma.SubsidiaryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSubsidiary>
+        }
+        groupBy: {
+          args: Prisma.SubsidiaryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SubsidiaryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SubsidiaryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SubsidiaryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -627,6 +702,18 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SubsidiaryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  name: 'name',
+  logo: 'logo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubsidiaryScalarFieldEnum = (typeof SubsidiaryScalarFieldEnum)[keyof typeof SubsidiaryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -853,6 +940,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   role?: Prisma.RoleOmit
   user?: Prisma.UserOmit
+  subsidiary?: Prisma.SubsidiaryOmit
 }
 
 /* Types for Logging */

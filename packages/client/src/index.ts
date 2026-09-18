@@ -13,5 +13,6 @@ export default createClient
 export type { Client, ClientOptions, Resources } from "./client"
 export type { RolesResource } from "./resources/index"
 export type { UsersResource } from "./resources/index"
+export type { SubsidiariesResource } from "./resources/index"
 export { ApiError, NetworkError, ResponseValidationError } from "./http"
 export type { Http, HttpOptions } from "./http"

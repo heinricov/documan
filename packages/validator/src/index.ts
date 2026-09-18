@@ -49,3 +49,19 @@ export type {
   UpdateUser,
   UserQuery,
 } from "@packages/validator/schemas/user"
+
+// ====================== Subsidiary Schemas ======================
+export {
+  SubsidiarySchema,
+  CreateSubsidiarySchema,
+  UpdateSubsidiarySchema,
+  SubsidiaryQuerySchema,
+} from "@packages/validator/schemas/subsidiary"
+
+// ====================== Subsidiary Types ======================
+export type {
+  Subsidiary,
+  CreateSubsidiary,
+  UpdateSubsidiary,
+  SubsidiaryQuery,
+} from "@packages/validator/schemas/subsidiary"

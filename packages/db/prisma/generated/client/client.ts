@@ -51,3 +51,8 @@ export type Role = Prisma.RoleModel
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Subsidiary
+ * 
+ */
+export type Subsidiary = Prisma.SubsidiaryModel

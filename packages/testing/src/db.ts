@@ -1,6 +1,6 @@
 import { prisma as defaultPrisma } from "@packages/db"
-import type { Role, User } from "@packages/validator"
-import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides } from "./factories.js"
+import type { Role, User, Subsidiary } from "@packages/validator"
+import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides } from "./factories.js"
 
 /**
  * ============================================================
@@ -29,7 +29,7 @@ type Db = typeof defaultPrisma
  * Memakai `TRUNCATE ... RESTART IDENTITY CASCADE` untuk memastikan
  * tidak ada dangling FK & auto-increment di-reset.
  *
- * Default: semua tabel (["users", "roles"]) agar aman untuk suite e2e.
+ * Default: semua tabel (["users", "roles", "subsidiaries"]) agar aman untuk suite e2e.
  *
  * @example
  * ```ts
@@ -43,7 +43,7 @@ type Db = typeof defaultPrisma
  * ```
  */
 export async function cleanDatabase(
-  tables: string[] = ["users", "roles"],
+  tables: string[] = ["users", "roles", "subsidiaries"],
   db: Db = defaultPrisma
 ): Promise<void> {
   if (tables.length === 0) return
@@ -239,4 +239,94 @@ function serializeUser(user: UserRecord): User {
 
 function serializeUserList(users: UserRecord[]): User[] {
   return users.map(serializeUser)
+}
+
+/**
+ * ============================================================
+ *  Subsidiary Seed
+ * ============================================================
+ */
+
+/**
+ * Menyisipkan fixture Subsidiary ke database dan mengembalikan record
+ * yang tersimpan (lengkap dengan `id` uuid) untuk referensi test.
+ *
+ * @example
+ * ```ts
+ * const subsidiary = await seedSubsidiary({ title: "PT Maju", name: "PT Maju Bersama" })
+ * // { id: "0c5f...", title: "PT Maju", name: "PT Maju Bersama", logo: null }
+ * ```
+ */
+export async function seedSubsidiary(
+  overrides: SubsidiaryOverrides = {},
+  db: Db = defaultPrisma
+): Promise<Subsidiary> {
+  const data = createSubsidiaryFixture(overrides)
+  return serializeSubsidiary(
+    await db.subsidiary.create({
+      data: {
+        title: data.title,
+        name: data.name,
+        logo: data.logo ?? undefined,
+      },
+    })
+  )
+}
+
+/**
+ * Menyisipkan banyak Subsidiary sekaligus dalam satu transaction.
+ * Mengembalikan record yang tersimpan dalam urutan input.
+ *
+ * @example
+ * ```ts
+ * const [subs1, subs2] = await seedSubsidiaries([
+ *   { title: "PT Maju", name: "PT Maju Bersama" },
+ *   { title: "PT Sejahtera", name: "PT Sejahtera Abadi" },
+ * ])
+ * ```
+ */
+export async function seedSubsidiaries(
+  items: SubsidiaryOverrides[] = [],
+  db: Db = defaultPrisma
+): Promise<Subsidiary[]> {
+  const fixtures = items.length > 0 ? items : [{}]
+  const data = fixtures.map((fixture) => createSubsidiaryFixture(fixture))
+
+  return serializeSubsidiaryList(
+    await db.$transaction(
+      data.map((subs) =>
+        db.subsidiary.create({
+          data: {
+            title: subs.title,
+            name: subs.name,
+            logo: subs.logo ?? undefined,
+          },
+        })
+      )
+    )
+  )
+}
+
+type SubsidiaryRecord = {
+  id: string
+  title: string
+  name: string
+  logo: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializeSubsidiary(subsidiary: SubsidiaryRecord): Subsidiary {
+  return {
+    id: subsidiary.id,
+    title: subsidiary.title,
+    name: subsidiary.name,
+    logo: subsidiary.logo,
+    createdAt: subsidiary.createdAt.toISOString(),
+    updatedAt: subsidiary.updatedAt.toISOString(),
+  }
+}
+
+function serializeSubsidiaryList(subsidiaries: SubsidiaryRecord[]): Subsidiary[] {
+  return subsidiaries.map(serializeSubsidiary)
 }

@@ -1,4 +1,4 @@
-import type { CreateRole, CreateUser } from "@packages/validator"
+import type { CreateRole, CreateUser, CreateSubsidiary } from "@packages/validator"
 
 /**
  * ============================================================
@@ -88,4 +88,46 @@ export function createUserFixture(overrides: UserOverrides = {}): CreateUser {
  */
 export function resetUserCounter(): void {
   userCounter = 0
+}
+
+/**
+ * ============================================================
+ *  Subsidiary Factory
+ * ============================================================
+ */
+
+let subsidiaryCounter = 0
+
+export interface SubsidiaryOverrides {
+  title?: string
+  name?: string
+  logo?: string
+}
+
+/**
+ * Membuat fixture data Subsidiary yang valid (siap divalidasi `CreateSubsidiarySchema`).
+ * `title` & `name` digenerate unik otomatis jika tidak di-supply.
+ *
+ * @example
+ * ```ts
+ * const subsidiary = createSubsidiaryFixture()
+ * // { title: "subsidiary-1-abc12345", name: "Subsidiary abc12345", logo: undefined }
+ * ```
+ */
+export function createSubsidiaryFixture(overrides: SubsidiaryOverrides = {}): CreateSubsidiary {
+  subsidiaryCounter++
+  const unique = `${subsidiaryCounter}-${crypto.randomUUID().slice(0, 8)}`
+
+  return {
+    title: overrides.title ?? `subsidiary-${unique}`,
+    name: overrides.name ?? `PT Subsidiary ${unique}`,
+    logo: overrides.logo,
+  }
+}
+
+/**
+ * Reset subsidiary counter — berguna di `beforeAll` / `beforeEach`.
+ */
+export function resetSubsidiaryCounter(): void {
+  subsidiaryCounter = 0
 }
