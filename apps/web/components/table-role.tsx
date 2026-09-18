@@ -2,7 +2,6 @@
 
 import * as React from "react"
 
-import { ApiError } from "@packages/client"
 import { toast } from "@packages/ui/components/toast"
 import { DataTable, type DataTableColumn } from "@packages/ui/table/table-data"
 import { ColumnSortDataTable } from "@packages/ui/table/column-sortable"
@@ -11,6 +10,7 @@ import { Eye, Pencil, Shield, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { api } from "@/lib/api"
+import { getErrorMessage } from "@/lib/errors"
 
 export const baseUrl = "/role"
 
@@ -36,11 +36,6 @@ const columns: DataTableColumn<Role>[] = [
   }),
 ]
 
-function errorMessage(error: unknown) {
-  if (error instanceof ApiError) return error.message
-  return "Tidak dapat terhubung ke server."
-}
-
 export function TableDataRole() {
   const router = useRouter()
   const [roleList, setRoleList] = React.useState<Role[]>([])
@@ -55,7 +50,7 @@ export function TableDataRole() {
         const roles = await api.resources.roles.list({ limit: 100 })
         if (active) setRoleList(roles)
       } catch (error) {
-        if (active) setLoadError(errorMessage(error))
+        if (active) setLoadError(getErrorMessage(error, "Tidak dapat terhubung ke server."))
       } finally {
         if (active) setIsLoading(false)
       }
@@ -81,7 +76,7 @@ export function TableDataRole() {
       toast.add({
         type: "error",
         title: "Gagal menghapus role",
-        description: errorMessage(error),
+        description: getErrorMessage(error, "Tidak dapat terhubung ke server."),
       })
     }
   }

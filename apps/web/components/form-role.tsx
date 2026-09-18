@@ -6,7 +6,6 @@ import { FieldLayout, FieldSetGroup } from "@packages/ui/form/field-layout"
 import { FieldInput } from "@packages/ui/form/field-input"
 import { FieldTextArea } from "@packages/ui/form/field-textarea"
 import { toast } from "@packages/ui/components/toast"
-import { ApiError, NetworkError } from "@packages/client"
 import {
   CreateRoleSchema,
   UpdateRoleSchema,
@@ -14,6 +13,7 @@ import {
 } from "@packages/validator/schemas/role"
 
 import { api } from "@/lib/api"
+import { getErrorMessage } from "@/lib/errors"
 import { baseUrl } from "./table-role"
 
 export type FormRoleMode = "create" | "edit"
@@ -22,13 +22,6 @@ export interface FormRoleProps {
   mode?: FormRoleMode
   roleId?: string
   initialData?: Pick<Role, "title" | "description">
-}
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof ApiError) return error.message
-  if (error instanceof NetworkError) return "Tidak dapat terhubung ke server."
-  if (error instanceof Error) return error.message
-  return "Terjadi kesalahan. Silakan coba lagi."
 }
 
 export function FormRole({

@@ -1,57 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { ApiError, NetworkError } from "@packages/client"
-import type { Role } from "@packages/validator"
 import { Button } from "@packages/ui/components/button"
 
 import { FormRole } from "@/components/form-role"
 import { baseUrl } from "@/components/table-role"
-import { api } from "@/lib/api"
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof ApiError) return error.message
-  if (error instanceof NetworkError) return "Tidak dapat terhubung ke server."
-  if (error instanceof Error) return error.message
-  return "Gagal memuat role."
-}
+import { useRole } from "@/hooks/use-role"
 
 export default function EditRolePage() {
   const params = useParams<{ id: string }>()
   const router = useRouter()
   const roleId = params?.id
 
-  const [role, setRole] = useState<Role | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!roleId) {
-      setError("ID role tidak valid.")
-      setIsLoading(false)
-      return
-    }
-
-    let active = true
-
-    async function load() {
-      try {
-        const data = await api.resources.roles.get(roleId)
-        if (active) setRole(data)
-      } catch (err) {
-        if (active) setError(getErrorMessage(err))
-      } finally {
-        if (active) setIsLoading(false)
-      }
-    }
-
-    void load()
-
-    return () => {
-      active = false
-    }
-  }, [roleId])
+  const { role, isLoading, error } = useRole(roleId)
 
   if (isLoading) {
     return (
