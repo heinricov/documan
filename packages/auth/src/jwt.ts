@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify, type JWTPayload } from "jose"
+import { envDefaults } from "@configs/environment"
 
 /**
  * ============================================================
@@ -111,8 +112,8 @@ export async function signToken(
   options: JwtOptions = {}
 ): Promise<string> {
   const secret = options.secret ?? getJwtSecret()
-  const expiresIn = options.expiresIn ?? process.env.JWT_EXPIRES_IN ?? "15m"
-  const issuer = options.issuer ?? process.env.JWT_ISSUER ?? "documan"
+  const expiresIn = options.expiresIn ?? process.env.JWT_EXPIRES_IN ?? envDefaults.JWT_EXPIRES_IN
+  const issuer = options.issuer ?? process.env.JWT_ISSUER ?? envDefaults.JWT_ISSUER
 
   const { userId, role, ...rest } = payload
 
@@ -145,7 +146,7 @@ export async function verifyToken<T extends object = object>(
   options: VerifyOptions = {}
 ): Promise<VerifyResult<T>> {
   const secret = options.secret ?? getJwtSecret()
-  const issuer = options.issuer ?? process.env.JWT_ISSUER ?? "documan"
+  const issuer = options.issuer ?? process.env.JWT_ISSUER ?? envDefaults.JWT_ISSUER
 
   try {
     const { payload } = await jwtVerify(token, toSecretKey(secret), {

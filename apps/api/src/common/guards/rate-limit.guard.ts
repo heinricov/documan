@@ -4,6 +4,7 @@ import {
   Injectable,
 } from "@nestjs/common"
 import { RateLimitError } from "@packages/core"
+import { envDefaults } from "@configs/environment"
 
 /**
  * ============================================================
@@ -29,8 +30,8 @@ export class RateLimitGuard implements CanActivate {
   private readonly hits = new Map<string, number[]>()
 
   constructor() {
-    this.windowMs = Number(process.env.RATE_LIMIT_TTL_MS) || 60_000
-    this.max = Number(process.env.RATE_LIMIT_MAX) || 100
+    this.windowMs = Number(process.env.RATE_LIMIT_TTL_MS) || envDefaults.RATE_LIMIT_TTL_MS
+    this.max = Number(process.env.RATE_LIMIT_MAX) || envDefaults.RATE_LIMIT_MAX
 
     // Bersihkan entry yang sudah kadaluarsa secara berkala
     const interval = setInterval(() => this.prune(), this.windowMs)

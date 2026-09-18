@@ -13,6 +13,7 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
+    "@configs/environment": "workspace:*",
     "@node-rs/argon2": "^2.2.0",
     "jose": "^6.0.0"
   },

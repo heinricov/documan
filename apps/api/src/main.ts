@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core"
 import helmet from "helmet"
 import type { Request, Response, NextFunction } from "express"
-import { loadEnv, validateEnv } from "@configs/environment"
+import { loadEnv, validateEnv, envDefaults } from "@configs/environment"
 import { setupSwagger } from "@packages/documentation"
 import {
   buildHttpContext,
@@ -84,7 +84,7 @@ async function bootstrap() {
     logger.info("Swagger UI tersedia di /docs")
   }
 
-  const port = Number(process.env.API_PORT) || 3001
+  const port = Number(process.env.API_PORT) || envDefaults.API_PORT
   await app.listen(port)
 
   logger.info(`API running on http://localhost:${port}`)

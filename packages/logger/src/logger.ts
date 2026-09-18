@@ -1,4 +1,5 @@
 import { pino, type LoggerOptions } from "pino"
+import { envDefaults } from "@configs/environment"
 import { getLogContext } from "./context.js"
 import { serializeError } from "./serializer.js"
 
@@ -63,7 +64,7 @@ const DEFAULT_REDACT: string[] = [
 export function createLogger(options: CreateLoggerOptions = {}) {
   const {
     service,
-    level = process.env.LOG_LEVEL ?? "info",
+    level = process.env.LOG_LEVEL ?? envDefaults.LOG_LEVEL,
     pretty,
     baseContext,
     redact = DEFAULT_REDACT,

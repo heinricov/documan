@@ -24,13 +24,13 @@ export class NetworkError extends Error {
   }
 }
 
-export class ValidationError extends Error {
+export class ResponseValidationError extends Error {
   readonly errors: z.ZodIssue[]
   readonly data: unknown
 
   constructor(errors: z.ZodIssue[], data?: unknown) {
     super("Response validation failed")
-    this.name = "ValidationError"
+    this.name = "ResponseValidationError"
     this.errors = errors
     this.data = data
   }
@@ -175,7 +175,7 @@ export function createHttp(baseUrl: string): Http {
     const result = schema.safeParse(payload)
 
     if (!result.success) {
-      throw new ValidationError(result.error.issues, payload)
+      throw new ResponseValidationError(result.error.issues, payload)
     }
 
     return result.data

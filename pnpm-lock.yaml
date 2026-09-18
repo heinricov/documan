@@ -258,6 +258,9 @@ importers:
 
   packages/auth:
     dependencies:
+      '@configs/environment':
+        specifier: workspace:*
+        version: link:../../configs/environment
       '@node-rs/argon2':
         specifier: ^2.2.0
         version: 2.2.1
@@ -394,6 +397,9 @@ importers:
 
   packages/logger:
     dependencies:
+      '@configs/environment':
+        specifier: workspace:*
+        version: link:../../configs/environment
       pino:
         specifier: ^9.0.0
         version: 9.14.0

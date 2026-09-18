@@ -13,6 +13,7 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
+    "@configs/environment": "workspace:*",
     "pino": "^9.0.0"
   },
   "devDependencies": {
