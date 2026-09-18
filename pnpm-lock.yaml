@@ -56,6 +56,9 @@ importers:
       '@nestjs/swagger':
         specifier: ^12.0.1
         version: 12.0.1(@nestjs/common@12.0.2(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.0.2)(reflect-metadata@0.2.2)
+      '@packages/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@packages/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -68,6 +71,9 @@ importers:
       '@packages/logger':
         specifier: workspace:*
         version: link:../../packages/logger
+      '@packages/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
       '@packages/validator':
         specifier: workspace:*
         version: link:../../packages/validator
