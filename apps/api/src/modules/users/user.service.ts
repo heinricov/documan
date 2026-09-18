@@ -14,6 +14,7 @@ import type {
   UserQuery,
   UpdateUser,
 } from "@packages/validator"
+import { hashPassword } from "@packages/auth"
 
 /**
  * ============================================================
@@ -27,7 +28,7 @@ import type {
  * - `username` dinormalisasi (trim) dan keunikan dicek case-insensitive
  *   (App-level; DB unique tetap case-sensitive).
  * - `email` dinormalisasi (trim + lowercase) dan keunikan dicek.
- * - `password` di-hash sebelum disimpan ke database.
+ * - `password` di-hash dengan Argon2id via @packages/auth sebelum disimpan.
  * - `createdAt`/`updatedAt` diserialisasi ke ISO string via serializeUser.
  */
 @Injectable()
@@ -193,15 +194,6 @@ function normalizeUsername(username: string): string {
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase()
-}
-
-async function hashPassword(password: string): Promise<string> {
-  // Simple hash for now - in production use bcrypt or argon2
-  const encoder = new TextEncoder()
-  const data = encoder.encode(password)
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("")
 }
 
 function serializeUser(user: UserRecord & { role: { id: string; title: string; description: string | null } }): User {
