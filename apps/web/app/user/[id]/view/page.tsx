@@ -2,9 +2,10 @@
 
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@packages/ui/components/button"
-import { Users, Pencil, ArrowLeft } from "lucide-react"
+import { Users, Pencil, ArrowLeft, Shield } from "lucide-react"
 
 import { useUser } from "@/features/user/hooks"
+import { useRoles } from "@/features/role/hooks"
 import { ROUTES } from "@/lib/constants"
 
 const baseUrl = ROUTES.user
@@ -23,9 +24,12 @@ function formatDate(value: string) {
 export default function ViewUserPage() {
   const params = useParams<{ id: string }>()
   const router = useRouter()
-  const userId = params?.id
+  const userId = params.id
 
   const { user, isLoading, error } = useUser(userId)
+  const { roles } = useRoles()
+
+  const roleTitle = roles.find((r) => r.id === user?.roleId)?.title ?? "—"
 
   if (isLoading) {
     return (
@@ -93,6 +97,13 @@ export default function ViewUserPage() {
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
           <dl className="divide-y">
             <div className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4">
+              <dt className="text-sm font-medium text-muted-foreground">ID</dt>
+              <dd className="font-mono text-xs break-all sm:col-span-2">
+                {user.id}
+              </dd>
+            </div>
+
+            <div className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium text-muted-foreground">
                 Username
               </dt>
@@ -108,17 +119,18 @@ export default function ViewUserPage() {
 
             <div className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium text-muted-foreground">
-                Role ID
+                Role
               </dt>
-              <dd className="font-mono text-xs break-all sm:col-span-2">
-                {user.roleId}
-              </dd>
-            </div>
-
-            <div className="grid gap-1 px-4 py-3 sm:grid-cols-3 sm:gap-4">
-              <dt className="text-sm font-medium text-muted-foreground">ID</dt>
-              <dd className="font-mono text-xs break-all sm:col-span-2">
-                {user.id}
+              <dd className="text-sm sm:col-span-2">
+                <div className="flex items-center gap-2">
+                  <div className="mt-0.5 rounded-md border bg-muted/40 p-1">
+                    <Shield
+                      className="size-3 text-muted-foreground"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  {roleTitle}
+                </div>
               </dd>
             </div>
 
