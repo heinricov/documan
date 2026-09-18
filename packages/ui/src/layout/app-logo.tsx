@@ -9,7 +9,7 @@ export function AppLogo() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton size="lg" render={<a href="#" />}>
+        <SidebarMenuButton size="lg" render={<a href="#" />} className="border">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
             <TerminalIcon className="size-4" />
           </div>

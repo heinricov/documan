@@ -11,19 +11,14 @@ import {
   SidebarHeader,
 } from "@packages/ui/components/sidebar"
 
-import { NavBasic } from "@packages/ui/layout/nav-basic"
-import { LifeBuoyIcon, SendIcon } from "lucide-react"
+import { NavMenu } from "@packages/ui/layout/nav-menu"
+import { Settings } from "lucide-react"
 
 export const MenuFooter = [
   {
-    title: "Support",
+    title: "Setting",
     url: "#",
-    icon: <LifeBuoyIcon />,
-  },
-  {
-    title: "Feedback",
-    url: "#",
-    icon: <SendIcon />,
+    icon: <Settings />,
   },
 ]
 
@@ -40,7 +35,7 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         {MenuContent}
-        <NavBasic menus={MenuFooter} className="mt-auto" />
+        <NavMenu items={MenuFooter} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>{/* footer side */}</SidebarFooter>
     </Sidebar>

@@ -1,15 +1,10 @@
 import { AppLayout } from "@packages/ui/layout/app-layout"
-import { NavCollaps } from "@packages/ui/layout/nav-collaps"
+import { NavMenu } from "@packages/ui/layout/nav-menu"
 
 import { BiData } from "react-icons/bi"
 import { MdDashboard } from "react-icons/md"
 
-export const MenuCollaps = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: <MdDashboard />,
-  },
+export const MenuAdmin = [
   {
     title: "Data",
     url: "#",
@@ -27,13 +22,22 @@ export const MenuCollaps = [
   },
 ]
 
+const MainMenu = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: <MdDashboard />,
+  },
+]
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <AppLayout
         MenuContent={
           <>
-            <NavCollaps lable="Menu" items={MenuCollaps} />
+            <NavMenu lable="Menu" items={MainMenu} />
+            <NavMenu lable="Admin" items={MenuAdmin} />
           </>
         }
       >

@@ -17,9 +17,10 @@ import {
 } from "@packages/ui/components/sidebar"
 import { ChevronRightIcon } from "lucide-react"
 
-export function NavCollaps({
+export function NavMenu({
   lable,
   items,
+  ...props
 }: {
   lable?: string
   items: {
@@ -32,9 +33,9 @@ export function NavCollaps({
       url: string
     }[]
   }[]
-}) {
+} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
-    <SidebarGroup>
+    <SidebarGroup {...props}>
       <SidebarGroupLabel>{lable}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
