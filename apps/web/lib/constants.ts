@@ -1,4 +1,4 @@
 export const ROUTES = {
-  role: "/role",
-  user: "/user",
+  role: "/dashboard/role",
+  user: "/dashboard/user",
 } as const
