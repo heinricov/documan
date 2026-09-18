@@ -3,10 +3,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { prisma } from '@packages/db';
 import { HealthModule } from './health/health.module.js';
 import { RolesModule } from './modules/roles/role.module.js';
+import { UsersModule } from './modules/users/user.module.js';
 import { RateLimitGuard } from './common/guards/rate-limit.guard.js';
 
 @Module({
-  imports: [HealthModule, RolesModule],
+  imports: [HealthModule, RolesModule, UsersModule],
   controllers: [],
   providers: [
     {

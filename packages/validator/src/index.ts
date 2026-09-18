@@ -33,3 +33,19 @@ export type {
   UpdateRole,
   RoleQuery,
 } from "@packages/validator/schemas/role"
+
+// ====================== User Schemas ======================
+export {
+  UserSchema,
+  CreateUserSchema,
+  UpdateUserSchema,
+  UserQuerySchema,
+} from "@packages/validator/schemas/user"
+
+// ====================== User Types ======================
+export type {
+  User,
+  CreateUser,
+  UpdateUser,
+  UserQuery,
+} from "@packages/validator/schemas/user"
