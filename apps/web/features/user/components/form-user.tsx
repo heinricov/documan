@@ -44,6 +44,9 @@ export function FormUser({
     roleId?: string
   }>({})
   const [roles, setRoles] = useState<Role[]>([])
+  const [selectedRoleId, setSelectedRoleId] = useState<string>(
+    initialData?.roleId ?? ""
+  )
 
   useEffect(() => {
     let active = true
@@ -81,7 +84,7 @@ export function FormUser({
           const username = (formData.get("username") as string)?.trim() ?? ""
           const email = (formData.get("email") as string)?.trim() ?? ""
           const password = (formData.get("password") as string) ?? ""
-          const roleId = (formData.get("roleId") as string) ?? ""
+          const roleId = selectedRoleId
 
           // Validasi dengan SSOT dari @packages/validator
           const schema = isEdit ? UpdateUserSchema : CreateUserSchema
@@ -206,8 +209,12 @@ export function FormUser({
             description="Pilih role untuk user ini"
             placeholder="Pilih role..."
             emptyMessage="Tidak ada role tersedia."
-            options={roles.map((role) => ({ label: role.title, value: role.id }))}
-            defaultValue={initialData?.roleId ?? ""}
+            options={roles.map((role) => ({
+              label: role.title,
+              value: role.id,
+            }))}
+            value={selectedRoleId}
+            onValueChange={(val) => setSelectedRoleId(val ?? "")}
             required
             disabled={isLoading}
             error={errors.roleId}
