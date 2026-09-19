@@ -21,8 +21,8 @@ documa/
 │   ├── validator/          # Zod schemas & tipe (SSOT request/response API)
 │   ├── documentation/      # Setup Swagger + konversi zod → OpenAPI
 │   ├── db/                 # Prisma client singleton, migrasi, seed
-│   ├── auth/               # JWT (jose), Argon2, guard helpers (belum aktif)
-│   ├── client/             # Typed API client (untuk web; belum terhubung)
+│   ├── auth/               # JWT (jose), Argon2 hash, guard helpers (dipakai api)
+│   ├── client/             # Typed API client (dipakai web — SSOT komunikasi web↔api)
 │   ├── testing/            # Factories, seed, clean database, token test
 │   ├── ui/                 # Komponen UI (shadcn/ui pattern) untuk web
 │   └── configs/
@@ -33,7 +33,7 @@ documa/
 └── pnpm-workspace.yaml
 ```
 
-**Prinsip:** paket-paket di `@packages/*` adalah **Source of Truth**; `apps/api` dan `apps/web` hanya memakai, tidak mendefinisikan ulang. Contoh: schema & validasi request ada di `@packages/validator` — dipakai Nest via `@ZodQuery({ zod })` dan nanti dipakai Next web + API client.
+**Prinsip:** paket-paket di `@packages/*` adalah **Source of Truth**; `apps/api` dan `apps/web` hanya memakai, tidak mendefinisikan ulang. Contoh: schema & validasi request ada di `@packages/validator` — dipakai Nest via `@ZodQuery({ zod })` dan dipakai web via `@packages/client` (response divalidasi dengan schema yang sama).
 
 ---
 
@@ -139,8 +139,8 @@ Dokumentasi lengkap API, pola endpoint baru, dan catatan NestJS 12 → `apps/api
 | `@packages/validator`     | Zod schemas & tipe (SSOT) — role, query, id params, common                           |
 | `@packages/documentation` | Swagger bootstrap + `zodToOpenApi` + helper pagination OpenAPI                       |
 | `@packages/db`            | Prisma client (driver adapter), migrasi + seed                                       |
-| `@packages/auth`          | JWT sign/verify (jose), Argon2 hash, guard helpers SSOT (belum dipakai)              |
-| `@packages/client`        | Typed API client (untuk web; belum terhubung ke apps/web)                            |
+| `@packages/auth`          | JWT sign/verify (jose), Argon2 hash, guard helpers SSOT                              |
+| `@packages/client`        | Typed API client (dipakai web) — auto-inject Bearer token + interceptor 401          |
 | `@packages/testing`       | `createRoleFixture`, `cleanDatabase`, `seedRole`, `createTestToken`                  |
 | `@packages/ui`            | Komponen UI (field, input, button, dll) untuk apps/web                               |
 | `@configs/environment`    | `loadEnv` root `.env` + `validateEnv` (fail-fast, aman env)                          |
@@ -151,21 +151,21 @@ Dokumentasi lengkap API, pola endpoint baru, dan catatan NestJS 12 → `apps/api
 
 ## Kekurangan Saat Ini (jujur)
 
-1. **Belum ada autentikasi** — seluruh route API publik; butuh `JWT_SECRET` di `.env` + model `User` + guard. `@packages/auth` sudah siap.
+1. **Otorisasi per-role belum diterapkan** — seluruh route CRUD sudah terproteksi autentikasi (wajib JWT), tetapi belum dibatasi per role (`@Roles` belum dipakai di controller). Roadmap: terapkan `@Roles("admin")` ke endpoint sensitif.
 2. **Tidak ada test** (unit/e2e) — infra `@packages/testing` sudah ada; dimajukan ke roadmap.
-3. **`apps/web` masih starter** — belum terhubung ke `apps/api` (via `@packages/client`).
-4. **Prisma migrate hanya untuk dev** — produksi butuh `prisma migrate deploy` (séparate) & build distribusi (lihat catatan NestJS di `apps/api/README` `#Produksi`).
-5. **Rate limiting in-memory** — cukup untuk 1 instance; multi-instance butuh store bersama (Redis).
-6. **Swagger hanya aktif di development** (aman untuk produksi).
+3. **Prisma migrate hanya untuk dev** — produksi butuh `prisma migrate deploy` (séparate) & build distribusi (lihat catatan NestJS di `apps/api/README` `#Produksi`).
+4. **Rate limiting in-memory** — cukup untuk 1 instance; multi-instance butuh store bersama (Redis).
+5. **Swagger hanya aktif di development** (aman untuk produksi).
 
 ---
 
 ## Roadmap
 
-- **[ ]** Auth: model `User` + login/register + `JwtAuthGuard`/`RolesGuard` + proteksi route CRUD roles admin-only
-- **[ ]** CRUD `users` (admin)
+- **[x]** Auth: model `User` + login/register/me + `AuthGuard`/`RolesGuard` global + proteksi route CRUD
+- **[x]** CRUD `users` (admin) & `subsidiaries`
+- **[x]** Integrasi web: `@packages/client` terhubung ke `apps/api` + login/register page + `AuthGuard` layout + token interceptor 401
+- **[ ]** Otorisasi per-role: terapkan `@Roles("admin")` ke endpoint CRUD sensitif
 - **[ ]** Feature inti **documents** (markdown + versi + riwayat); validasi & tipe di `@packages/validator`
-- **[ ]** Integrasi web: `@packages/client` + login page + daftar/pilih dokumen + editor
 - **[ ]** Test unit + e2e (supertest) + CI (lint/typecheck/test)
 - **[ ]** Produksi: build `packages/*` → `dist` + `node dist/main` (hilangkan ketergantungan `tsx`)
 

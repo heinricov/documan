@@ -84,7 +84,8 @@ function unwrapResponse(raw: unknown): unknown {
 
 export function createHttp(
   baseUrl: string,
-  getToken?: () => Promise<string | null>
+  getToken?: () => Promise<string | null>,
+  onUnauthorized?: () => void
 ): Http {
   function buildUrl(path: string, query?: Record<string, unknown>): string {
     const url = new URL(path, baseUrl)
@@ -133,6 +134,14 @@ export function createHttp(
         `Network error while calling ${method} ${path}`,
         error
       )
+    }
+
+    // Token interceptor: 401 + request membawa Authorization header
+    // → token tidak valid / sudah expired. Panggil onUnauthorized
+    // (mis. clear token + redirect ke login di sisi web).
+    // Catatan: 401 dari login (tanpa token) TIDAK memicu ini.
+    if (onUnauthorized && response.status === 401 && authHeader.Authorization) {
+      onUnauthorized()
     }
 
     const rawData = await response.json().catch(() => null)

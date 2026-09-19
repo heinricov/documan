@@ -17,6 +17,14 @@ export interface ClientOptions {
    * ```
    */
   getToken?: () => Promise<string | null>
+  /**
+   * Dipanggil saat API mengembalikan HTTP 401 dan request membawa
+   * Authorization header (token tidak valid/expired).
+   *
+   * Cocok untuk interceptor global: clear token + redirect ke login.
+   * TIDAK dipanggil untuk 401 tanpa token (mis. login dengan password salah).
+   */
+  onUnauthorized?: () => void
 }
 
 export interface Client {
@@ -35,7 +43,7 @@ export function createClient(options: ClientOptions = {}): Client {
     )
   }
 
-  const http = createHttp(baseUrl, options.getToken)
+  const http = createHttp(baseUrl, options.getToken, options.onUnauthorized)
   const resources = createResources(http)
 
   return { resources }

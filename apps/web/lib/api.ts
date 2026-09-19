@@ -22,4 +22,14 @@ export function getStoredToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }
 
-export const api = createClient({ getToken })
+export const api = createClient({
+  getToken,
+  // Token interceptor global: 401 dengan Authorization → token invalid/expired.
+  // Hapus token & arahkan ke halaman login (login page sudah handle redirect jika sudah login).
+  onUnauthorized: () => {
+    clearToken()
+    if (typeof window !== "undefined") {
+      window.location.assign("/auth/login")
+    }
+  },
+})
