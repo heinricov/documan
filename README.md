@@ -705,22 +705,24 @@ const DEFAULT_TABLES = ["roles", "users"] // tambahkan "users"
 
 ```typescript
 export const ROUTES = {
-  role: "/role",
-  user: "/user",
+  role: "/dashboard/role",
+  user: "/dashboard/user",
+  subsidiary: "/dashboard/subsidiary",
+  docType: "/dashboard/doc-type",
 } as const
 ```
 
 #### 6.2 Buat feature folder
 
 ```
-apps/web/features/user/
+apps/web/features/doc-type/
 ├── components/
-│   ├── form-user.tsx        ← Form create/edit (copy dari form-role, sesuaikan fields)
-│   ├── table-user.tsx       ← Data table (copy dari table-role, sesuaikan columns)
+│   ├── form-doc-type.tsx    ← Form create/edit (copy dari form-role, sesuaikan fields)
+│   ├── table-doc-type.tsx   ← Data table (copy dari table-role, sesuaikan columns)
 │   └── index.ts             ← Barrel export
 ├── hooks/
-│   ├── use-user.ts          ← useUser(id) hook
-│   ├── use-users.ts         ← useUsers() hook
+│   ├── use-doc-type.ts      ← useDocType(id) hook
+│   ├── use-doc-types.ts     ← useDocTypes() hook
 │   └── index.ts             ← Barrel export
 └── index.ts                 ← Root barrel export
 ```
@@ -728,12 +730,32 @@ apps/web/features/user/
 #### 6.3 Buat route pages
 
 ```
-apps/web/app/user/
-├── page.tsx                 ← List page: <TableDataUser />
-├── add/page.tsx             ← Add page: <FormUser />
+apps/web/app/doc-type/
+├── page.tsx                 ← List page: <TableDataDocType />
+├── add/page.tsx             ← Add page: <FormDocType />
 └── [id]/
-    ├── edit/page.tsx        ← Edit page: load user → <FormUser mode="edit" />
-    └── view/page.tsx        ← View page: load user → detail card
+    ├── edit/page.tsx        ← Edit page: load docType → <FormDocType mode="edit" />
+    └── view/page.tsx        ← View page: load docType → detail card
+```
+
+#### 6.4 Daftarkan di dashboard layout (`apps/web/app/dashboard/layout.tsx`)
+
+Tambahkan item menu ke `MenuAdmin` (atau `MenuUser` terguna role):
+
+```typescript
+export const MenuAdmin = [
+  {
+    title: "Data",
+    url: "#",
+    icon: <BiData />,
+    items: [
+      { title: "Role", url: "/dashboard/role" },
+      { title: "User", url: "/dashboard/user" },
+      { title: "Subsidiary", url: "/dashboard/subsidiary" },
+      { title: "Doc Type", url: "/dashboard/doc-type" }, // ← tambahkan
+    ],
+  },
+]
 ```
 
 ---
@@ -816,8 +838,9 @@ runScript("Clean users", import.meta.url, cleanUsers)
 | 15  | `apps/web/lib/constants.ts`                              | Tambah ke ROUTES                       |
 | 16  | `apps/web/features/<entity>/`                            | **Buat baru** (components + hooks)     |
 | 17  | `apps/web/app/<entity>/`                                 | **Buat baru** (route pages)            |
-| 18  | `packages/db/scripts/seed/<entity>.ts`                   | **Buat baru** (seed default)           |
-| 19  | `packages/db/scripts/clean/<entity>.ts`                  | **Buat baru** (clean)                  |
-| 20  | `packages/db/scripts/seed/index.ts`                      | Tambah ke `SEEDERS`                    |
-| 21  | `packages/db/scripts/lib/clean-table.ts`                 | Tambah ke `TABLES`                     |
-| 22  | `packages/db/package.json`                               | Tambah script `db:seed:*`/`db:clean:*` |
+| 18  | `apps/web/app/dashboard/layout.tsx`                      | Tambah item ke `MenuAdmin`/`MenuUser`  |
+| 19  | `packages/db/scripts/seed/<entity>.ts`                   | **Buat baru** (seed default)           |
+| 20  | `packages/db/scripts/clean/<entity>.ts`                  | **Buat baru** (clean)                  |
+| 21  | `packages/db/scripts/seed/index.ts`                      | Tambah ke `SEEDERS`                    |
+| 22  | `packages/db/scripts/lib/clean-table.ts`                 | Tambah ke `TABLES`                     |
+| 23  | `packages/db/package.json`                               | Tambah script `db:seed:*`/`db:clean:*` |

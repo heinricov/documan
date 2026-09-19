@@ -37,6 +37,10 @@ export const MenuAdmin = [
         title: "Subsidiary",
         url: "/dashboard/subsidiary",
       },
+      {
+        title: "Doc Type",
+        url: "/dashboard/doc-type",
+      },
     ],
   },
 ]
