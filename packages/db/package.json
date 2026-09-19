@@ -11,8 +11,16 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "tsx scripts/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:seed": "tsx scripts/seed/index.ts",
+    "db:seed:roles": "tsx scripts/seed/roles.ts",
+    "db:seed:users": "tsx scripts/seed/users.ts",
+    "db:seed:doc-types": "tsx scripts/seed/doc-types.ts",
+    "db:clean": "tsx scripts/clean/index.ts",
+    "db:clean:roles": "tsx scripts/clean/roles.ts",
+    "db:clean:users": "tsx scripts/clean/users.ts",
+    "db:clean:subsidiaries": "tsx scripts/clean/subsidiaries.ts",
+    "db:clean:doc-types": "tsx scripts/clean/doc-types.ts"
   },
   "exports": {
     ".": "./src/index.ts",

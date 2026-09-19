@@ -104,13 +104,45 @@ pnpm --filter @packages/db prisma:migrate
 
 ## Database Management
 
+Semua script bersumber dari `@packages/db`:
+
+```text
+packages/db/scripts/
+├── seed/          # Seed data (per entity)
+│   ├── index.ts       # Seed SEMUA
+│   ├── roles.ts       # Seed roles
+│   ├── users.ts       # Seed users
+│   └── doc-types.ts   # Seed doc types
+├── clean/         # Hapus data (per table)
+│   ├── index.ts       # Clean SEMUA
+│   ├── roles.ts       # Clean roles
+│   ├── users.ts       # Clean users
+│   ├── subsidiaries.ts# Clean subsidiaries
+│   └── doc-types.ts   # Clean doc types
+└── lib/           # Helper bersama
+    ├── clean-table.ts # cleanTable / cleanAllTables
+    └── run-main.ts    # isMain / runScript
+```
+
 ### Seed (data awal)
 
-Seed script membuat 2 role + 2 user default:
+Seed **semua sekaligus**:
 
 ```bash
 pnpm --filter @packages/db db:seed
 ```
+
+Seed **per entity**:
+
+```bash
+pnpm --filter @packages/db db:seed:roles     # roles saja
+pnpm --filter @packages/db db:seed:users     # users saja
+pnpm --filter @packages/db db:seed:doc-types # doc types saja
+```
+
+> Catatan: `db:seed:users` butuh role admin & user — pastikan `db:seed:roles` sudah dijalankan dulu (atau pakai `db:seed`).
+
+Data yang dibuat (idempotent — aman dijalankan berulang):
 
 | Role  | Username | Email            | Password  |
 | ----- | -------- | ---------------- | --------- |
@@ -122,52 +154,51 @@ pnpm --filter @packages/db db:seed
 | do      | Delivery Order  |
 | pv      | Payment Voucher |
 
-### Truncate + Re-seed (reset total)
+### Clean (hapus data)
 
-Untuk menghapus semua data dan membuat ulang dari awal:
+Hapus **semua tabel** sekaligus:
 
 ```bash
-# 1) Truncate semua tabel (doc_types, users, subsidiaries, roles)
-pnpm --filter @packages/db tsx scripts/truncate.ts
+pnpm --filter @packages/db db:clean
+```
 
-# 2) Jalankan seed ulang
+Hapus **per table**:
+
+```bash
+pnpm --filter @packages/db db:clean:roles        # roles (CASCADE ke users)
+pnpm --filter @packages/db db:clean:users        # users saja
+pnpm --filter @packages/db db:clean:subsidiaries # subsidiaries saja
+pnpm --filter @packages/db db:clean:doc-types    # doc types saja
+```
+
+> Perhatian `CASCADE`: `roles` direferensikan oleh `users`. Hapus `roles`
+> akan ikut menghapus `users` yang memakai role tersebut.
+
+### Truncate + Re-seed (reset total)
+
+Untuk menghapus semua data lalu membuat ulang dari awal:
+
+```bash
+# 1) Hapus semua data
+pnpm --filter @packages/db db:clean
+
+# 2) Seed ulang semua
 pnpm --filter @packages/db db:seed
 ```
 
-### Truncate script
+Atau satu baris:
 
-File: `packages/db/scripts/truncate.ts`
-
-```typescript
-import { prisma } from "../src/client.js"
-
-const TABLES = ["doc_types", "users", "subsidiaries", "roles"]
-
-async function truncate(): Promise<void> {
-  const escaped = TABLES.map((t) => `"${t}"`).join(", ")
-
-  await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE ${escaped} RESTART IDENTITY CASCADE`
-  )
-
-  process.stdout.write(`Truncate selesai: ${TABLES.join(", ")} kosong.\n`)
-}
-
-try {
-  await truncate()
-  await prisma.$disconnect()
-} catch (error) {
-  process.stderr.write(`Truncate gagal: ${String(error)}\n`)
-  await prisma.$disconnect()
-  process.exitCode = 1
-}
+```bash
+pnpm --filter @packages/db db:clean && pnpm --filter @packages/db db:seed
 ```
 
 **Catatan:**
 
-- `RESTART IDENTITY CASCADE` mereset auto-increment dan menghapus semua data
-- Tabel `doc_types`, `users`, `subsidiaries`, `roles` akan kosong setelah truncate
-- Jalankan `db:seed` setelah truncate untuk membuat data awal kembali
+- `TRUNCATE ... RESTART IDENTITY CASCADE` mereset auto-increment & menghapus
+  semua baris (termasuk tabel lain yang punya FK ke tabel tersebut)
+- Tabel `doc_types`, `users`, `subsidiaries`, `roles` akan kosong setelah `db:clean`
+- Jalankan `db:seed` setelah `db:clean` untuk membuat data awal kembali
+- Semua script idempotent — bisa dijalankan berulang kali tanpa duplikat data
 
 ### Akses Developert Test
 
@@ -707,24 +738,86 @@ apps/web/app/user/
 
 ---
 
+### Langkah 7: Seed & Clean Default Data (`packages/db`)
+
+Tambahkan file seed & clean khusus entity agar bisa dijalankan satu-satu atau sekaligus.
+
+#### 7.1 Buat file seed
+
+```typescript
+// packages/db/scripts/seed/users.ts
+import { prisma } from "../../src/client.js"
+import { runScript } from "../lib/run-main.js"
+
+const DEFAULT_USERS = [
+  { email: "admin@documan.id", name: "Admin" },
+] as const
+
+export async function seedUsers(): Promise<void> {
+  let inserted = 0
+
+  for (const user of DEFAULT_USERS) {
+    const existing = await prisma.user.findUnique({
+      where: { email: user.email },
+    })
+
+    if (existing) continue
+
+    await prisma.user.create({ data: user })
+    inserted++
+  }
+
+  process.stdout.write(`Seed users selesai: ${inserted} user dibuat.\n`)
+}
+
+runScript("Seed users", import.meta.url, seedUsers)
+```
+
+#### 7.2 Buat file clean
+
+```typescript
+// packages/db/scripts/clean/users.ts
+import { cleanTable } from "../lib/clean-table.js"
+import { runScript } from "../lib/run-main.js"
+
+export async function cleanUsers(): Promise<void> {
+  await cleanTable("users")
+}
+
+runScript("Clean users", import.meta.url, cleanUsers)
+```
+
+#### 7.3 Daftarkan di `index.ts` & `package.json`
+
+- Tambahkan `seedUsers` ke array `SEEDERS` di `packages/db/scripts/seed/index.ts`
+- Tambahkan `"users"` ke `TABLES` di `packages/db/scripts/lib/clean-table.ts` (jika belum ada)
+- Tambahkan script `db:seed:users` & `db:clean:users` di `packages/db/package.json`
+
+---
+
 ### Checklist Lengkap
 
-| #   | File                                                     | Aksi                               |
-| --- | -------------------------------------------------------- | ---------------------------------- |
-| 1   | `packages/db/prisma/schema.prisma`                       | Tambah model                       |
-| 2   | `packages/validator/src/schemas/<entity>.ts`             | **Buat baru**                      |
-| 3   | `packages/validator/src/index.ts`                        | Tambah export                      |
-| 4   | `packages/client/src/resources/<entities>.ts`            | **Buat baru**                      |
-| 5   | `packages/client/src/resources/index.ts`                 | Tambah ke Resources                |
-| 6   | `packages/client/src/index.ts`                           | Tambah export type                 |
-| 7   | `apps/api/src/modules/<entities>/<entity>.module.ts`     | **Buat baru**                      |
-| 8   | `apps/api/src/modules/<entities>/<entity>.service.ts`    | **Buat baru**                      |
-| 9   | `apps/api/src/modules/<entities>/<entity>.controller.ts` | **Buat baru**                      |
-| 10  | `apps/api/src/modules/<entities>/<entity>.swagger.ts`    | **Buat baru**                      |
-| 11  | `apps/api/src/app.module.ts`                             | Tambah import module               |
-| 12  | `packages/testing/src/factories.ts`                      | Tambah factory                     |
-| 13  | `packages/testing/src/db.ts`                             | Tambah seed + serialize            |
-| 14  | `packages/testing/src/index.ts`                          | Tambah export                      |
-| 15  | `apps/web/lib/constants.ts`                              | Tambah ke ROUTES                   |
-| 16  | `apps/web/features/<entity>/`                            | **Buat baru** (components + hooks) |
-| 17  | `apps/web/app/<entity>/`                                 | **Buat baru** (route pages)        |
+| #   | File                                                     | Aksi                                   |
+| --- | -------------------------------------------------------- | -------------------------------------- |
+| 1   | `packages/db/prisma/schema.prisma`                       | Tambah model                           |
+| 2   | `packages/validator/src/schemas/<entity>.ts`             | **Buat baru**                          |
+| 3   | `packages/validator/src/index.ts`                        | Tambah export                          |
+| 4   | `packages/client/src/resources/<entities>.ts`            | **Buat baru**                          |
+| 5   | `packages/client/src/resources/index.ts`                 | Tambah ke Resources                    |
+| 6   | `packages/client/src/index.ts`                           | Tambah export type                     |
+| 7   | `apps/api/src/modules/<entities>/<entity>.module.ts`     | **Buat baru**                          |
+| 8   | `apps/api/src/modules/<entities>/<entity>.service.ts`    | **Buat baru**                          |
+| 9   | `apps/api/src/modules/<entities>/<entity>.controller.ts` | **Buat baru**                          |
+| 10  | `apps/api/src/modules/<entities>/<entity>.swagger.ts`    | **Buat baru**                          |
+| 11  | `apps/api/src/app.module.ts`                             | Tambah import module                   |
+| 12  | `packages/testing/src/factories.ts`                      | Tambah factory                         |
+| 13  | `packages/testing/src/db.ts`                             | Tambah seed + serialize                |
+| 14  | `packages/testing/src/index.ts`                          | Tambah export                          |
+| 15  | `apps/web/lib/constants.ts`                              | Tambah ke ROUTES                       |
+| 16  | `apps/web/features/<entity>/`                            | **Buat baru** (components + hooks)     |
+| 17  | `apps/web/app/<entity>/`                                 | **Buat baru** (route pages)            |
+| 18  | `packages/db/scripts/seed/<entity>.ts`                   | **Buat baru** (seed default)           |
+| 19  | `packages/db/scripts/clean/<entity>.ts`                  | **Buat baru** (clean)                  |
+| 20  | `packages/db/scripts/seed/index.ts`                      | Tambah ke `SEEDERS`                    |
+| 21  | `packages/db/scripts/lib/clean-table.ts`                 | Tambah ke `TABLES`                     |
+| 22  | `packages/db/package.json`                               | Tambah script `db:seed:*`/`db:clean:*` |
