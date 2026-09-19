@@ -2,15 +2,16 @@ import { prisma } from "../../src/client.js"
 import { seedRoles } from "./roles.js"
 import { seedUsers } from "./users.js"
 import { seedDocTypes } from "./doc-types.js"
+import { seedPartners } from "./partners.js"
 
 /**
  * Seed SEMUA tabel sekaligus.
- * Urutan penting: roles dulu (roleId users), lalu users, lalu doc-types.
+ * Urutan penting: roles dulu (roleId users), lalu users, lalu doc-types, lalu partners.
  *
  * Jalankan: pnpm --filter @packages/db db:seed
  */
 
-const SEEDERS = [seedRoles, seedUsers, seedDocTypes]
+const SEEDERS = [seedRoles, seedUsers, seedDocTypes, seedPartners]
 
 try {
   for (const seed of SEEDERS) {

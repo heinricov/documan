@@ -155,6 +155,97 @@ describe("App (e2e)", () => {
     })
   })
 
+  describe("Partner endpoints", () => {
+    let adminToken: string
+    let partnerId: string
+
+    beforeAll(async () => {
+      adminToken = await createTestToken({ role: "admin" }).then(authHeader)
+    })
+
+    it("403 — non-admin tidak boleh POST /partners", async () => {
+      return request(app.getHttpServer())
+        .post("/partners")
+        .set("Authorization", authHeader(await createTestToken({ role: "viewer" })))
+        .send({ name: "test", type: "vendor" })
+        .expect(403)
+    })
+
+    it("POST /partners — admin membuat partner", () => {
+      return request(app.getHttpServer())
+        .post("/partners")
+        .set("Authorization", adminToken)
+        .send({ name: `partner-${Date.now()}`, type: "supplier", description: "Test partner" })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(res.body.data).toHaveProperty("name")
+          expect(res.body.data).toHaveProperty("type", "supplier")
+          partnerId = res.body.data.id
+        })
+    })
+
+    it("409 — nama duplikat ditolak", async () => {
+      const created = await request(app.getHttpServer())
+        .post("/partners")
+        .set("Authorization", adminToken)
+        .send({ name: `dup-partner-${Date.now()}`, type: "vendor" })
+        .expect(201)
+
+      return request(app.getHttpServer())
+        .post("/partners")
+        .set("Authorization", adminToken)
+        .send({ name: created.body.data.name, type: "vendor" })
+        .expect(409)
+    })
+
+    it("GET /partners — admin bisa listing", () => {
+      return request(app.getHttpServer())
+        .get("/partners")
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(Array.isArray(res.body.data)).toBe(true)
+        })
+    })
+
+    it("GET /partners/:id — detail partner", () => {
+      return request(app.getHttpServer())
+        .get(`/partners/${partnerId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("id", partnerId)
+        })
+    })
+
+    it("PATCH /partners/:id — update description", () => {
+      return request(app.getHttpServer())
+        .patch(`/partners/${partnerId}`)
+        .set("Authorization", adminToken)
+        .send({ description: "Partner Updated" })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("description", "Partner Updated")
+        })
+    })
+
+    it("DELETE /partners/:id — hapus partner", () => {
+      return request(app.getHttpServer())
+        .delete(`/partners/${partnerId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+    })
+
+    it("404 — get partner yang sudah dihapus", () => {
+      return request(app.getHttpServer())
+        .get(`/partners/${partnerId}`)
+        .set("Authorization", adminToken)
+        .expect(404)
+    })
+  })
+
   describe("Auth protection", () => {
     it("401 jika akses endpoint tanpa token", () => {
       return request(app.getHttpServer())

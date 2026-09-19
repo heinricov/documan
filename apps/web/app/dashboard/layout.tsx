@@ -41,6 +41,10 @@ export const MenuAdmin = [
         title: "Doc Type",
         url: "/dashboard/doc-type",
       },
+      {
+        title: "Partner",
+        url: "/dashboard/partner",
+      },
     ],
   },
 ]

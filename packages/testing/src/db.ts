@@ -1,6 +1,6 @@
 import { prisma as defaultPrisma } from "@packages/db"
-import type { Role, User, Subsidiary, DocType } from "@packages/validator"
-import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides } from "./factories.js"
+import type { Role, User, Subsidiary, DocType, Partner } from "@packages/validator"
+import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides, createPartnerFixture, type PartnerOverrides } from "./factories.js"
 
 /**
  * ============================================================
@@ -393,4 +393,72 @@ function serializeDocType(docType: DocTypeRecord): DocType {
 
 function serializeDocTypeList(docTypes: DocTypeRecord[]): DocType[] {
   return docTypes.map(serializeDocType)
+}
+
+/**
+ * ============================================================
+ *  Partner Seed
+ * ============================================================
+ */
+
+export async function seedPartner(
+  overrides: PartnerOverrides = {},
+  db: Db = defaultPrisma
+): Promise<Partner> {
+  const data = createPartnerFixture(overrides)
+  return serializePartner(
+    await db.partner.create({
+      data: {
+        name: data.name,
+        description: data.description ?? undefined,
+        type: data.type,
+      },
+    })
+  )
+}
+
+export async function seedPartners(
+  items: PartnerOverrides[] = [],
+  db: Db = defaultPrisma
+): Promise<Partner[]> {
+  const fixtures = items.length > 0 ? items : [{}]
+  const data = fixtures.map((fixture) => createPartnerFixture(fixture))
+
+  return serializePartnerList(
+    await db.$transaction(
+      data.map((partner) =>
+        db.partner.create({
+          data: {
+            name: partner.name,
+            description: partner.description ?? undefined,
+            type: partner.type,
+          },
+        })
+      )
+    )
+  )
+}
+
+type PartnerRecord = {
+  id: string
+  name: string
+  description: string | null
+  type: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializePartner(partner: PartnerRecord): Partner {
+  return {
+    id: partner.id,
+    name: partner.name,
+    description: partner.description,
+    type: partner.type,
+    createdAt: partner.createdAt.toISOString(),
+    updatedAt: partner.updatedAt.toISOString(),
+  }
+}
+
+function serializePartnerList(partners: PartnerRecord[]): Partner[] {
+  return partners.map(serializePartner)
 }

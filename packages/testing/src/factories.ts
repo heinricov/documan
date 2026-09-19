@@ -1,4 +1,4 @@
-import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType } from "@packages/validator"
+import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType, CreatePartner } from "@packages/validator"
 
 /**
  * ============================================================
@@ -172,4 +172,48 @@ export function createDocTypeFixture(overrides: DocTypeOverrides = {}): CreateDo
  */
 export function resetDocTypeCounter(): void {
   docTypeCounter = 0
+}
+
+/**
+ * ============================================================
+ *  Partner Factory
+ * ============================================================
+ */
+
+let partnerCounter = 0
+
+export interface PartnerOverrides {
+  name?: string
+  description?: CreatePartner["description"]
+  type?: string
+}
+
+/**
+ * Membuat fixture data Partner yang valid (siap divalidasi `CreatePartnerSchema`).
+ * `name` digenerate unik otomatis jika tidak di-supply.
+ *
+ * @example
+ * ```ts
+ * const partner = createPartnerFixture()
+ * // { name: "partner-1-abc12345", description: undefined, type: "vendor" }
+ *
+ * const supplier = createPartnerFixture({ name: "PT Supplier", type: "supplier", description: "Main supplier" })
+ * // { name: "PT Supplier", description: "Main supplier", type: "supplier" }
+ * ```
+ */
+export function createPartnerFixture(overrides: PartnerOverrides = {}): CreatePartner {
+  partnerCounter++
+
+  return {
+    name: overrides.name ?? `partner-${partnerCounter}-${crypto.randomUUID().slice(0, 8)}`,
+    description: overrides.description,
+    type: overrides.type ?? "vendor",
+  }
+}
+
+/**
+ * Reset partner counter — berguna di `beforeAll` / `beforeEach`.
+ */
+export function resetPartnerCounter(): void {
+  partnerCounter = 0
 }

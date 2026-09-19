@@ -93,3 +93,19 @@ export type {
   UpdateDocType,
   DocTypeQuery,
 } from "@packages/validator/schemas/doc-type"
+
+// ====================== Partner Schemas ======================
+export {
+  PartnerSchema,
+  CreatePartnerSchema,
+  UpdatePartnerSchema,
+  PartnerQuerySchema,
+} from "@packages/validator/schemas/partner"
+
+// ====================== Partner Types ======================
+export type {
+  Partner,
+  CreatePartner,
+  UpdatePartner,
+  PartnerQuery,
+} from "@packages/validator/schemas/partner"

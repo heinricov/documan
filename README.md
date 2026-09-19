@@ -112,13 +112,15 @@ packages/db/scripts/
 │   ├── index.ts       # Seed SEMUA
 │   ├── roles.ts       # Seed roles
 │   ├── users.ts       # Seed users
-│   └── doc-types.ts   # Seed doc types
+│   ├── doc-types.ts   # Seed doc types
+│   └── partners.ts    # Seed partners
 ├── clean/         # Hapus data (per table)
 │   ├── index.ts       # Clean SEMUA
 │   ├── roles.ts       # Clean roles
 │   ├── users.ts       # Clean users
 │   ├── subsidiaries.ts# Clean subsidiaries
-│   └── doc-types.ts   # Clean doc types
+│   ├── doc-types.ts   # Clean doc types
+│   └── partners.ts    # Clean partners
 └── lib/           # Helper bersama
     ├── clean-table.ts # cleanTable / cleanAllTables
     └── run-main.ts    # isMain / runScript
@@ -138,6 +140,7 @@ Seed **per entity**:
 pnpm --filter @packages/db db:seed:roles     # roles saja
 pnpm --filter @packages/db db:seed:users     # users saja
 pnpm --filter @packages/db db:seed:doc-types # doc types saja
+pnpm --filter @packages/db db:seed:partners  # partners saja
 ```
 
 > Catatan: `db:seed:users` butuh role admin & user — pastikan `db:seed:roles` sudah dijalankan dulu (atau pakai `db:seed`).
@@ -154,6 +157,12 @@ Data yang dibuat (idempotent — aman dijalankan berulang):
 | do      | Delivery Order  |
 | pv      | Payment Voucher |
 
+| Partner | Description | Type |
+| ------- | ----------- | ---- |
+| PT Sumber Jaya | Supplier utama bahan baku | supplier |
+| CV Logistik Nusantara | Jasa pengiriman barang | logistics |
+| Bank BCA | Layanan pembayaran & transfer | bank |
+
 ### Clean (hapus data)
 
 Hapus **semua tabel** sekaligus:
@@ -165,6 +174,7 @@ pnpm --filter @packages/db db:clean
 Hapus **per table**:
 
 ```bash
+pnpm --filter @packages/db db:clean:partners    # partners
 pnpm --filter @packages/db db:clean:roles        # roles (CASCADE ke users)
 pnpm --filter @packages/db db:clean:users        # users saja
 pnpm --filter @packages/db db:clean:subsidiaries # subsidiaries saja

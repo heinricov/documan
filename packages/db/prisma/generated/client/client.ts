@@ -61,3 +61,8 @@ export type Subsidiary = Prisma.SubsidiaryModel
  * 
  */
 export type DocType = Prisma.DocTypeModel
+/**
+ * Model Partner
+ * 
+ */
+export type Partner = Prisma.PartnerModel
