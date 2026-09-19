@@ -102,6 +102,62 @@ pnpm --filter @packages/db prisma:migrate
 
 ---
 
+## Database Management
+
+### Seed (data awal)
+
+Seed script membuat 2 role + 2 user default:
+
+```bash
+pnpm --filter @packages/db db:seed
+```
+
+| Role  | Username | Email            | Password  |
+| ----- | -------- | ---------------- | --------- |
+| admin | admin    | admin@documan.id | admin1234 |
+| user  | user     | user@documan.id  | user1234  |
+
+### Truncate + Re-seed (reset total)
+
+Untuk menghapus semua data dan membuat ulang dari awal:
+
+```bash
+# 1) Truncate semua tabel (users, roles, subsidiaries)
+pnpm --filter @packages/db tsx scripts/truncate.ts
+
+# 2) Jalankan seed ulang
+pnpm --filter @packages/db db:seed
+```
+
+### Truncate script
+
+File: `packages/db/scripts/truncate.ts`
+
+```typescript
+import { prisma } from "../src/client.js"
+
+async function main() {
+  await prisma.$executeRawUnsafe(
+    `TRUNCATE TABLE "users", "subsidiaries", "roles" RESTART IDENTITY CASCADE`
+  )
+  console.log("Semua data di-truncate.")
+  await prisma.$disconnect()
+}
+
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})
+```
+
+**Catatan:**
+
+- `RESTART IDENTITY CASCADE` mereset auto-increment dan menghapus semua data
+- Tabel `users`, `roles`, `subsidiaries` akan kosong setelah truncate
+- Jalankan `db:seed` setelah truncate untuk membuat data awal kembali
+
+---
+
 ## API — Ringkasan
 
 REST API NestJS modular di `apps/api`. Setiap fitur = module mandiri (`src/modules/<fitur>/`) dengan controller, service, validator, & swagger sendiri.

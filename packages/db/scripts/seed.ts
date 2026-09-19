@@ -10,20 +10,24 @@ import { hashPassword } from "@packages/auth"
 
 const ROLES = [
   { title: "admin", description: "Full access" },
-  { title: "editor", description: "Can manage content" },
-  { title: "viewer", description: "Read-only access" },
+  { title: "user", description: "Standard user access" },
 ] as const
 
 /**
  * User default untuk testing login.
- * Password: admin1234
  */
 const DEFAULT_USERS = [
   {
-    username: "superadmin",
-    email: "superadmin@documan.id",
+    username: "admin",
+    email: "admin@documan.id",
     password: "admin1234",
     roleTitle: "admin",
+  },
+  {
+    username: "user",
+    email: "user@documan.id",
+    password: "user1234",
+    roleTitle: "user",
   },
 ] as const
 
