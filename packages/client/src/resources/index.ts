@@ -5,6 +5,8 @@ import { createUsersResource } from "./users"
 import type { UsersResource } from "./users"
 import { createSubsidiariesResource } from "./subsidiaries"
 import type { SubsidiariesResource } from "./subsidiaries"
+import { createDocTypesResource } from "./doc-types"
+import type { DocTypesResource } from "./doc-types"
 import { createAuthResource } from "./auth"
 import type { AuthResource } from "./auth"
 
@@ -13,6 +15,7 @@ export interface Resources {
   roles: RolesResource
   users: UsersResource
   subsidiaries: SubsidiariesResource
+  docTypes: DocTypesResource
 }
 
 export function createResources(http: Http): Resources {
@@ -21,6 +24,7 @@ export function createResources(http: Http): Resources {
     roles: createRolesResource(http),
     users: createUsersResource(http),
     subsidiaries: createSubsidiariesResource(http),
+    docTypes: createDocTypesResource(http),
   }
 }
 
@@ -28,3 +32,4 @@ export type { AuthResource, AuthResult } from "./auth"
 export type { RolesResource } from "./roles"
 export type { UsersResource } from "./users"
 export type { SubsidiariesResource } from "./subsidiaries"
+export type { DocTypesResource } from "./doc-types"

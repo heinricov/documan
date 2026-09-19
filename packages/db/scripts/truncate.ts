@@ -9,7 +9,7 @@ import { prisma } from "../src/client.js"
  * Setelah truncate, jalankan db:seed untuk membuat data awal kembali.
  */
 
-const TABLES = ["users", "subsidiaries", "roles"]
+const TABLES = ["doc_types", "users", "subsidiaries", "roles"]
 
 async function truncate(): Promise<void> {
   const escaped = TABLES.map((t) => `"${t}"`).join(", ")

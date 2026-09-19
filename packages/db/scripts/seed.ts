@@ -31,6 +31,14 @@ const DEFAULT_USERS = [
   },
 ] as const
 
+/**
+ * DocType default.
+ */
+const DEFAULT_DOC_TYPES = [
+  { title: "do", description: "Delivery Order" },
+  { title: "pv", description: "Payment Voucher" },
+] as const
+
 async function seed(): Promise<void> {
   let inserted = 0
   let updated = 0
@@ -88,8 +96,26 @@ async function seed(): Promise<void> {
     insertedUsers++
   }
 
+  // Seed default doc types (idempotent by title — unique)
+  let insertedDocTypes = 0
+  for (const docType of DEFAULT_DOC_TYPES) {
+    const existing = await prisma.docType.findUnique({
+      where: { title: docType.title },
+    })
+
+    if (existing) continue
+
+    await prisma.docType.create({
+      data: {
+        title: docType.title,
+        description: docType.description,
+      },
+    })
+    insertedDocTypes++
+  }
+
   process.stdout.write(
-    `Seed selesai: ${inserted} role dibuat, ${updated} role diperbarui, ${insertedUsers} user dibuat.\n`
+    `Seed selesai: ${inserted} role dibuat, ${updated} role diperbarui, ${insertedUsers} user dibuat, ${insertedDocTypes} doc type dibuat.\n`
   )
 }
 

@@ -117,12 +117,17 @@ pnpm --filter @packages/db db:seed
 | admin | admin    | admin@documan.id | admin1234 |
 | user  | user     | user@documan.id  | user1234  |
 
+| DocType | Description     |
+| ------- | --------------- |
+| do      | Delivery Order  |
+| pv      | Payment Voucher |
+
 ### Truncate + Re-seed (reset total)
 
 Untuk menghapus semua data dan membuat ulang dari awal:
 
 ```bash
-# 1) Truncate semua tabel (users, roles, subsidiaries)
+# 1) Truncate semua tabel (doc_types, users, subsidiaries, roles)
 pnpm --filter @packages/db tsx scripts/truncate.ts
 
 # 2) Jalankan seed ulang
@@ -136,25 +141,43 @@ File: `packages/db/scripts/truncate.ts`
 ```typescript
 import { prisma } from "../src/client.js"
 
-async function main() {
+const TABLES = ["doc_types", "users", "subsidiaries", "roles"]
+
+async function truncate(): Promise<void> {
+  const escaped = TABLES.map((t) => `"${t}"`).join(", ")
+
   await prisma.$executeRawUnsafe(
-    `TRUNCATE TABLE "users", "subsidiaries", "roles" RESTART IDENTITY CASCADE`
+    `TRUNCATE TABLE ${escaped} RESTART IDENTITY CASCADE`
   )
-  console.log("Semua data di-truncate.")
-  await prisma.$disconnect()
+
+  process.stdout.write(`Truncate selesai: ${TABLES.join(", ")} kosong.\n`)
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+try {
+  await truncate()
+  await prisma.$disconnect()
+} catch (error) {
+  process.stderr.write(`Truncate gagal: ${String(error)}\n`)
+  await prisma.$disconnect()
+  process.exitCode = 1
+}
 ```
 
 **Catatan:**
 
 - `RESTART IDENTITY CASCADE` mereset auto-increment dan menghapus semua data
-- Tabel `users`, `roles`, `subsidiaries` akan kosong setelah truncate
+- Tabel `doc_types`, `users`, `subsidiaries`, `roles` akan kosong setelah truncate
 - Jalankan `db:seed` setelah truncate untuk membuat data awal kembali
+
+### Akses Developert Test
+
+username: "admin",
+email: "admin@documan.id",
+password: "admin1234",
+
+username: "user",
+email: "user@documan.id",
+password: "user1234",
 
 ---
 

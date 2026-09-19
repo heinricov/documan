@@ -77,3 +77,19 @@ export type {
   LoginBody,
   AuthResponse,
 } from "@packages/validator/schemas/auth"
+
+// ====================== DocType Schemas ======================
+export {
+  DocTypeSchema,
+  CreateDocTypeSchema,
+  UpdateDocTypeSchema,
+  DocTypeQuerySchema,
+} from "@packages/validator/schemas/doc-type"
+
+// ====================== DocType Types ======================
+export type {
+  DocType,
+  CreateDocType,
+  UpdateDocType,
+  DocTypeQuery,
+} from "@packages/validator/schemas/doc-type"

@@ -32,3 +32,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type Subsidiary = Prisma.SubsidiaryModel
+/**
+ * Model DocType
+ * 
+ */
+export type DocType = Prisma.DocTypeModel

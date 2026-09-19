@@ -399,7 +399,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Role: 'Role',
   User: 'User',
-  Subsidiary: 'Subsidiary'
+  Subsidiary: 'Subsidiary',
+  DocType: 'DocType'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "user" | "subsidiary"
+    modelProps: "role" | "user" | "subsidiary" | "docType"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -641,6 +642,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DocType: {
+      payload: Prisma.$DocTypePayload<ExtArgs>
+      fields: Prisma.DocTypeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DocTypeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DocTypeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>
+        }
+        findFirst: {
+          args: Prisma.DocTypeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DocTypeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>
+        }
+        findMany: {
+          args: Prisma.DocTypeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>[]
+        }
+        create: {
+          args: Prisma.DocTypeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>
+        }
+        createMany: {
+          args: Prisma.DocTypeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DocTypeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>[]
+        }
+        delete: {
+          args: Prisma.DocTypeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>
+        }
+        update: {
+          args: Prisma.DocTypeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>
+        }
+        deleteMany: {
+          args: Prisma.DocTypeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DocTypeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DocTypeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>[]
+        }
+        upsert: {
+          args: Prisma.DocTypeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocTypePayload>
+        }
+        aggregate: {
+          args: Prisma.DocTypeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDocType>
+        }
+        groupBy: {
+          args: Prisma.DocTypeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocTypeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DocTypeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocTypeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -714,6 +789,17 @@ export const SubsidiaryScalarFieldEnum = {
 } as const
 
 export type SubsidiaryScalarFieldEnum = (typeof SubsidiaryScalarFieldEnum)[keyof typeof SubsidiaryScalarFieldEnum]
+
+
+export const DocTypeScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocTypeScalarFieldEnum = (typeof DocTypeScalarFieldEnum)[keyof typeof DocTypeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -941,6 +1027,7 @@ export type GlobalOmitConfig = {
   role?: Prisma.RoleOmit
   user?: Prisma.UserOmit
   subsidiary?: Prisma.SubsidiaryOmit
+  docType?: Prisma.DocTypeOmit
 }
 
 /* Types for Logging */

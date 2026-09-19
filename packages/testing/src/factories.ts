@@ -1,4 +1,4 @@
-import type { CreateRole, CreateUser, CreateSubsidiary } from "@packages/validator"
+import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType } from "@packages/validator"
 
 /**
  * ============================================================
@@ -130,4 +130,46 @@ export function createSubsidiaryFixture(overrides: SubsidiaryOverrides = {}): Cr
  */
 export function resetSubsidiaryCounter(): void {
   subsidiaryCounter = 0
+}
+
+/**
+ * ============================================================
+ *  DocType Factory
+ * ============================================================
+ */
+
+let docTypeCounter = 0
+
+export interface DocTypeOverrides {
+  title?: string
+  description?: CreateDocType["description"]
+}
+
+/**
+ * Membuat fixture data DocType yang valid (siap divalidasi `CreateDocTypeSchema`).
+ * `title` digenerate unik otomatis jika tidak di-supply.
+ *
+ * @example
+ * ```ts
+ * const docType = createDocTypeFixture()
+ * // { title: "doctype-1-abc12345", description: undefined }
+ *
+ * const doType = createDocTypeFixture({ title: "do", description: "Delivery Order" })
+ * // { title: "do", description: "Delivery Order" }
+ * ```
+ */
+export function createDocTypeFixture(overrides: DocTypeOverrides = {}): CreateDocType {
+  docTypeCounter++
+
+  return {
+    title: overrides.title ?? `doctype-${docTypeCounter}-${crypto.randomUUID().slice(0, 8)}`,
+    description: overrides.description,
+  }
+}
+
+/**
+ * Reset docType counter — berguna di `beforeAll` / `beforeEach`.
+ */
+export function resetDocTypeCounter(): void {
+  docTypeCounter = 0
 }

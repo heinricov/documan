@@ -1,6 +1,6 @@
 import { prisma as defaultPrisma } from "@packages/db"
-import type { Role, User, Subsidiary } from "@packages/validator"
-import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides } from "./factories.js"
+import type { Role, User, Subsidiary, DocType } from "@packages/validator"
+import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides } from "./factories.js"
 
 /**
  * ============================================================
@@ -329,4 +329,68 @@ function serializeSubsidiary(subsidiary: SubsidiaryRecord): Subsidiary {
 
 function serializeSubsidiaryList(subsidiaries: SubsidiaryRecord[]): Subsidiary[] {
   return subsidiaries.map(serializeSubsidiary)
+}
+
+/**
+ * ============================================================
+ *  DocType Seed
+ * ============================================================
+ */
+
+export async function seedDocType(
+  overrides: DocTypeOverrides = {},
+  db: Db = defaultPrisma
+): Promise<DocType> {
+  const data = createDocTypeFixture(overrides)
+  return serializeDocType(
+    await db.docType.create({
+      data: {
+        title: data.title,
+        description: data.description ?? undefined,
+      },
+    })
+  )
+}
+
+export async function seedDocTypes(
+  items: DocTypeOverrides[] = [],
+  db: Db = defaultPrisma
+): Promise<DocType[]> {
+  const fixtures = items.length > 0 ? items : [{}]
+  const data = fixtures.map((fixture) => createDocTypeFixture(fixture))
+
+  return serializeDocTypeList(
+    await db.$transaction(
+      data.map((docType) =>
+        db.docType.create({
+          data: {
+            title: docType.title,
+            description: docType.description ?? undefined,
+          },
+        })
+      )
+    )
+  )
+}
+
+type DocTypeRecord = {
+  id: string
+  title: string
+  description: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializeDocType(docType: DocTypeRecord): DocType {
+  return {
+    id: docType.id,
+    title: docType.title,
+    description: docType.description,
+    createdAt: docType.createdAt.toISOString(),
+    updatedAt: docType.updatedAt.toISOString(),
+  }
+}
+
+function serializeDocTypeList(docTypes: DocTypeRecord[]): DocType[] {
+  return docTypes.map(serializeDocType)
 }

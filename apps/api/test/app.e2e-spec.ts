@@ -64,6 +64,97 @@ describe("App (e2e)", () => {
     })
   })
 
+  describe("DocType endpoints", () => {
+    let adminToken: string
+    let docTypeId: string
+
+    beforeAll(async () => {
+      adminToken = await createTestToken({ role: "admin" }).then(authHeader)
+    })
+
+    it("403 — non-admin tidak boleh POST /doc-types", async () => {
+      return request(app.getHttpServer())
+        .post("/doc-types")
+        .set("Authorization", authHeader(await createTestToken({ role: "viewer" })))
+        .send({ title: "si" })
+        .expect(403)
+    })
+
+    it("POST /doc-types — admin membuat doc type", () => {
+      return request(app.getHttpServer())
+        .post("/doc-types")
+        .set("Authorization", adminToken)
+        .send({ title: `si-${Date.now()}`, description: "Surat Jalan" })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(res.body.data).toHaveProperty("title")
+          expect(res.body.data).toHaveProperty("description", "Surat Jalan")
+          docTypeId = res.body.data.id
+        })
+    })
+
+    it("409 — title duplikat ditolak", async () => {
+      const created = await request(app.getHttpServer())
+        .post("/doc-types")
+        .set("Authorization", adminToken)
+        .send({ title: `dup-${Date.now()}` })
+        .expect(201)
+
+      return request(app.getHttpServer())
+        .post("/doc-types")
+        .set("Authorization", adminToken)
+        .send({ title: created.body.data.title })
+        .expect(409)
+    })
+
+    it("GET /doc-types — admin bisa listing", () => {
+      return request(app.getHttpServer())
+        .get("/doc-types")
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(Array.isArray(res.body.data)).toBe(true)
+        })
+    })
+
+    it("GET /doc-types/:id — detail doc type", () => {
+      return request(app.getHttpServer())
+        .get(`/doc-types/${docTypeId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("id", docTypeId)
+        })
+    })
+
+    it("PATCH /doc-types/:id — update description", () => {
+      return request(app.getHttpServer())
+        .patch(`/doc-types/${docTypeId}`)
+        .set("Authorization", adminToken)
+        .send({ description: "Surat Jalan Updated" })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("description", "Surat Jalan Updated")
+        })
+    })
+
+    it("DELETE /doc-types/:id — hapus doc type", () => {
+      return request(app.getHttpServer())
+        .delete(`/doc-types/${docTypeId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+    })
+
+    it("404 — get doc type yang sudah dihapus", () => {
+      return request(app.getHttpServer())
+        .get(`/doc-types/${docTypeId}`)
+        .set("Authorization", adminToken)
+        .expect(404)
+    })
+  })
+
   describe("Auth protection", () => {
     it("401 jika akses endpoint tanpa token", () => {
       return request(app.getHttpServer())

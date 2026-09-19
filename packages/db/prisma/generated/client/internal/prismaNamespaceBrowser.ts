@@ -53,7 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Role: 'Role',
   User: 'User',
-  Subsidiary: 'Subsidiary'
+  Subsidiary: 'Subsidiary',
+  DocType: 'DocType'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -106,6 +107,17 @@ export const SubsidiaryScalarFieldEnum = {
 } as const
 
 export type SubsidiaryScalarFieldEnum = (typeof SubsidiaryScalarFieldEnum)[keyof typeof SubsidiaryScalarFieldEnum]
+
+
+export const DocTypeScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocTypeScalarFieldEnum = (typeof DocTypeScalarFieldEnum)[keyof typeof DocTypeScalarFieldEnum]
 
 
 export const SortOrder = {
