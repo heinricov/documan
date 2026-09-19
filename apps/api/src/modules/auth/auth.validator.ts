@@ -7,5 +7,5 @@
  * File ini hanya re-export untuk backward compatibility.
  */
 
-export { LoginSchema, RegisterSchema } from "@packages/validator"
-export type { LoginBody, RegisterBody } from "@packages/validator"
+export { LoginSchema } from "@packages/validator"
+export type { LoginBody } from "@packages/validator"

@@ -9,6 +9,8 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { RateLimitGuard } from './common/guards/rate-limit.guard.js';
 import { AuthGuard } from './common/guards/auth.guard.js';
 import { RolesGuard } from './common/guards/roles.guard.js';
+import { RATE_LIMIT_STORE } from './common/rate-limit/store.js';
+import { InMemoryRateLimitStore } from './common/rate-limit/in-memory-store.js';
 
 @Module({
   imports: [HealthModule, AuthModule, RolesModule, UsersModule, SubsidiariesModule],
@@ -25,6 +27,10 @@ import { RolesGuard } from './common/guards/roles.guard.js';
     {
       provide: APP_GUARD,
       useClass: RateLimitGuard,
+    },
+    {
+      provide: RATE_LIMIT_STORE,
+      useClass: InMemoryRateLimitStore,
     },
   ],
 })

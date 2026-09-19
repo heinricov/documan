@@ -6,6 +6,7 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiBearerAuth,
 } from "@nestjs/swagger"
 import {
   CreateRoleSchema,
@@ -18,7 +19,7 @@ import {
   type UpdateRole,
 } from "@packages/validator"
 import { ZodBody, ZodParams, ZodQuery } from "../../common/zod.decorators.js"
-import { Public } from "../../common/auth.js"
+import { Public, Roles } from "../../common/auth.js"
 import {
   createRoleSchema,
   paginatedRoleSchema,
@@ -38,6 +39,7 @@ import { RoleService } from "./role.service.js"
  */
 @Controller("roles")
 @ApiTags("roles")
+@ApiBearerAuth()
 export class RoleController {
   constructor(
     @Inject(RoleService) private readonly roleService: RoleService
@@ -55,6 +57,7 @@ export class RoleController {
   }
 
   @Post()
+  @Roles("admin")
   @ApiOperation({ summary: "Buat role baru" })
   @ApiBody({ schema: createRoleSchema })
   @ApiOkResponse({ description: "Role berhasil dibuat", schema: roleSchema })
@@ -75,6 +78,7 @@ export class RoleController {
   }
 
   @Patch(":id")
+  @Roles("admin")
   @ApiOperation({ summary: "Perbarui role" })
   @ApiParam({ name: "id", description: "UUID role" })
   @ApiBody({ schema: updateRoleSchema })
@@ -90,6 +94,7 @@ export class RoleController {
   }
 
   @Delete(":id")
+  @Roles("admin")
   @ApiOperation({ summary: "Hapus role" })
   @ApiParam({ name: "id", description: "UUID role" })
   @ApiOkResponse({ description: "Role dihapus", schema: roleSchema })

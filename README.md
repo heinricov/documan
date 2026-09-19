@@ -151,22 +151,20 @@ Dokumentasi lengkap API, pola endpoint baru, dan catatan NestJS 12 → `apps/api
 
 ## Kekurangan Saat Ini (jujur)
 
-1. **Otorisasi per-role belum diterapkan** — seluruh route CRUD sudah terproteksi autentikasi (wajib JWT), tetapi belum dibatasi per role (`@Roles` belum dipakai di controller). Roadmap: terapkan `@Roles("admin")` ke endpoint sensitif.
-2. **Tidak ada test** (unit/e2e) — infra `@packages/testing` sudah ada; dimajukan ke roadmap.
-3. **Prisma migrate hanya untuk dev** — produksi butuh `prisma migrate deploy` (séparate) & build distribusi (lihat catatan NestJS di `apps/api/README` `#Produksi`).
-4. **Rate limiting in-memory** — cukup untuk 1 instance; multi-instance butuh store bersama (Redis).
-5. **Swagger hanya aktif di development** (aman untuk produksi).
+1. **Rate limiting in-memory** — `InMemoryRateLimitStore` sudah di-refactor ke pluggable interface (DI). Untuk multi-instance, implementasikan `RateLimitStore` baru (mis. Redis) dan daftarkan via DI di `AppModule`.
+2. **Produksi belum tested end-to-end** — prisma migrate deploy sudah ada (`db:deploy`), tapi build distribusi & deployment pipeline belum diverifikasi.
+3. **Swagger hanya aktif di development** (sudah aman by design — tidak perlu diubah).
 
 ---
 
 ## Roadmap
 
-- **[x]** Auth: model `User` + login/register/me + `AuthGuard`/`RolesGuard` global + proteksi route CRUD
+- **[x]** Auth: model `User` + login/me + `AuthGuard`/`RolesGuard` global + proteksi route CRUD + admin-only user creation via `POST /users`
 - **[x]** CRUD `users` (admin) & `subsidiaries`
-- **[x]** Integrasi web: `@packages/client` terhubung ke `apps/api` + login/register page + `AuthGuard` layout + token interceptor 401
-- **[ ]** Otorisasi per-role: terapkan `@Roles("admin")` ke endpoint CRUD sensitif
+- **[x]** Integrasi web: `@packages/client` terhubung ke `apps/api` + login page + `AuthGuard` layout + token interceptor 401
+- **[x]** Otorisasi per-role: `@Roles("admin")` diterapkan ke endpoint CRUD sensitif (roles write, users all, subsidiaries write)
+- **[x]** Unit tests (35 tests) + E2E tests (12 tests) — vitest + supertest, menjalankan di `pnpm --filter api test` / `test:e2e`
 - **[ ]** Feature inti **documents** (markdown + versi + riwayat); validasi & tipe di `@packages/validator`
-- **[ ]** Test unit + e2e (supertest) + CI (lint/typecheck/test)
 - **[ ]** Produksi: build `packages/*` → `dist` + `node dist/main` (hilangkan ketergantungan `tsx`)
 
 ---

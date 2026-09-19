@@ -6,6 +6,7 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiBearerAuth,
 } from "@nestjs/swagger"
 import {
   CreateUserSchema,
@@ -18,6 +19,7 @@ import {
   type UpdateUser,
 } from "@packages/validator"
 import { ZodBody, ZodParams, ZodQuery } from "../../common/zod.decorators.js"
+import { Roles } from "../../common/auth.js"
 import {
   createUserSchema,
   paginatedUserSchema,
@@ -37,12 +39,14 @@ import { UserService } from "./user.service.js"
  */
 @Controller("users")
 @ApiTags("users")
+@ApiBearerAuth()
 export class UserController {
   constructor(
     @Inject(UserService) private readonly userService: UserService
   ) {}
 
   @Get()
+  @Roles("admin")
   @ApiOperation({ summary: "Daftar users (paginasi)" })
   @ApiOkResponse({
     description: "Daftar users terpaginasi",
@@ -53,6 +57,7 @@ export class UserController {
   }
 
   @Post()
+  @Roles("admin")
   @ApiOperation({ summary: "Buat user baru" })
   @ApiBody({ schema: createUserSchema })
   @ApiOkResponse({ description: "User berhasil dibuat", schema: userSchema })
@@ -64,6 +69,7 @@ export class UserController {
   }
 
   @Get(":id")
+  @Roles("admin")
   @ApiOperation({ summary: "Detail user berdasarkan ID" })
   @ApiParam({ name: "id", description: "UUID user" })
   @ApiOkResponse({ description: "Detail user", schema: userSchema })
@@ -74,6 +80,7 @@ export class UserController {
   }
 
   @Patch(":id")
+  @Roles("admin")
   @ApiOperation({ summary: "Perbarui user" })
   @ApiParam({ name: "id", description: "UUID user" })
   @ApiBody({ schema: updateUserSchema })
@@ -89,6 +96,7 @@ export class UserController {
   }
 
   @Delete(":id")
+  @Roles("admin")
   @ApiOperation({ summary: "Hapus user" })
   @ApiParam({ name: "id", description: "UUID user" })
   @ApiOkResponse({ description: "User dihapus", schema: userSchema })

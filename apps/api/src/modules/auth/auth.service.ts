@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException } from "@nestjs/common"
+import { Injectable, UnauthorizedException } from "@nestjs/common"
 import { prisma, type User as UserRecord } from "@packages/db"
 import {
   NotFoundError,
@@ -6,19 +6,20 @@ import {
 import type { User } from "@packages/validator"
 import {
   signToken,
-  hashPassword,
   verifyPassword,
   type AuthTokenPayload,
 } from "@packages/auth"
-import type { LoginBody, RegisterBody } from "./auth.validator.js"
+import type { LoginBody } from "./auth.validator.js"
 
 /**
  * ============================================================
  *  Auth Service
  * ============================================================
  *
- * Layanan autentikasi: login, register, getMe.
- * Menggunakan @packages/auth untuk JWT signing & password hashing.
+ * Layanan autentikasi: login, getMe.
+ * Menggunakan @packages/auth untuk JWT signing & password verification.
+ *
+ * User baru dibuat oleh admin via UserService.create().
  */
 @Injectable()
 export class AuthService {
@@ -44,65 +45,6 @@ export class AuthService {
       throw new UnauthorizedException("Email atau password salah.")
     }
 
-    const token = await signToken({
-      sub: user.id,
-      userId: user.id,
-      role: user.role.title,
-    } satisfies AuthTokenPayload)
-
-    return {
-      token,
-      user: serializeUser(user),
-    }
-  }
-
-  /**
-   * Register user baru.
-   * Mengembalikan JWT token + user data.
-   */
-  async register(data: RegisterBody): Promise<{ token: string; user: User }> {
-    const username = data.username.trim()
-    const email = data.email.trim().toLowerCase()
-
-    // Cek username unik
-    const existingUsername = await prisma.user.findFirst({
-      where: { username: { equals: username, mode: "insensitive" } },
-    })
-
-    if (existingUsername) {
-      throw new ConflictException(`Username "${username}" sudah ada`)
-    }
-
-    // Cek email unik
-    const existingEmail = await prisma.user.findFirst({
-      where: { email: { equals: email, mode: "insensitive" } },
-    })
-
-    if (existingEmail) {
-      throw new ConflictException(`Email "${email}" sudah terdaftar`)
-    }
-
-    // Cek role exists
-    const role = await prisma.role.findUnique({ where: { id: data.roleId } })
-    if (!role) {
-      throw new NotFoundError("Role")
-    }
-
-    // Hash password
-    const hashedPassword = await hashPassword(data.password)
-
-    // Buat user
-    const user = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-        roleId: data.roleId,
-      },
-      include: { role: true },
-    })
-
-    // Sign JWT
     const token = await signToken({
       sub: user.id,
       userId: user.id,

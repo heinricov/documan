@@ -14,7 +14,6 @@ import {
 } from "@packages/ui/components/card"
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@packages/ui/components/field"
@@ -109,16 +108,6 @@ export function LoginForm() {
               </Field>
             </FieldGroup>
           </form>
-
-          <FieldDescription className="mt-4 text-center text-sm">
-            Belum punya akun?{" "}
-            <a
-              href="/auth/register"
-              className="font-medium text-primary underline-offset-4 hover:underline"
-            >
-              Daftar
-            </a>
-          </FieldDescription>
         </CardContent>
       </Card>
     </div>

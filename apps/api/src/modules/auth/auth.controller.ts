@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Inject } from "@nestjs/common"
+import { Controller, Get, Post, Inject, HttpCode } from "@nestjs/common"
 import {
   ApiBody,
   ApiOkResponse,
@@ -12,13 +12,10 @@ import type { AuthContext } from "@packages/auth"
 import { ZodBody } from "../../common/zod.decorators.js"
 import {
   LoginSchema,
-  RegisterSchema,
   type LoginBody,
-  type RegisterBody,
 } from "./auth.validator.js"
 import {
   loginSchema,
-  registerSchema,
   authResponseSchema,
   userSchema,
 } from "./auth.swagger.js"
@@ -29,9 +26,10 @@ import { AuthService } from "./auth.service.js"
  *  Auth Controller
  * ============================================================
  *
- * Endpoint autentikasi: login, register, me.
- * - login & register adalah public (tidak perlu token).
+ * Endpoint autentikasi: login, me.
+ * - login adalah public (tidak perlu token).
  * - me memerlukan autentikasi (Bearer JWT).
+ * - User baru dibuat oleh admin via POST /users.
  */
 @Controller("auth")
 @ApiTags("auth")
@@ -42,6 +40,7 @@ export class AuthController {
 
   @Post("login")
   @Public()
+  @HttpCode(200)
   @ApiOperation({ summary: "Login dengan email & password" })
   @ApiBody({ schema: loginSchema })
   @ApiOkResponse({
@@ -51,19 +50,6 @@ export class AuthController {
   @ApiResponse({ status: 401, description: "Email atau password salah" })
   login(@ZodBody({ zod: LoginSchema }) body: LoginBody) {
     return this.authService.login(body)
-  }
-
-  @Post("register")
-  @Public()
-  @ApiOperation({ summary: "Register akun baru" })
-  @ApiBody({ schema: registerSchema })
-  @ApiOkResponse({
-    description: "Register berhasil — mengembalikan token & user data",
-    schema: authResponseSchema,
-  })
-  @ApiResponse({ status: 409, description: "Username atau email sudah ada" })
-  register(@ZodBody({ zod: RegisterSchema }) body: RegisterBody) {
-    return this.authService.register(body)
   }
 
   @Get("me")

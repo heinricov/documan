@@ -31,13 +31,6 @@ export interface AuthContextValue {
   isLoading: boolean
   /** Login dengan email + password */
   login: (email: string, password: string) => Promise<void>
-  /** Register akun baru */
-  register: (data: {
-    username: string
-    email: string
-    password: string
-    roleId: string
-  }) => Promise<void>
   /** Logout — hapus token & reset state */
   logout: () => void
 }
@@ -101,21 +94,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(result.user)
   }, [])
 
-  const register = useCallback(
-    async (data: {
-      username: string
-      email: string
-      password: string
-      roleId: string
-    }) => {
-      const result = await api.resources.auth.register(data)
-      setToken(result.token)
-      setTokenState(result.token)
-      setUser(result.user)
-    },
-    []
-  )
-
   const logout = useCallback(() => {
     clearToken()
     setTokenState(null)
@@ -124,7 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isLoading, login, register, logout }}
+      value={{ user, token, isLoading, login, logout }}
     >
       {children}
     </AuthContext.Provider>

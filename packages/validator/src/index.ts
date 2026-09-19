@@ -69,13 +69,11 @@ export type {
 // ====================== Auth Schemas ======================
 export {
   LoginSchema,
-  RegisterSchema,
   AuthResponseSchema,
 } from "@packages/validator/schemas/auth"
 
 // ====================== Auth Types ======================
 export type {
   LoginBody,
-  RegisterBody,
   AuthResponse,
 } from "@packages/validator/schemas/auth"

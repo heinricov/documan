@@ -6,6 +6,7 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
+  ApiBearerAuth,
 } from "@nestjs/swagger"
 import {
   CreateSubsidiarySchema,
@@ -18,6 +19,7 @@ import {
   type UpdateSubsidiary,
 } from "@packages/validator"
 import { ZodBody, ZodParams, ZodQuery } from "../../common/zod.decorators.js"
+import { Roles } from "../../common/auth.js"
 import {
   createSubsidiarySchema,
   paginatedSubsidiarySchema,
@@ -37,6 +39,7 @@ import { SubsidiaryService } from "./subsidiary.service.js"
  */
 @Controller("subsidiaries")
 @ApiTags("subsidiaries")
+@ApiBearerAuth()
 export class SubsidiaryController {
   constructor(
     @Inject(SubsidiaryService) private readonly subsidiaryService: SubsidiaryService
@@ -53,6 +56,7 @@ export class SubsidiaryController {
   }
 
   @Post()
+  @Roles("admin")
   @ApiOperation({ summary: "Buat subsidiary baru" })
   @ApiBody({ schema: createSubsidiarySchema })
   @ApiOkResponse({ description: "Subsidiary berhasil dibuat", schema: subsidiarySchema })
@@ -73,6 +77,7 @@ export class SubsidiaryController {
   }
 
   @Patch(":id")
+  @Roles("admin")
   @ApiOperation({ summary: "Perbarui subsidiary" })
   @ApiParam({ name: "id", description: "UUID subsidiary" })
   @ApiBody({ schema: updateSubsidiarySchema })
@@ -88,6 +93,7 @@ export class SubsidiaryController {
   }
 
   @Delete(":id")
+  @Roles("admin")
   @ApiOperation({ summary: "Hapus subsidiary" })
   @ApiParam({ name: "id", description: "UUID subsidiary" })
   @ApiOkResponse({ description: "Subsidiary dihapus", schema: subsidiarySchema })
