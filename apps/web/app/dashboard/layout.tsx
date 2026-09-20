@@ -45,6 +45,10 @@ export const MenuAdmin = [
         title: "Partner",
         url: "/dashboard/partner",
       },
+      {
+        title: "Box",
+        url: "/dashboard/box",
+      },
     ],
   },
 ]

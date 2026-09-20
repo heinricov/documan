@@ -113,14 +113,16 @@ packages/db/scripts/
 │   ├── roles.ts       # Seed roles
 │   ├── users.ts       # Seed users
 │   ├── doc-types.ts   # Seed doc types
-│   └── partners.ts    # Seed partners
+│   ├── partners.ts    # Seed partners
+│   └── boxes.ts       # Seed boxes
 ├── clean/         # Hapus data (per table)
 │   ├── index.ts       # Clean SEMUA
 │   ├── roles.ts       # Clean roles
 │   ├── users.ts       # Clean users
 │   ├── subsidiaries.ts# Clean subsidiaries
 │   ├── doc-types.ts   # Clean doc types
-│   └── partners.ts    # Clean partners
+│   ├── partners.ts    # Clean partners
+│   └── boxes.ts       # Clean boxes
 └── lib/           # Helper bersama
     ├── clean-table.ts # cleanTable / cleanAllTables
     └── run-main.ts    # isMain / runScript
@@ -141,6 +143,7 @@ pnpm --filter @packages/db db:seed:roles     # roles saja
 pnpm --filter @packages/db db:seed:users     # users saja
 pnpm --filter @packages/db db:seed:doc-types # doc types saja
 pnpm --filter @packages/db db:seed:partners  # partners saja
+pnpm --filter @packages/db db:seed:boxes     # boxes saja
 ```
 
 > Catatan: `db:seed:users` butuh role admin & user — pastikan `db:seed:roles` sudah dijalankan dulu (atau pakai `db:seed`).
@@ -163,6 +166,12 @@ Data yang dibuat (idempotent — aman dijalankan berulang):
 | CV Logistik Nusantara | Jasa pengiriman barang | logistics |
 | Bank BCA | Layanan pembayaran & transfer | bank |
 
+| No Box  | Title                | Description                        |
+| ------- | -------------------- | ---------------------------------- |
+| BOX-001 | Arsip Dokumen 2026   | Box untuk arsip dokumen tahun 2026 |
+| BOX-002 | Dokumen Keuangan     | Box khusus dokumen keuangan        |
+| BOX-003 | Dokumen Legal        | Box untuk dokumen legal & perizinan |
+
 ### Clean (hapus data)
 
 Hapus **semua tabel** sekaligus:
@@ -179,6 +188,7 @@ pnpm --filter @packages/db db:clean:roles        # roles (CASCADE ke users)
 pnpm --filter @packages/db db:clean:users        # users saja
 pnpm --filter @packages/db db:clean:subsidiaries # subsidiaries saja
 pnpm --filter @packages/db db:clean:doc-types    # doc types saja
+pnpm --filter @packages/db db:clean:boxes        # boxes saja
 ```
 
 > Perhatian `CASCADE`: `roles` direferensikan oleh `users`. Hapus `roles`

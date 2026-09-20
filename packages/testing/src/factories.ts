@@ -1,4 +1,4 @@
-import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType, CreatePartner } from "@packages/validator"
+import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType, CreatePartner, CreateBox } from "@packages/validator"
 
 /**
  * ============================================================
@@ -216,4 +216,48 @@ export function createPartnerFixture(overrides: PartnerOverrides = {}): CreatePa
  */
 export function resetPartnerCounter(): void {
   partnerCounter = 0
+}
+
+/**
+ * ============================================================
+ *  Box Factory
+ * ============================================================
+ */
+
+let boxCounter = 0
+
+export interface BoxOverrides {
+  noBox?: string
+  title?: CreateBox["title"]
+  description?: CreateBox["description"]
+}
+
+/**
+ * Membuat fixture data Box yang valid (siap divalidasi `CreateBoxSchema`).
+ * `noBox` digenerate unik otomatis jika tidak di-supply.
+ *
+ * @example
+ * ```ts
+ * const box = createBoxFixture()
+ * // { noBox: "BOX-1-abc12345", title: undefined, description: undefined }
+ *
+ * const arsip = createBoxFixture({ noBox: "BOX-001", title: "Arsip 2026" })
+ * // { noBox: "BOX-001", title: "Arsip 2026", description: undefined }
+ * ```
+ */
+export function createBoxFixture(overrides: BoxOverrides = {}): CreateBox {
+  boxCounter++
+
+  return {
+    noBox: overrides.noBox ?? `BOX-${boxCounter}-${crypto.randomUUID().slice(0, 8)}`,
+    title: overrides.title,
+    description: overrides.description,
+  }
+}
+
+/**
+ * Reset box counter — berguna di `beforeAll` / `beforeEach`.
+ */
+export function resetBoxCounter(): void {
+  boxCounter = 0
 }

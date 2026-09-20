@@ -42,3 +42,8 @@ export type DocType = Prisma.DocTypeModel
  * 
  */
 export type Partner = Prisma.PartnerModel
+/**
+ * Model Box
+ * 
+ */
+export type Box = Prisma.BoxModel

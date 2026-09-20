@@ -246,6 +246,97 @@ describe("App (e2e)", () => {
     })
   })
 
+  describe("Box endpoints", () => {
+    let adminToken: string
+    let boxId: string
+
+    beforeAll(async () => {
+      adminToken = await createTestToken({ role: "admin" }).then(authHeader)
+    })
+
+    it("403 — non-admin tidak boleh POST /boxes", async () => {
+      return request(app.getHttpServer())
+        .post("/boxes")
+        .set("Authorization", authHeader(await createTestToken({ role: "viewer" })))
+        .send({ noBox: "BOX-DENIED" })
+        .expect(403)
+    })
+
+    it("POST /boxes — admin membuat box", () => {
+      return request(app.getHttpServer())
+        .post("/boxes")
+        .set("Authorization", adminToken)
+        .send({ noBox: `BOX-${Date.now()}`, title: "Test Box", description: "Test box" })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(res.body.data).toHaveProperty("noBox")
+          expect(res.body.data).toHaveProperty("title", "Test Box")
+          boxId = res.body.data.id
+        })
+    })
+
+    it("409 — noBox duplikat ditolak", async () => {
+      const created = await request(app.getHttpServer())
+        .post("/boxes")
+        .set("Authorization", adminToken)
+        .send({ noBox: `BOX-DUP-${Date.now()}` })
+        .expect(201)
+
+      return request(app.getHttpServer())
+        .post("/boxes")
+        .set("Authorization", adminToken)
+        .send({ noBox: created.body.data.noBox })
+        .expect(409)
+    })
+
+    it("GET /boxes — admin bisa listing", () => {
+      return request(app.getHttpServer())
+        .get("/boxes")
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(Array.isArray(res.body.data)).toBe(true)
+        })
+    })
+
+    it("GET /boxes/:id — detail box", () => {
+      return request(app.getHttpServer())
+        .get(`/boxes/${boxId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("id", boxId)
+        })
+    })
+
+    it("PATCH /boxes/:id — update title", () => {
+      return request(app.getHttpServer())
+        .patch(`/boxes/${boxId}`)
+        .set("Authorization", adminToken)
+        .send({ title: "Box Updated" })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("title", "Box Updated")
+        })
+    })
+
+    it("DELETE /boxes/:id — hapus box", () => {
+      return request(app.getHttpServer())
+        .delete(`/boxes/${boxId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+    })
+
+    it("404 — get box yang sudah dihapus", () => {
+      return request(app.getHttpServer())
+        .get(`/boxes/${boxId}`)
+        .set("Authorization", adminToken)
+        .expect(404)
+    })
+  })
+
   describe("Auth protection", () => {
     it("401 jika akses endpoint tanpa token", () => {
       return request(app.getHttpServer())

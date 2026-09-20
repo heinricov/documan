@@ -109,3 +109,19 @@ export type {
   UpdatePartner,
   PartnerQuery,
 } from "@packages/validator/schemas/partner"
+
+// ====================== Box Schemas ======================
+export {
+  BoxSchema,
+  CreateBoxSchema,
+  UpdateBoxSchema,
+  BoxQuerySchema,
+} from "@packages/validator/schemas/box"
+
+// ====================== Box Types ======================
+export type {
+  Box,
+  CreateBox,
+  UpdateBox,
+  BoxQuery,
+} from "@packages/validator/schemas/box"

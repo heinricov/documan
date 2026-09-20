@@ -4,4 +4,5 @@ export const ROUTES = {
   subsidiary: "/dashboard/subsidiary",
   docType: "/dashboard/doc-type",
   partner: "/dashboard/partner",
+  box: "/dashboard/box",
 } as const

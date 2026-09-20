@@ -1,6 +1,6 @@
 import { prisma as defaultPrisma } from "@packages/db"
-import type { Role, User, Subsidiary, DocType, Partner } from "@packages/validator"
-import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides, createPartnerFixture, type PartnerOverrides } from "./factories.js"
+import type { Role, User, Subsidiary, DocType, Partner, Box } from "@packages/validator"
+import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides, createPartnerFixture, type PartnerOverrides, createBoxFixture, type BoxOverrides } from "./factories.js"
 
 /**
  * ============================================================
@@ -461,4 +461,72 @@ function serializePartner(partner: PartnerRecord): Partner {
 
 function serializePartnerList(partners: PartnerRecord[]): Partner[] {
   return partners.map(serializePartner)
+}
+
+/**
+ * ============================================================
+ *  Box Seed
+ * ============================================================
+ */
+
+export async function seedBox(
+  overrides: BoxOverrides = {},
+  db: Db = defaultPrisma
+): Promise<Box> {
+  const data = createBoxFixture(overrides)
+  return serializeBox(
+    await db.box.create({
+      data: {
+        noBox: data.noBox,
+        title: data.title ?? undefined,
+        description: data.description ?? undefined,
+      },
+    })
+  )
+}
+
+export async function seedBoxes(
+  items: BoxOverrides[] = [],
+  db: Db = defaultPrisma
+): Promise<Box[]> {
+  const fixtures = items.length > 0 ? items : [{}]
+  const data = fixtures.map((fixture) => createBoxFixture(fixture))
+
+  return serializeBoxList(
+    await db.$transaction(
+      data.map((box) =>
+        db.box.create({
+          data: {
+            noBox: box.noBox,
+            title: box.title ?? undefined,
+            description: box.description ?? undefined,
+          },
+        })
+      )
+    )
+  )
+}
+
+type BoxRecord = {
+  id: string
+  noBox: string
+  title: string | null
+  description: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializeBox(box: BoxRecord): Box {
+  return {
+    id: box.id,
+    noBox: box.noBox,
+    title: box.title,
+    description: box.description,
+    createdAt: box.createdAt.toISOString(),
+    updatedAt: box.updatedAt.toISOString(),
+  }
+}
+
+function serializeBoxList(boxes: BoxRecord[]): Box[] {
+  return boxes.map(serializeBox)
 }

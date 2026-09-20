@@ -55,7 +55,8 @@ export const ModelName = {
   User: 'User',
   Subsidiary: 'Subsidiary',
   DocType: 'DocType',
-  Partner: 'Partner'
+  Partner: 'Partner',
+  Box: 'Box'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -131,6 +132,18 @@ export const PartnerScalarFieldEnum = {
 } as const
 
 export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
+
+
+export const BoxScalarFieldEnum = {
+  id: 'id',
+  noBox: 'noBox',
+  title: 'title',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BoxScalarFieldEnum = (typeof BoxScalarFieldEnum)[keyof typeof BoxScalarFieldEnum]
 
 
 export const SortOrder = {

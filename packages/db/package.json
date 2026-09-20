@@ -17,12 +17,14 @@
     "db:seed:users": "tsx scripts/seed/users.ts",
     "db:seed:doc-types": "tsx scripts/seed/doc-types.ts",
     "db:seed:partners": "tsx scripts/seed/partners.ts",
+    "db:seed:boxes": "tsx scripts/seed/boxes.ts",
     "db:clean": "tsx scripts/clean/index.ts",
     "db:clean:roles": "tsx scripts/clean/roles.ts",
     "db:clean:users": "tsx scripts/clean/users.ts",
     "db:clean:subsidiaries": "tsx scripts/clean/subsidiaries.ts",
     "db:clean:doc-types": "tsx scripts/clean/doc-types.ts",
-    "db:clean:partners": "tsx scripts/clean/partners.ts"
+    "db:clean:partners": "tsx scripts/clean/partners.ts",
+    "db:clean:boxes": "tsx scripts/clean/boxes.ts"
   },
   "exports": {
     ".": "./src/index.ts",
