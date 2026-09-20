@@ -7,7 +7,6 @@ import {
   BreadcrumbSeparator,
 } from "@packages/ui/components/breadcrumb"
 import { Separator } from "@packages/ui/components/separator"
-import { SidebarTrigger } from "@packages/ui/components/sidebar"
 import { NavUser } from "@packages/ui/layout/nav-user"
 
 const defaultUser = {
@@ -18,13 +17,8 @@ const defaultUser = {
 
 export function AppHeader({ UserContent }: { UserContent?: React.ReactNode }) {
   return (
-    <header className="sticky top-0 flex h-16 w-full shrink-0 items-center justify-between gap-2 border-b bg-background px-4">
+    <header className="sticky top-0 z-10 flex h-16 w-full shrink-0 items-center justify-between gap-2 border-b bg-background px-4">
       <div className="flex items-center gap-2 px-4">
-        <SidebarTrigger className="-ml-1" size="lg" />
-        <Separator
-          orientation="vertical"
-          className="mr-2 data-[orientation=vertical]:h-14"
-        />
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">

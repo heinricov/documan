@@ -9,10 +9,16 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarTrigger,
+  useSidebar,
 } from "@packages/ui/components/sidebar"
 
 import { NavMenu } from "@packages/ui/layout/nav-menu"
 import { Settings } from "lucide-react"
+import {
+  BsLayoutSidebarInsetReverse,
+  BsLayoutSidebarInset,
+} from "react-icons/bs"
 
 export const MenuFooter = [
   {
@@ -30,10 +36,23 @@ export function AppSidebar({
   MenuContent?: React.ReactNode
   FooterContent?: React.ReactNode
 }) {
+  const { state } = useSidebar()
+  const isCollapsed = state === "collapsed"
+
   return (
     <Sidebar collapsible="icon" variant="inset" {...props}>
       <SidebarHeader>
-        <AppLogo />
+        {isCollapsed ? (
+          <div className="flex flex-col items-center gap-1">
+            <SidebarTrigger icon={<BsLayoutSidebarInsetReverse />} />
+            <AppLogo />
+          </div>
+        ) : (
+          <div className="flex flex-row items-center gap-1">
+            <AppLogo />
+            <SidebarTrigger icon={<BsLayoutSidebarInset className="" />} />
+          </div>
+        )}
       </SidebarHeader>
       <SidebarContent>
         {MenuContent}

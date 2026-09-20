@@ -6,7 +6,7 @@ import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 
-import { useIsMobile } from "@packages/ui/hooks/use-mobile"
+import { useIsMobile, useIsTablet } from "@packages/ui/hooks/use-mobile"
 import { Button } from "@packages/ui/components/button"
 import { Input } from "@packages/ui/components/input"
 import { Separator } from "@packages/ui/components/separator"
@@ -67,12 +67,23 @@ function SidebarProvider({
   onOpenChange?: (open: boolean) => void
 }) {
   const isMobile = useIsMobile()
+  const isTablet = useIsTablet()
   const [openMobile, setOpenMobile] = React.useState(false)
+
+  // Force collapsed on tablet screens
+  const effectiveDefaultOpen = isTablet ? false : defaultOpen
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
-  const [_open, _setOpen] = React.useState(defaultOpen)
+  const [_open, _setOpen] = React.useState(effectiveDefaultOpen)
   const open = openProp ?? _open
+
+  // Force collapse when entering tablet
+  React.useEffect(() => {
+    if (isTablet) {
+      _setOpen(false)
+    }
+  }, [isTablet])
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value
@@ -254,8 +265,11 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  icon,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & {
+  icon?: React.ReactNode
+}) {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -263,7 +277,7 @@ function SidebarTrigger({
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
-      size="icon-sm"
+      size="lg"
       className={cn(className)}
       onClick={(event) => {
         onClick?.(event)
@@ -271,7 +285,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      {icon ?? <PanelLeftIcon />}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
