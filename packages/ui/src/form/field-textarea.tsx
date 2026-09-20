@@ -2,9 +2,7 @@ import React, { useId } from "react"
 
 import {
   InputGroup,
-  InputGroupAddon,
   InputGroupTextarea,
-  InputGroupText,
 } from "@packages/ui/components/input-group"
 import {
   Field,
@@ -20,7 +18,6 @@ export function FieldTextArea({
   error,
   required = false,
   maxLength,
-  showCounter = false,
   id,
   className,
   ...props
@@ -30,7 +27,6 @@ export function FieldTextArea({
   error?: string | string[]
   required?: boolean
   maxLength?: number
-  showCounter?: boolean
 }) {
   const autoId = useId()
   const inputId = id ?? autoId
@@ -59,14 +55,6 @@ export function FieldTextArea({
           {...props}
         />
 
-        {showCounter && maxLength ? (
-          <InputGroupAddon align="block-end">
-            <InputGroupText className="text-xs text-muted-foreground">
-              {/* Counter real bisa dihubungkan dengan controlled value nanti */}
-              Max {maxLength} characters
-            </InputGroupText>
-          </InputGroupAddon>
-        ) : null}
       </InputGroup>
 
       {description && descriptionId ? (

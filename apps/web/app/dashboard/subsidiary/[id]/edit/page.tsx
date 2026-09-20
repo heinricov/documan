@@ -1,55 +1,25 @@
 "use client"
 
-import { useParams, useRouter } from "next/navigation"
-import { Button } from "@packages/ui/components/button"
-
-import { FormSubsidiary } from "@/features/subsidiary/components"
+import { useParams } from "next/navigation"
 import { useSubsidiary } from "@/features/subsidiary/hooks"
+import { FormSubsidiary } from "@/features/subsidiary/components"
 import { ROUTES } from "@/lib/constants"
-
-const baseUrl = ROUTES.subsidiary
+import { EntityEditPage, type EntityEditPageConfig } from "@/components/entity"
 
 export default function EditSubsidiaryPage() {
   const params = useParams<{ id: string }>()
-  const router = useRouter()
-  const subsidiaryId = params?.id
+  const { subsidiary, isLoading, error } = useSubsidiary(params?.id)
 
-  const { subsidiary, isLoading, error } = useSubsidiary(subsidiaryId)
-
-  if (isLoading) {
-    return (
-      <section className="flex min-h-svh w-full items-center justify-center bg-background px-4 py-10">
-        <p className="text-sm text-muted-foreground">Memuat subsidiary...</p>
-      </section>
-    )
+  const config: EntityEditPageConfig = {
+    item: subsidiary,
+    isLoading,
+    error,
+    entityName: "subsidiary",
+    baseUrl: ROUTES.subsidiary,
+    children: subsidiary ? (
+      <FormSubsidiary mode="edit" subsidiaryId={subsidiary.id} initialData={{ title: subsidiary.title, name: subsidiary.name, logo: subsidiary.logo }} />
+    ) : null,
   }
 
-  if (error || !subsidiary) {
-    return (
-      <section className="flex min-h-svh w-full flex-col items-center justify-center gap-4 bg-background px-4 py-10">
-        <p className="text-sm text-destructive">
-          {error ?? "Subsidiary tidak ditemukan."}
-        </p>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.push(baseUrl)}
-        >
-          Kembali ke daftar subsidiary
-        </Button>
-      </section>
-    )
-  }
-
-  return (
-    <FormSubsidiary
-      mode="edit"
-      subsidiaryId={subsidiary.id}
-      initialData={{
-        title: subsidiary.title,
-        name: subsidiary.name,
-        logo: subsidiary.logo,
-      }}
-    />
-  )
+  return <EntityEditPage config={config} />
 }

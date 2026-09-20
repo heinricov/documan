@@ -1,48 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback } from "react"
 import type { Subsidiary } from "@packages/validator"
 import { api } from "@/lib/api"
-import { getErrorMessage } from "@/lib/errors"
+import { useEntityList } from "@/lib/hooks"
 
-export interface UseSubsidiariesResult {
-  subsidiaries: Subsidiary[]
-  isLoading: boolean
-  error: string | null
-  deleteSubsidiary: (subsidiary: Subsidiary) => Promise<void>
-}
+export type UseSubsidiariesResult = { subsidiaries: Subsidiary[]; deleteSubsidiary: (subsidiary: Subsidiary) => Promise<void> } & Pick<ReturnType<typeof useEntityList<Subsidiary>>, "isLoading" | "error">
 
 export function useSubsidiaries(): UseSubsidiariesResult {
-  const [subsidiaries, setSubsidiaries] = useState<Subsidiary[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let active = true
-
-    async function loadSubsidiaries() {
-      try {
-        const data = await api.resources.subsidiaries.list({ limit: 100 })
-        if (active) setSubsidiaries(data)
-      } catch (err) {
-        if (active)
-          setError(getErrorMessage(err, "Tidak dapat terhubung ke server."))
-      } finally {
-        if (active) setIsLoading(false)
-      }
-    }
-
-    void loadSubsidiaries()
-
-    return () => {
-      active = false
-    }
-  }, [])
-
-  async function deleteSubsidiary(subsidiary: Subsidiary) {
-    await api.resources.subsidiaries.remove(subsidiary.id)
-    setSubsidiaries((prev) => prev.filter((item) => item.id !== subsidiary.id))
-  }
-
-  return { subsidiaries, isLoading, error, deleteSubsidiary }
+  const listGetter = useCallback(() => api.resources.subsidiaries.list({ limit: 100 }), [])
+  const removeGetter = useCallback((id: string) => api.resources.subsidiaries.remove(id), [])
+  const { items, removeItem, ...rest } = useEntityList(listGetter, removeGetter, "subsidiary")
+  return { subsidiaries: items, deleteSubsidiary: removeItem, ...rest }
 }
