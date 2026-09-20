@@ -47,3 +47,8 @@ export type Partner = Prisma.PartnerModel
  * 
  */
 export type Box = Prisma.BoxModel
+/**
+ * Model DocumentReceipt
+ * 
+ */
+export type DocumentReceipt = Prisma.DocumentReceiptModel

@@ -1,6 +1,6 @@
 import { prisma as defaultPrisma } from "@packages/db"
-import type { Role, User, Subsidiary, DocType, Partner, Box } from "@packages/validator"
-import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides, createPartnerFixture, type PartnerOverrides, createBoxFixture, type BoxOverrides } from "./factories.js"
+import type { Role, User, Subsidiary, DocType, Partner, Box, DocumentReceipt } from "@packages/validator"
+import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides, createPartnerFixture, type PartnerOverrides, createBoxFixture, type BoxOverrides, createDocumentReceiptFixture, type DocumentReceiptOverrides } from "./factories.js"
 
 /**
  * ============================================================
@@ -529,4 +529,88 @@ function serializeBox(box: BoxRecord): Box {
 
 function serializeBoxList(boxes: BoxRecord[]): Box[] {
   return boxes.map(serializeBox)
+}
+
+/**
+ * ============================================================
+ *  DocumentReceipt Seed
+ * ============================================================
+ */
+
+export async function seedDocumentReceipt(
+  overrides: DocumentReceiptOverrides = {},
+  db: Db = defaultPrisma
+): Promise<DocumentReceipt> {
+  const data = createDocumentReceiptFixture(overrides)
+  return serializeDocumentReceipt(
+    await db.documentReceipt.create({
+      data: {
+        title: data.title,
+        description: data.description ?? undefined,
+        userId: data.userId,
+        docTypeId: data.docTypeId,
+        subsidiaryId: data.subsidiaryId,
+        partnerId: data.partnerId,
+        boxId: data.boxId,
+      },
+    })
+  )
+}
+
+export async function seedDocumentReceipts(
+  items: DocumentReceiptOverrides[] = [],
+  db: Db = defaultPrisma
+): Promise<DocumentReceipt[]> {
+  const fixtures = items.length > 0 ? items : [{}]
+  const data = fixtures.map((fixture) => createDocumentReceiptFixture(fixture))
+
+  return serializeDocumentReceiptList(
+    await db.$transaction(
+      data.map((item) =>
+        db.documentReceipt.create({
+          data: {
+            title: item.title,
+            description: item.description ?? undefined,
+            userId: item.userId,
+            docTypeId: item.docTypeId,
+            subsidiaryId: item.subsidiaryId,
+            partnerId: item.partnerId,
+            boxId: item.boxId,
+          },
+        })
+      )
+    )
+  )
+}
+
+type DocumentReceiptRecord = {
+  id: string
+  title: string
+  description: string | null
+  userId: string
+  docTypeId: string
+  subsidiaryId: string
+  partnerId: string
+  boxId: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializeDocumentReceipt(item: DocumentReceiptRecord): DocumentReceipt {
+  return {
+    id: item.id,
+    title: item.title,
+    description: item.description,
+    userId: item.userId,
+    docTypeId: item.docTypeId,
+    subsidiaryId: item.subsidiaryId,
+    partnerId: item.partnerId,
+    boxId: item.boxId,
+    createdAt: item.createdAt.toISOString(),
+    updatedAt: item.updatedAt.toISOString(),
+  }
+}
+
+function serializeDocumentReceiptList(items: DocumentReceiptRecord[]): DocumentReceipt[] {
+  return items.map(serializeDocumentReceipt)
 }

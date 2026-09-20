@@ -4,7 +4,7 @@ import { prisma } from "../../src/client.js"
  * Daftar tabel yang dikelola oleh script clean.
  * Urutan = urutan TRUNCATE saat clean semua sekaligus.
  */
-export const TABLES = ["boxes", "partners", "doc_types", "users", "subsidiaries", "roles"] as const
+export const TABLES = ["document_receipts", "boxes", "partners", "doc_types", "users", "subsidiaries", "roles"] as const
 
 export type TableName = (typeof TABLES)[number]
 

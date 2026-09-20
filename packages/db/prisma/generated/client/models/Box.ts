@@ -190,6 +190,7 @@ export type BoxWhereInput = {
   description?: Prisma.StringNullableFilter<"Box"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Box"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Box"> | Date | string
+  documentReceipts?: Prisma.DocumentReceiptListRelationFilter
 }
 
 export type BoxOrderByWithRelationInput = {
@@ -199,6 +200,7 @@ export type BoxOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  documentReceipts?: Prisma.DocumentReceiptOrderByRelationAggregateInput
 }
 
 export type BoxWhereUniqueInput = Prisma.AtLeast<{
@@ -211,6 +213,7 @@ export type BoxWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Box"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Box"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Box"> | Date | string
+  documentReceipts?: Prisma.DocumentReceiptListRelationFilter
 }, "id" | "noBox">
 
 export type BoxOrderByWithAggregationInput = {
@@ -244,6 +247,7 @@ export type BoxCreateInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptCreateNestedManyWithoutBoxInput
 }
 
 export type BoxUncheckedCreateInput = {
@@ -253,6 +257,7 @@ export type BoxUncheckedCreateInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedCreateNestedManyWithoutBoxInput
 }
 
 export type BoxUpdateInput = {
@@ -262,6 +267,7 @@ export type BoxUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUpdateManyWithoutBoxNestedInput
 }
 
 export type BoxUncheckedUpdateInput = {
@@ -271,6 +277,7 @@ export type BoxUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedUpdateManyWithoutBoxNestedInput
 }
 
 export type BoxCreateManyInput = {
@@ -327,6 +334,106 @@ export type BoxMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type BoxScalarRelationFilter = {
+  is?: Prisma.BoxWhereInput
+  isNot?: Prisma.BoxWhereInput
+}
+
+export type BoxCreateNestedOneWithoutDocumentReceiptsInput = {
+  create?: Prisma.XOR<Prisma.BoxCreateWithoutDocumentReceiptsInput, Prisma.BoxUncheckedCreateWithoutDocumentReceiptsInput>
+  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutDocumentReceiptsInput
+  connect?: Prisma.BoxWhereUniqueInput
+}
+
+export type BoxUpdateOneRequiredWithoutDocumentReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.BoxCreateWithoutDocumentReceiptsInput, Prisma.BoxUncheckedCreateWithoutDocumentReceiptsInput>
+  connectOrCreate?: Prisma.BoxCreateOrConnectWithoutDocumentReceiptsInput
+  upsert?: Prisma.BoxUpsertWithoutDocumentReceiptsInput
+  connect?: Prisma.BoxWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BoxUpdateToOneWithWhereWithoutDocumentReceiptsInput, Prisma.BoxUpdateWithoutDocumentReceiptsInput>, Prisma.BoxUncheckedUpdateWithoutDocumentReceiptsInput>
+}
+
+export type BoxCreateWithoutDocumentReceiptsInput = {
+  id?: string
+  noBox: string
+  title?: string | null
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type BoxUncheckedCreateWithoutDocumentReceiptsInput = {
+  id?: string
+  noBox: string
+  title?: string | null
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type BoxCreateOrConnectWithoutDocumentReceiptsInput = {
+  where: Prisma.BoxWhereUniqueInput
+  create: Prisma.XOR<Prisma.BoxCreateWithoutDocumentReceiptsInput, Prisma.BoxUncheckedCreateWithoutDocumentReceiptsInput>
+}
+
+export type BoxUpsertWithoutDocumentReceiptsInput = {
+  update: Prisma.XOR<Prisma.BoxUpdateWithoutDocumentReceiptsInput, Prisma.BoxUncheckedUpdateWithoutDocumentReceiptsInput>
+  create: Prisma.XOR<Prisma.BoxCreateWithoutDocumentReceiptsInput, Prisma.BoxUncheckedCreateWithoutDocumentReceiptsInput>
+  where?: Prisma.BoxWhereInput
+}
+
+export type BoxUpdateToOneWithWhereWithoutDocumentReceiptsInput = {
+  where?: Prisma.BoxWhereInput
+  data: Prisma.XOR<Prisma.BoxUpdateWithoutDocumentReceiptsInput, Prisma.BoxUncheckedUpdateWithoutDocumentReceiptsInput>
+}
+
+export type BoxUpdateWithoutDocumentReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  noBox?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type BoxUncheckedUpdateWithoutDocumentReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  noBox?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type BoxCountOutputType
+ */
+
+export type BoxCountOutputType = {
+  documentReceipts: number
+}
+
+export type BoxCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceipts?: boolean | BoxCountOutputTypeCountDocumentReceiptsArgs
+}
+
+/**
+ * BoxCountOutputType without action
+ */
+export type BoxCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BoxCountOutputType
+   */
+  select?: Prisma.BoxCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * BoxCountOutputType without action
+ */
+export type BoxCountOutputTypeCountDocumentReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentReceiptWhereInput
+}
 
 
 export type BoxSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -336,6 +443,8 @@ export type BoxSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   description?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  documentReceipts?: boolean | Prisma.Box$documentReceiptsArgs<ExtArgs>
+  _count?: boolean | Prisma.BoxCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["box"]>
 
 export type BoxSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -366,10 +475,18 @@ export type BoxSelectScalar = {
 }
 
 export type BoxOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "noBox" | "title" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["box"]>
+export type BoxInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceipts?: boolean | Prisma.Box$documentReceiptsArgs<ExtArgs>
+  _count?: boolean | Prisma.BoxCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type BoxIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type BoxIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $BoxPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Box"
-  objects: {}
+  objects: {
+    documentReceipts: Prisma.$DocumentReceiptPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     noBox: string
@@ -771,6 +888,7 @@ readonly fields: BoxFieldRefs;
  */
 export interface Prisma__BoxClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  documentReceipts<T extends Prisma.Box$documentReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Box$documentReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -823,6 +941,10 @@ export type BoxFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
+  /**
    * Filter, which Box to fetch.
    */
   where: Prisma.BoxWhereUniqueInput
@@ -841,6 +963,10 @@ export type BoxFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
+  /**
    * Filter, which Box to fetch.
    */
   where: Prisma.BoxWhereUniqueInput
@@ -858,6 +984,10 @@ export type BoxFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Box
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
   /**
    * Filter, which Box to fetch.
    */
@@ -907,6 +1037,10 @@ export type BoxFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
+  /**
    * Filter, which Box to fetch.
    */
   where?: Prisma.BoxWhereInput
@@ -954,6 +1088,10 @@ export type BoxFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the Box
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
   /**
    * Filter, which Boxes to fetch.
    */
@@ -1003,6 +1141,10 @@ export type BoxCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
+  /**
    * The data needed to create a Box.
    */
   data: Prisma.XOR<Prisma.BoxCreateInput, Prisma.BoxUncheckedCreateInput>
@@ -1050,6 +1192,10 @@ export type BoxUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
    * Omit specific fields from the Box
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
   /**
    * The data needed to update a Box.
    */
@@ -1117,6 +1263,10 @@ export type BoxUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
+  /**
    * The filter to search for the Box to update in case it exists.
    */
   where: Prisma.BoxWhereUniqueInput
@@ -1143,6 +1293,10 @@ export type BoxDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
+  /**
    * Filter which Box to delete.
    */
   where: Prisma.BoxWhereUniqueInput
@@ -1163,6 +1317,30 @@ export type BoxDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * Box.documentReceipts
+ */
+export type Box$documentReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentReceipt
+   */
+  select?: Prisma.DocumentReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DocumentReceipt
+   */
+  omit?: Prisma.DocumentReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentReceiptInclude<ExtArgs> | null
+  where?: Prisma.DocumentReceiptWhereInput
+  orderBy?: Prisma.DocumentReceiptOrderByWithRelationInput | Prisma.DocumentReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentReceiptScalarFieldEnum | Prisma.DocumentReceiptScalarFieldEnum[]
+}
+
+/**
  * Box without action
  */
 export type BoxDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1174,4 +1352,8 @@ export type BoxDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the Box
    */
   omit?: Prisma.BoxOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BoxInclude<ExtArgs> | null
 }

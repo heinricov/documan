@@ -182,6 +182,7 @@ export type DocTypeWhereInput = {
   description?: Prisma.StringNullableFilter<"DocType"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
+  documentReceipts?: Prisma.DocumentReceiptListRelationFilter
 }
 
 export type DocTypeOrderByWithRelationInput = {
@@ -190,6 +191,7 @@ export type DocTypeOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  documentReceipts?: Prisma.DocumentReceiptOrderByRelationAggregateInput
 }
 
 export type DocTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -201,6 +203,7 @@ export type DocTypeWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"DocType"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
+  documentReceipts?: Prisma.DocumentReceiptListRelationFilter
 }, "id" | "title">
 
 export type DocTypeOrderByWithAggregationInput = {
@@ -231,6 +234,7 @@ export type DocTypeCreateInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptCreateNestedManyWithoutDocTypeInput
 }
 
 export type DocTypeUncheckedCreateInput = {
@@ -239,6 +243,7 @@ export type DocTypeUncheckedCreateInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedCreateNestedManyWithoutDocTypeInput
 }
 
 export type DocTypeUpdateInput = {
@@ -247,6 +252,7 @@ export type DocTypeUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUpdateManyWithoutDocTypeNestedInput
 }
 
 export type DocTypeUncheckedUpdateInput = {
@@ -255,6 +261,7 @@ export type DocTypeUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedUpdateManyWithoutDocTypeNestedInput
 }
 
 export type DocTypeCreateManyInput = {
@@ -305,6 +312,102 @@ export type DocTypeMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type DocTypeScalarRelationFilter = {
+  is?: Prisma.DocTypeWhereInput
+  isNot?: Prisma.DocTypeWhereInput
+}
+
+export type DocTypeCreateNestedOneWithoutDocumentReceiptsInput = {
+  create?: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptsInput>
+  connectOrCreate?: Prisma.DocTypeCreateOrConnectWithoutDocumentReceiptsInput
+  connect?: Prisma.DocTypeWhereUniqueInput
+}
+
+export type DocTypeUpdateOneRequiredWithoutDocumentReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptsInput>
+  connectOrCreate?: Prisma.DocTypeCreateOrConnectWithoutDocumentReceiptsInput
+  upsert?: Prisma.DocTypeUpsertWithoutDocumentReceiptsInput
+  connect?: Prisma.DocTypeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocTypeUpdateToOneWithWhereWithoutDocumentReceiptsInput, Prisma.DocTypeUpdateWithoutDocumentReceiptsInput>, Prisma.DocTypeUncheckedUpdateWithoutDocumentReceiptsInput>
+}
+
+export type DocTypeCreateWithoutDocumentReceiptsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocTypeUncheckedCreateWithoutDocumentReceiptsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocTypeCreateOrConnectWithoutDocumentReceiptsInput = {
+  where: Prisma.DocTypeWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptsInput>
+}
+
+export type DocTypeUpsertWithoutDocumentReceiptsInput = {
+  update: Prisma.XOR<Prisma.DocTypeUpdateWithoutDocumentReceiptsInput, Prisma.DocTypeUncheckedUpdateWithoutDocumentReceiptsInput>
+  create: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptsInput>
+  where?: Prisma.DocTypeWhereInput
+}
+
+export type DocTypeUpdateToOneWithWhereWithoutDocumentReceiptsInput = {
+  where?: Prisma.DocTypeWhereInput
+  data: Prisma.XOR<Prisma.DocTypeUpdateWithoutDocumentReceiptsInput, Prisma.DocTypeUncheckedUpdateWithoutDocumentReceiptsInput>
+}
+
+export type DocTypeUpdateWithoutDocumentReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DocTypeUncheckedUpdateWithoutDocumentReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type DocTypeCountOutputType
+ */
+
+export type DocTypeCountOutputType = {
+  documentReceipts: number
+}
+
+export type DocTypeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceipts?: boolean | DocTypeCountOutputTypeCountDocumentReceiptsArgs
+}
+
+/**
+ * DocTypeCountOutputType without action
+ */
+export type DocTypeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocTypeCountOutputType
+   */
+  select?: Prisma.DocTypeCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DocTypeCountOutputType without action
+ */
+export type DocTypeCountOutputTypeCountDocumentReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentReceiptWhereInput
+}
 
 
 export type DocTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -313,6 +416,8 @@ export type DocTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   description?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  documentReceipts?: boolean | Prisma.DocType$documentReceiptsArgs<ExtArgs>
+  _count?: boolean | Prisma.DocTypeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["docType"]>
 
 export type DocTypeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -340,10 +445,18 @@ export type DocTypeSelectScalar = {
 }
 
 export type DocTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["docType"]>
+export type DocTypeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceipts?: boolean | Prisma.DocType$documentReceiptsArgs<ExtArgs>
+  _count?: boolean | Prisma.DocTypeCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type DocTypeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type DocTypeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $DocTypePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DocType"
-  objects: {}
+  objects: {
+    documentReceipts: Prisma.$DocumentReceiptPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
@@ -744,6 +857,7 @@ readonly fields: DocTypeFieldRefs;
  */
 export interface Prisma__DocTypeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  documentReceipts<T extends Prisma.DocType$documentReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocType$documentReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -795,6 +909,10 @@ export type DocTypeFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
+  /**
    * Filter, which DocType to fetch.
    */
   where: Prisma.DocTypeWhereUniqueInput
@@ -813,6 +931,10 @@ export type DocTypeFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
+  /**
    * Filter, which DocType to fetch.
    */
   where: Prisma.DocTypeWhereUniqueInput
@@ -830,6 +952,10 @@ export type DocTypeFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the DocType
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
   /**
    * Filter, which DocType to fetch.
    */
@@ -879,6 +1005,10 @@ export type DocTypeFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
+  /**
    * Filter, which DocType to fetch.
    */
   where?: Prisma.DocTypeWhereInput
@@ -926,6 +1056,10 @@ export type DocTypeFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the DocType
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
   /**
    * Filter, which DocTypes to fetch.
    */
@@ -975,6 +1109,10 @@ export type DocTypeCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
+  /**
    * The data needed to create a DocType.
    */
   data: Prisma.XOR<Prisma.DocTypeCreateInput, Prisma.DocTypeUncheckedCreateInput>
@@ -1022,6 +1160,10 @@ export type DocTypeUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the DocType
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
   /**
    * The data needed to update a DocType.
    */
@@ -1089,6 +1231,10 @@ export type DocTypeUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
+  /**
    * The filter to search for the DocType to update in case it exists.
    */
   where: Prisma.DocTypeWhereUniqueInput
@@ -1115,6 +1261,10 @@ export type DocTypeDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
+  /**
    * Filter which DocType to delete.
    */
   where: Prisma.DocTypeWhereUniqueInput
@@ -1135,6 +1285,30 @@ export type DocTypeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * DocType.documentReceipts
+ */
+export type DocType$documentReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentReceipt
+   */
+  select?: Prisma.DocumentReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DocumentReceipt
+   */
+  omit?: Prisma.DocumentReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentReceiptInclude<ExtArgs> | null
+  where?: Prisma.DocumentReceiptWhereInput
+  orderBy?: Prisma.DocumentReceiptOrderByWithRelationInput | Prisma.DocumentReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentReceiptScalarFieldEnum | Prisma.DocumentReceiptScalarFieldEnum[]
+}
+
+/**
  * DocType without action
  */
 export type DocTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1146,4 +1320,8 @@ export type DocTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the DocType
    */
   omit?: Prisma.DocTypeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocTypeInclude<ExtArgs> | null
 }

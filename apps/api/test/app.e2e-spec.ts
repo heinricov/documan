@@ -5,7 +5,7 @@ import { loadEnv } from "@configs/environment"
 import { AppModule } from "../src/app.module.js"
 import { HttpExceptionFilter } from "../src/common/filters/http-exception.filter.js"
 import { TransformInterceptor } from "../src/common/interceptors/transform.interceptor.js"
-import { cleanDatabase, seedRole, createTestToken, authHeader } from "@packages/testing"
+import { cleanDatabase, seedRole, seedUser, seedDocType, seedSubsidiary, seedPartner, seedBox, createTestToken, authHeader } from "@packages/testing"
 
 loadEnv()
 
@@ -332,6 +332,111 @@ describe("App (e2e)", () => {
     it("404 — get box yang sudah dihapus", () => {
       return request(app.getHttpServer())
         .get(`/boxes/${boxId}`)
+        .set("Authorization", adminToken)
+        .expect(404)
+    })
+  })
+
+  describe("DocumentReceipts CRUD", () => {
+    let adminToken: string
+    let userId: string
+    let docTypeId: string
+    let subsidiaryId: string
+    let partnerId: string
+    let boxId: string
+    let documentReceiptId: string
+
+    beforeAll(async () => {
+      const adminRole = await seedRole({ title: `admin-dr-${Date.now()}` })
+      const user = await seedUser({ roleId: adminRole.id })
+      userId = user.id
+
+      const docType = await seedDocType({ title: `doc-type-dr-${Date.now()}` })
+      docTypeId = docType.id
+
+      const subsidiary = await seedSubsidiary({
+        title: `subs-dr-${Date.now()}`,
+        name: `subs-name-dr-${Date.now()}`,
+      })
+      subsidiaryId = subsidiary.id
+
+      const partner = await seedPartner({
+        name: `partner-dr-${Date.now()}`,
+        type: "supplier",
+      })
+      partnerId = partner.id
+
+      const box = await seedBox({ noBox: `BOX-DR-${Date.now()}` })
+      boxId = box.id
+
+      const token = await createTestToken({ role: "admin" })
+      adminToken = authHeader(token)
+    })
+
+    it("POST /document-receipts — admin membuat document receipt", () => {
+      return request(app.getHttpServer())
+        .post("/document-receipts")
+        .set("Authorization", adminToken)
+        .send({
+          title: `Doc Receipt ${Date.now()}`,
+          description: "Test document receipt",
+          userId,
+          docTypeId,
+          subsidiaryId,
+          partnerId,
+          boxId,
+        })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(res.body.data).toHaveProperty("id")
+          expect(res.body.data).toHaveProperty("title")
+          documentReceiptId = res.body.data.id
+        })
+    })
+
+    it("GET /document-receipts — admin bisa listing", () => {
+      return request(app.getHttpServer())
+        .get("/document-receipts")
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.success).toBe(true)
+          expect(Array.isArray(res.body.data)).toBe(true)
+        })
+    })
+
+    it("GET /document-receipts/:id — detail document receipt", () => {
+      return request(app.getHttpServer())
+        .get(`/document-receipts/${documentReceiptId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("id", documentReceiptId)
+        })
+    })
+
+    it("PATCH /document-receipts/:id — update title", () => {
+      return request(app.getHttpServer())
+        .patch(`/document-receipts/${documentReceiptId}`)
+        .set("Authorization", adminToken)
+        .send({ title: "Doc Receipt Updated" })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data).toHaveProperty("title", "Doc Receipt Updated")
+        })
+    })
+
+    it("DELETE /document-receipts/:id — hapus document receipt", () => {
+      return request(app.getHttpServer())
+        .delete(`/document-receipts/${documentReceiptId}`)
+        .set("Authorization", adminToken)
+        .expect(200)
+    })
+
+    it("404 — get document receipt yang sudah dihapus", () => {
+      return request(app.getHttpServer())
+        .get(`/document-receipts/${documentReceiptId}`)
         .set("Authorization", adminToken)
         .expect(404)
     })

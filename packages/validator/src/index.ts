@@ -125,3 +125,19 @@ export type {
   UpdateBox,
   BoxQuery,
 } from "@packages/validator/schemas/box"
+
+// ====================== DocumentReceipt Schemas ======================
+export {
+  DocumentReceiptSchema,
+  CreateDocumentReceiptSchema,
+  UpdateDocumentReceiptSchema,
+  DocumentReceiptQuerySchema,
+} from "@packages/validator/schemas/document-receipt"
+
+// ====================== DocumentReceipt Types ======================
+export type {
+  DocumentReceipt,
+  CreateDocumentReceipt,
+  UpdateDocumentReceipt,
+  DocumentReceiptQuery,
+} from "@packages/validator/schemas/document-receipt"

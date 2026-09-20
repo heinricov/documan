@@ -11,6 +11,8 @@ import { createPartnersResource } from "./partners"
 import type { PartnersResource } from "./partners"
 import { createBoxesResource } from "./boxes"
 import type { BoxesResource } from "./boxes"
+import { createDocumentReceiptsResource } from "./document-receipts"
+import type { DocumentReceiptsResource } from "./document-receipts"
 import { createAuthResource } from "./auth"
 import type { AuthResource } from "./auth"
 
@@ -22,6 +24,7 @@ export interface Resources {
   docTypes: DocTypesResource
   partners: PartnersResource
   boxes: BoxesResource
+  documentReceipts: DocumentReceiptsResource
 }
 
 export function createResources(http: Http): Resources {
@@ -33,6 +36,7 @@ export function createResources(http: Http): Resources {
     docTypes: createDocTypesResource(http),
     partners: createPartnersResource(http),
     boxes: createBoxesResource(http),
+    documentReceipts: createDocumentReceiptsResource(http),
   }
 }
 
@@ -43,3 +47,4 @@ export type { SubsidiariesResource } from "./subsidiaries"
 export type { DocTypesResource } from "./doc-types"
 export type { PartnersResource } from "./partners"
 export type { BoxesResource } from "./boxes"
+export type { DocumentReceiptsResource } from "./document-receipts"

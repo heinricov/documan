@@ -190,6 +190,7 @@ export type SubsidiaryWhereInput = {
   logo?: Prisma.StringNullableFilter<"Subsidiary"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subsidiary"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subsidiary"> | Date | string
+  documentReceipts?: Prisma.DocumentReceiptListRelationFilter
 }
 
 export type SubsidiaryOrderByWithRelationInput = {
@@ -199,6 +200,7 @@ export type SubsidiaryOrderByWithRelationInput = {
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  documentReceipts?: Prisma.DocumentReceiptOrderByRelationAggregateInput
 }
 
 export type SubsidiaryWhereUniqueInput = Prisma.AtLeast<{
@@ -211,6 +213,7 @@ export type SubsidiaryWhereUniqueInput = Prisma.AtLeast<{
   logo?: Prisma.StringNullableFilter<"Subsidiary"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Subsidiary"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subsidiary"> | Date | string
+  documentReceipts?: Prisma.DocumentReceiptListRelationFilter
 }, "id" | "title" | "name">
 
 export type SubsidiaryOrderByWithAggregationInput = {
@@ -244,6 +247,7 @@ export type SubsidiaryCreateInput = {
   logo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptCreateNestedManyWithoutSubsidiaryInput
 }
 
 export type SubsidiaryUncheckedCreateInput = {
@@ -253,6 +257,7 @@ export type SubsidiaryUncheckedCreateInput = {
   logo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedCreateNestedManyWithoutSubsidiaryInput
 }
 
 export type SubsidiaryUpdateInput = {
@@ -262,6 +267,7 @@ export type SubsidiaryUpdateInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUpdateManyWithoutSubsidiaryNestedInput
 }
 
 export type SubsidiaryUncheckedUpdateInput = {
@@ -271,6 +277,7 @@ export type SubsidiaryUncheckedUpdateInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedUpdateManyWithoutSubsidiaryNestedInput
 }
 
 export type SubsidiaryCreateManyInput = {
@@ -327,6 +334,106 @@ export type SubsidiaryMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type SubsidiaryScalarRelationFilter = {
+  is?: Prisma.SubsidiaryWhereInput
+  isNot?: Prisma.SubsidiaryWhereInput
+}
+
+export type SubsidiaryCreateNestedOneWithoutDocumentReceiptsInput = {
+  create?: Prisma.XOR<Prisma.SubsidiaryCreateWithoutDocumentReceiptsInput, Prisma.SubsidiaryUncheckedCreateWithoutDocumentReceiptsInput>
+  connectOrCreate?: Prisma.SubsidiaryCreateOrConnectWithoutDocumentReceiptsInput
+  connect?: Prisma.SubsidiaryWhereUniqueInput
+}
+
+export type SubsidiaryUpdateOneRequiredWithoutDocumentReceiptsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubsidiaryCreateWithoutDocumentReceiptsInput, Prisma.SubsidiaryUncheckedCreateWithoutDocumentReceiptsInput>
+  connectOrCreate?: Prisma.SubsidiaryCreateOrConnectWithoutDocumentReceiptsInput
+  upsert?: Prisma.SubsidiaryUpsertWithoutDocumentReceiptsInput
+  connect?: Prisma.SubsidiaryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubsidiaryUpdateToOneWithWhereWithoutDocumentReceiptsInput, Prisma.SubsidiaryUpdateWithoutDocumentReceiptsInput>, Prisma.SubsidiaryUncheckedUpdateWithoutDocumentReceiptsInput>
+}
+
+export type SubsidiaryCreateWithoutDocumentReceiptsInput = {
+  id?: string
+  title: string
+  name: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SubsidiaryUncheckedCreateWithoutDocumentReceiptsInput = {
+  id?: string
+  title: string
+  name: string
+  logo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SubsidiaryCreateOrConnectWithoutDocumentReceiptsInput = {
+  where: Prisma.SubsidiaryWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubsidiaryCreateWithoutDocumentReceiptsInput, Prisma.SubsidiaryUncheckedCreateWithoutDocumentReceiptsInput>
+}
+
+export type SubsidiaryUpsertWithoutDocumentReceiptsInput = {
+  update: Prisma.XOR<Prisma.SubsidiaryUpdateWithoutDocumentReceiptsInput, Prisma.SubsidiaryUncheckedUpdateWithoutDocumentReceiptsInput>
+  create: Prisma.XOR<Prisma.SubsidiaryCreateWithoutDocumentReceiptsInput, Prisma.SubsidiaryUncheckedCreateWithoutDocumentReceiptsInput>
+  where?: Prisma.SubsidiaryWhereInput
+}
+
+export type SubsidiaryUpdateToOneWithWhereWithoutDocumentReceiptsInput = {
+  where?: Prisma.SubsidiaryWhereInput
+  data: Prisma.XOR<Prisma.SubsidiaryUpdateWithoutDocumentReceiptsInput, Prisma.SubsidiaryUncheckedUpdateWithoutDocumentReceiptsInput>
+}
+
+export type SubsidiaryUpdateWithoutDocumentReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SubsidiaryUncheckedUpdateWithoutDocumentReceiptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type SubsidiaryCountOutputType
+ */
+
+export type SubsidiaryCountOutputType = {
+  documentReceipts: number
+}
+
+export type SubsidiaryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceipts?: boolean | SubsidiaryCountOutputTypeCountDocumentReceiptsArgs
+}
+
+/**
+ * SubsidiaryCountOutputType without action
+ */
+export type SubsidiaryCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SubsidiaryCountOutputType
+   */
+  select?: Prisma.SubsidiaryCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SubsidiaryCountOutputType without action
+ */
+export type SubsidiaryCountOutputTypeCountDocumentReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentReceiptWhereInput
+}
 
 
 export type SubsidiarySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -336,6 +443,8 @@ export type SubsidiarySelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   logo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  documentReceipts?: boolean | Prisma.Subsidiary$documentReceiptsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubsidiaryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subsidiary"]>
 
 export type SubsidiarySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -366,10 +475,18 @@ export type SubsidiarySelectScalar = {
 }
 
 export type SubsidiaryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "name" | "logo" | "createdAt" | "updatedAt", ExtArgs["result"]["subsidiary"]>
+export type SubsidiaryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceipts?: boolean | Prisma.Subsidiary$documentReceiptsArgs<ExtArgs>
+  _count?: boolean | Prisma.SubsidiaryCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SubsidiaryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SubsidiaryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $SubsidiaryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Subsidiary"
-  objects: {}
+  objects: {
+    documentReceipts: Prisma.$DocumentReceiptPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
@@ -771,6 +888,7 @@ readonly fields: SubsidiaryFieldRefs;
  */
 export interface Prisma__SubsidiaryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  documentReceipts<T extends Prisma.Subsidiary$documentReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subsidiary$documentReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -823,6 +941,10 @@ export type SubsidiaryFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
+  /**
    * Filter, which Subsidiary to fetch.
    */
   where: Prisma.SubsidiaryWhereUniqueInput
@@ -841,6 +963,10 @@ export type SubsidiaryFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extens
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
+  /**
    * Filter, which Subsidiary to fetch.
    */
   where: Prisma.SubsidiaryWhereUniqueInput
@@ -858,6 +984,10 @@ export type SubsidiaryFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the Subsidiary
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
   /**
    * Filter, which Subsidiary to fetch.
    */
@@ -907,6 +1037,10 @@ export type SubsidiaryFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
+  /**
    * Filter, which Subsidiary to fetch.
    */
   where?: Prisma.SubsidiaryWhereInput
@@ -954,6 +1088,10 @@ export type SubsidiaryFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Subsidiary
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
   /**
    * Filter, which Subsidiaries to fetch.
    */
@@ -1003,6 +1141,10 @@ export type SubsidiaryCreateArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
+  /**
    * The data needed to create a Subsidiary.
    */
   data: Prisma.XOR<Prisma.SubsidiaryCreateInput, Prisma.SubsidiaryUncheckedCreateInput>
@@ -1050,6 +1192,10 @@ export type SubsidiaryUpdateArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Subsidiary
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
   /**
    * The data needed to update a Subsidiary.
    */
@@ -1117,6 +1263,10 @@ export type SubsidiaryUpsertArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
+  /**
    * The filter to search for the Subsidiary to update in case it exists.
    */
   where: Prisma.SubsidiaryWhereUniqueInput
@@ -1143,6 +1293,10 @@ export type SubsidiaryDeleteArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
+  /**
    * Filter which Subsidiary to delete.
    */
   where: Prisma.SubsidiaryWhereUniqueInput
@@ -1163,6 +1317,30 @@ export type SubsidiaryDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
+ * Subsidiary.documentReceipts
+ */
+export type Subsidiary$documentReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentReceipt
+   */
+  select?: Prisma.DocumentReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DocumentReceipt
+   */
+  omit?: Prisma.DocumentReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentReceiptInclude<ExtArgs> | null
+  where?: Prisma.DocumentReceiptWhereInput
+  orderBy?: Prisma.DocumentReceiptOrderByWithRelationInput | Prisma.DocumentReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentReceiptScalarFieldEnum | Prisma.DocumentReceiptScalarFieldEnum[]
+}
+
+/**
  * Subsidiary without action
  */
 export type SubsidiaryDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1174,4 +1352,8 @@ export type SubsidiaryDefaultArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the Subsidiary
    */
   omit?: Prisma.SubsidiaryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubsidiaryInclude<ExtArgs> | null
 }

@@ -402,7 +402,8 @@ export const ModelName = {
   Subsidiary: 'Subsidiary',
   DocType: 'DocType',
   Partner: 'Partner',
-  Box: 'Box'
+  Box: 'Box',
+  DocumentReceipt: 'DocumentReceipt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "user" | "subsidiary" | "docType" | "partner" | "box"
+    modelProps: "role" | "user" | "subsidiary" | "docType" | "partner" | "box" | "documentReceipt"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -866,6 +867,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DocumentReceipt: {
+      payload: Prisma.$DocumentReceiptPayload<ExtArgs>
+      fields: Prisma.DocumentReceiptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DocumentReceiptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DocumentReceiptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>
+        }
+        findFirst: {
+          args: Prisma.DocumentReceiptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DocumentReceiptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>
+        }
+        findMany: {
+          args: Prisma.DocumentReceiptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>[]
+        }
+        create: {
+          args: Prisma.DocumentReceiptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>
+        }
+        createMany: {
+          args: Prisma.DocumentReceiptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DocumentReceiptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>[]
+        }
+        delete: {
+          args: Prisma.DocumentReceiptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>
+        }
+        update: {
+          args: Prisma.DocumentReceiptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>
+        }
+        deleteMany: {
+          args: Prisma.DocumentReceiptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DocumentReceiptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DocumentReceiptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>[]
+        }
+        upsert: {
+          args: Prisma.DocumentReceiptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptPayload>
+        }
+        aggregate: {
+          args: Prisma.DocumentReceiptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDocumentReceipt>
+        }
+        groupBy: {
+          args: Prisma.DocumentReceiptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentReceiptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DocumentReceiptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentReceiptCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -974,6 +1049,22 @@ export const BoxScalarFieldEnum = {
 } as const
 
 export type BoxScalarFieldEnum = (typeof BoxScalarFieldEnum)[keyof typeof BoxScalarFieldEnum]
+
+
+export const DocumentReceiptScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  userId: 'userId',
+  docTypeId: 'docTypeId',
+  subsidiaryId: 'subsidiaryId',
+  partnerId: 'partnerId',
+  boxId: 'boxId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentReceiptScalarFieldEnum = (typeof DocumentReceiptScalarFieldEnum)[keyof typeof DocumentReceiptScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1204,6 +1295,7 @@ export type GlobalOmitConfig = {
   docType?: Prisma.DocTypeOmit
   partner?: Prisma.PartnerOmit
   box?: Prisma.BoxOmit
+  documentReceipt?: Prisma.DocumentReceiptOmit
 }
 
 /* Types for Logging */

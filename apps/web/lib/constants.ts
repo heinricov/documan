@@ -5,4 +5,5 @@ export const ROUTES = {
   docType: "/dashboard/doc-type",
   partner: "/dashboard/partner",
   box: "/dashboard/box",
+  documentReceipt: "/dashboard/document-receipt",
 } as const

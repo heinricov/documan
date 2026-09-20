@@ -6,12 +6,12 @@
  */
 
 // ====================== Factories ======================
-export { createRoleFixture, resetRoleCounter, createUserFixture, resetUserCounter, createSubsidiaryFixture, resetSubsidiaryCounter, createDocTypeFixture, resetDocTypeCounter, createPartnerFixture, resetPartnerCounter, createBoxFixture, resetBoxCounter } from "./factories.js"
+export { createRoleFixture, resetRoleCounter, createUserFixture, resetUserCounter, createSubsidiaryFixture, resetSubsidiaryCounter, createDocTypeFixture, resetDocTypeCounter, createPartnerFixture, resetPartnerCounter, createBoxFixture, resetBoxCounter, createDocumentReceiptFixture, resetDocumentReceiptCounter } from "./factories.js"
 
-export type { RoleOverrides, UserOverrides, SubsidiaryOverrides, DocTypeOverrides, PartnerOverrides, BoxOverrides } from "./factories.js"
+export type { RoleOverrides, UserOverrides, SubsidiaryOverrides, DocTypeOverrides, PartnerOverrides, BoxOverrides, DocumentReceiptOverrides } from "./factories.js"
 
 // ====================== DB Helpers ======================
-export { cleanDatabase, seedRole, seedRoles, seedUser, seedUsers, seedSubsidiary, seedSubsidiaries, seedDocType, seedDocTypes, seedPartner, seedPartners, seedBox, seedBoxes } from "./db.js"
+export { cleanDatabase, seedRole, seedRoles, seedUser, seedUsers, seedSubsidiary, seedSubsidiaries, seedDocType, seedDocTypes, seedPartner, seedPartners, seedBox, seedBoxes, seedDocumentReceipt, seedDocumentReceipts } from "./db.js"
 
 export type { PrismaClientLike } from "./db.js"
 

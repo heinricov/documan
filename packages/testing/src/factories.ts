@@ -1,4 +1,4 @@
-import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType, CreatePartner, CreateBox } from "@packages/validator"
+import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType, CreatePartner, CreateBox, CreateDocumentReceipt } from "@packages/validator"
 
 /**
  * ============================================================
@@ -260,4 +260,46 @@ export function createBoxFixture(overrides: BoxOverrides = {}): CreateBox {
  */
 export function resetBoxCounter(): void {
   boxCounter = 0
+}
+
+/**
+ * ============================================================
+ *  DocumentReceipt Factory
+ * ============================================================
+ */
+
+let documentReceiptCounter = 0
+
+export interface DocumentReceiptOverrides {
+  title?: string
+  description?: CreateDocumentReceipt["description"]
+  userId?: string
+  docTypeId?: string
+  subsidiaryId?: string
+  partnerId?: string
+  boxId?: string
+}
+
+/**
+ * Membuat fixture data DocumentReceipt yang valid.
+ * `title` digenerate unik otomatis jika tidak di-supply.
+ */
+export function createDocumentReceiptFixture(
+  overrides: DocumentReceiptOverrides = {}
+): CreateDocumentReceipt {
+  documentReceiptCounter++
+
+  return {
+    title: overrides.title ?? `doc-receipt-${documentReceiptCounter}-${crypto.randomUUID().slice(0, 8)}`,
+    description: overrides.description,
+    userId: overrides.userId ?? crypto.randomUUID(),
+    docTypeId: overrides.docTypeId ?? crypto.randomUUID(),
+    subsidiaryId: overrides.subsidiaryId ?? crypto.randomUUID(),
+    partnerId: overrides.partnerId ?? crypto.randomUUID(),
+    boxId: overrides.boxId ?? crypto.randomUUID(),
+  }
+}
+
+export function resetDocumentReceiptCounter(): void {
+  documentReceiptCounter = 0
 }

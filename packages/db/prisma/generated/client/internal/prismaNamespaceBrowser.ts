@@ -56,7 +56,8 @@ export const ModelName = {
   Subsidiary: 'Subsidiary',
   DocType: 'DocType',
   Partner: 'Partner',
-  Box: 'Box'
+  Box: 'Box',
+  DocumentReceipt: 'DocumentReceipt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -144,6 +145,22 @@ export const BoxScalarFieldEnum = {
 } as const
 
 export type BoxScalarFieldEnum = (typeof BoxScalarFieldEnum)[keyof typeof BoxScalarFieldEnum]
+
+
+export const DocumentReceiptScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  userId: 'userId',
+  docTypeId: 'docTypeId',
+  subsidiaryId: 'subsidiaryId',
+  partnerId: 'partnerId',
+  boxId: 'boxId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentReceiptScalarFieldEnum = (typeof DocumentReceiptScalarFieldEnum)[keyof typeof DocumentReceiptScalarFieldEnum]
 
 
 export const SortOrder = {
