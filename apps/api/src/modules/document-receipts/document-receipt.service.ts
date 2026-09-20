@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { prisma, type DocumentReceipt as DocumentReceiptRecord } from "@packages/db"
 import {
-  ConflictError,
   NotFoundError,
   paginatedResponse,
   parseOffsetPagination,
@@ -27,7 +26,7 @@ export class DocumentReceiptService {
   async findAll(query: DocumentReceiptQuery): Promise<PaginatedResponse<DocumentReceipt>> {
     const { page, limit, offset } = parseOffsetPagination(query)
     const { skip, take } = toPrismaArgs({ page, limit, offset })
-    const { id, search, userId, docTypeId, subsidiaryId, partnerId, boxId } = query
+    const { id, search, userId, docTypeId, boxId } = query
 
     const where = {
       ...(id ? { id } : {}),
@@ -36,8 +35,6 @@ export class DocumentReceiptService {
         : {}),
       ...(userId ? { userId } : {}),
       ...(docTypeId ? { docTypeId } : {}),
-      ...(subsidiaryId ? { subsidiaryId } : {}),
-      ...(partnerId ? { partnerId } : {}),
       ...(boxId ? { boxId } : {}),
     }
 
@@ -50,8 +47,6 @@ export class DocumentReceiptService {
         include: {
           user: { select: { id: true, username: true } },
           docType: { select: { id: true, title: true } },
-          subsidiary: { select: { id: true, title: true } },
-          partner: { select: { id: true, name: true } },
           box: { select: { id: true, noBox: true } },
         },
       }),
@@ -67,8 +62,6 @@ export class DocumentReceiptService {
       include: {
         user: { select: { id: true, username: true } },
         docType: { select: { id: true, title: true } },
-        subsidiary: { select: { id: true, title: true } },
-        partner: { select: { id: true, name: true } },
         box: { select: { id: true, noBox: true } },
       },
     })
@@ -88,15 +81,11 @@ export class DocumentReceiptService {
           description: data.description,
           userId: data.userId,
           docTypeId: data.docTypeId,
-          subsidiaryId: data.subsidiaryId,
-          partnerId: data.partnerId,
           boxId: data.boxId,
         },
         include: {
           user: { select: { id: true, username: true } },
           docType: { select: { id: true, title: true } },
-          subsidiary: { select: { id: true, title: true } },
-          partner: { select: { id: true, name: true } },
           box: { select: { id: true, noBox: true } },
         },
       })
@@ -118,15 +107,11 @@ export class DocumentReceiptService {
           ...(data.description !== undefined ? { description: data.description } : {}),
           ...(data.userId !== undefined ? { userId: data.userId } : {}),
           ...(data.docTypeId !== undefined ? { docTypeId: data.docTypeId } : {}),
-          ...(data.subsidiaryId !== undefined ? { subsidiaryId: data.subsidiaryId } : {}),
-          ...(data.partnerId !== undefined ? { partnerId: data.partnerId } : {}),
           ...(data.boxId !== undefined ? { boxId: data.boxId } : {}),
         },
         include: {
           user: { select: { id: true, username: true } },
           docType: { select: { id: true, title: true } },
-          subsidiary: { select: { id: true, title: true } },
-          partner: { select: { id: true, name: true } },
           box: { select: { id: true, noBox: true } },
         },
       })
@@ -146,8 +131,6 @@ export class DocumentReceiptService {
         include: {
           user: { select: { id: true, username: true } },
           docType: { select: { id: true, title: true } },
-          subsidiary: { select: { id: true, title: true } },
-          partner: { select: { id: true, name: true } },
           box: { select: { id: true, noBox: true } },
         },
       })
@@ -159,8 +142,6 @@ function serializeDocumentReceipt(
   item: DocumentReceiptRecord & {
     user: { id: string; username: string }
     docType: { id: string; title: string }
-    subsidiary: { id: string; title: string }
-    partner: { id: string; name: string }
     box: { id: string; noBox: string }
   }
 ): DocumentReceipt {
@@ -170,8 +151,6 @@ function serializeDocumentReceipt(
     description: item.description,
     userId: item.userId,
     docTypeId: item.docTypeId,
-    subsidiaryId: item.subsidiaryId,
-    partnerId: item.partnerId,
     boxId: item.boxId,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),

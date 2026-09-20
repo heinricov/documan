@@ -549,8 +549,6 @@ export async function seedDocumentReceipt(
         description: data.description ?? undefined,
         userId: data.userId,
         docTypeId: data.docTypeId,
-        subsidiaryId: data.subsidiaryId,
-        partnerId: data.partnerId,
         boxId: data.boxId,
       },
     })
@@ -573,8 +571,6 @@ export async function seedDocumentReceipts(
             description: item.description ?? undefined,
             userId: item.userId,
             docTypeId: item.docTypeId,
-            subsidiaryId: item.subsidiaryId,
-            partnerId: item.partnerId,
             boxId: item.boxId,
           },
         })
@@ -589,8 +585,6 @@ type DocumentReceiptRecord = {
   description: string | null
   userId: string
   docTypeId: string
-  subsidiaryId: string
-  partnerId: string
   boxId: string
   createdAt: Date
   updatedAt: Date
@@ -603,8 +597,6 @@ function serializeDocumentReceipt(item: DocumentReceiptRecord): DocumentReceipt 
     description: item.description,
     userId: item.userId,
     docTypeId: item.docTypeId,
-    subsidiaryId: item.subsidiaryId,
-    partnerId: item.partnerId,
     boxId: item.boxId,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),

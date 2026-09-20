@@ -18,7 +18,7 @@ export interface FormDocumentReceiptProps {
   documentReceiptId?: string
   initialData?: Pick<
     DocumentReceipt,
-    "title" | "description" | "userId" | "docTypeId" | "subsidiaryId" | "partnerId" | "boxId"
+    "title" | "description" | "userId" | "docTypeId" | "boxId"
   >
 }
 
@@ -29,8 +29,6 @@ export function FormDocumentReceipt({
 }: FormDocumentReceiptProps) {
   const [userOptions, setUserOptions] = useState<Option[]>([])
   const [docTypeOptions, setDocTypeOptions] = useState<Option[]>([])
-  const [subsidiaryOptions, setSubsidiaryOptions] = useState<Option[]>([])
-  const [partnerOptions, setPartnerOptions] = useState<Option[]>([])
   const [boxOptions, setBoxOptions] = useState<Option[]>([])
 
   useEffect(() => {
@@ -38,11 +36,9 @@ export function FormDocumentReceipt({
 
     async function load() {
       try {
-        const [users, docTypes, subsidiaries, partners, boxes] = await Promise.all([
+        const [users, docTypes, boxes] = await Promise.all([
           api.resources.users.list({ limit: 100 }),
           api.resources.docTypes.list({ limit: 100 }),
-          api.resources.subsidiaries.list({ limit: 100 }),
-          api.resources.partners.list({ limit: 100 }),
           api.resources.boxes.list({ limit: 100 }),
         ])
 
@@ -50,8 +46,6 @@ export function FormDocumentReceipt({
 
         setUserOptions(users.map((u) => ({ value: u.id, label: u.username })))
         setDocTypeOptions(docTypes.map((d) => ({ value: d.id, label: d.title })))
-        setSubsidiaryOptions(subsidiaries.map((s) => ({ value: s.id, label: s.title })))
-        setPartnerOptions(partners.map((p) => ({ value: p.id, label: p.name })))
         setBoxOptions(boxes.map((b) => ({ value: b.id, label: b.noBox })))
       } catch {
         // silently fail — options will be empty
@@ -78,8 +72,6 @@ export function FormDocumentReceipt({
           description?: string | null
           userId: string
           docTypeId: string
-          subsidiaryId: string
-          partnerId: string
           boxId: string
         }
       ),
@@ -91,8 +83,6 @@ export function FormDocumentReceipt({
           description?: string | null
           userId?: string
           docTypeId?: string
-          subsidiaryId?: string
-          partnerId?: string
           boxId?: string
         }
       ),
@@ -126,22 +116,6 @@ export function FormDocumentReceipt({
         description: "Jenis dokumen",
         render: "select",
         options: docTypeOptions,
-        required: true,
-      },
-      {
-        name: "subsidiaryId",
-        label: "Subsidiary",
-        description: "Anak perusahaan terkait",
-        render: "select",
-        options: subsidiaryOptions,
-        required: true,
-      },
-      {
-        name: "partnerId",
-        label: "Partner",
-        description: "Partner terkait",
-        render: "select",
-        options: partnerOptions,
         required: true,
       },
       {

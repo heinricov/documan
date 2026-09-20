@@ -27,16 +27,14 @@ const DEFAULT_DOCUMENT_RECEIPTS = [
 export async function seedDocumentReceipts(): Promise<void> {
   let inserted = 0
 
-  // Ambil data referensi yang diperlukan
+  // Ambil data referensi yang diperlukan (tanpa subsidiary/partner sekarang)
   const users = await prisma.user.findMany({ take: 1 })
   const docTypes = await prisma.docType.findMany({ take: 1 })
-  const subsidiaries = await prisma.subsidiary.findMany({ take: 1 })
-  const partners = await prisma.partner.findMany({ take: 1 })
   const boxes = await prisma.box.findMany({ take: 1 })
 
-  if (!users[0] || !docTypes[0] || !subsidiaries[0] || !partners[0] || !boxes[0]) {
+  if (!users[0] || !docTypes[0] || !boxes[0]) {
     process.stdout.write(
-      "Seed document_receipts dilewati: pastikan users, doc_types, subsidiaries, partners, dan boxes sudah di-seed.\n"
+      "Seed document_receipts dilewati: pastikan users, doc_types, dan boxes sudah di-seed.\n"
     )
     return
   }
@@ -54,8 +52,6 @@ export async function seedDocumentReceipts(): Promise<void> {
         description: item.description,
         userId: users[0].id,
         docTypeId: docTypes[0].id,
-        subsidiaryId: subsidiaries[0].id,
-        partnerId: partners[0].id,
         boxId: boxes[0].id,
       },
     })

@@ -275,8 +275,6 @@ export interface DocumentReceiptOverrides {
   description?: CreateDocumentReceipt["description"]
   userId?: string
   docTypeId?: string
-  subsidiaryId?: string
-  partnerId?: string
   boxId?: string
 }
 
@@ -294,8 +292,6 @@ export function createDocumentReceiptFixture(
     description: overrides.description,
     userId: overrides.userId ?? crypto.randomUUID(),
     docTypeId: overrides.docTypeId ?? crypto.randomUUID(),
-    subsidiaryId: overrides.subsidiaryId ?? crypto.randomUUID(),
-    partnerId: overrides.partnerId ?? crypto.randomUUID(),
     boxId: overrides.boxId ?? crypto.randomUUID(),
   }
 }

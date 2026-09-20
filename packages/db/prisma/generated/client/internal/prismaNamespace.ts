@@ -1057,8 +1057,6 @@ export const DocumentReceiptScalarFieldEnum = {
   description: 'description',
   userId: 'userId',
   docTypeId: 'docTypeId',
-  subsidiaryId: 'subsidiaryId',
-  partnerId: 'partnerId',
   boxId: 'boxId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -25,8 +25,6 @@ export default function EditDocumentReceiptPage() {
           description: documentReceipt.description,
           userId: documentReceipt.userId,
           docTypeId: documentReceipt.docTypeId,
-          subsidiaryId: documentReceipt.subsidiaryId,
-          partnerId: documentReceipt.partnerId,
           boxId: documentReceipt.boxId,
         }}
       />

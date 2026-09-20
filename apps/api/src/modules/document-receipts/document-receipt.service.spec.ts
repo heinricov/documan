@@ -165,8 +165,6 @@ describe("DocumentReceiptService", () => {
         description: "Test description",
         userId: "550e8400-e29b-41d4-a716-446655440001",
         docTypeId: "550e8400-e29b-41d4-a716-446655440002",
-        subsidiaryId: "550e8400-e29b-41d4-a716-446655440003",
-        partnerId: "550e8400-e29b-41d4-a716-446655440004",
         boxId: "550e8400-e29b-41d4-a716-446655440005",
       })
 
@@ -182,8 +180,6 @@ describe("DocumentReceiptService", () => {
         title: "  Trimmed Title  ",
         userId: "550e8400-e29b-41d4-a716-446655440001",
         docTypeId: "550e8400-e29b-41d4-a716-446655440002",
-        subsidiaryId: "550e8400-e29b-41d4-a716-446655440003",
-        partnerId: "550e8400-e29b-41d4-a716-446655440004",
         boxId: "550e8400-e29b-41d4-a716-446655440005",
       })
 
