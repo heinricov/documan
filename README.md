@@ -305,10 +305,9 @@ Dokumentasi lengkap API, pola endpoint baru, dan catatan NestJS 12 → `apps/api
 - Menambahkan app/package baru → `pnpm apps:add` / `pnpm packages:add` (lihat `scripts/README.md`).
 
 ---
-
 ## Menambah Entity Baru
 
-Panduan langkah-demi-langkah untuk menambah entity baru (contoh: `User`). Setiap entity mengikuti pola yang sama dengan `Role`.
+Panduan langkah-demi-langkah untuk menambah entity baru. Pola yang sama berlaku untuk semua entity (Role, User, DocType, Partner, Box, Subsidiary).
 
 ### Overview
 
@@ -316,11 +315,12 @@ Panduan langkah-demi-langkah untuk menambah entity baru (contoh: `User`). Setiap
 packages/db          → Model database (Prisma)
 packages/validator   → Zod schemas & types (SSOT)
 packages/client      → Typed API client
+packages/testing     → Factory & seed helper
 apps/api             → NestJS module (controller + service)
-apps/web             → Feature folder + route pages
+apps/web             → Config object + route pages (menggunakan generic components)
 ```
 
-**Total: ~20 file baru + 6 file modifikasi**
+**Total: ~15 file baru + beberapa file modifikasi** (jauh lebih sedikit berkat generic components)
 
 ---
 
@@ -331,20 +331,19 @@ apps/web             → Feature folder + route pages
 ```prisma
 // packages/db/prisma/schema.prisma
 
-model User {
-  id        String   @id @default(uuid()) @db.Uuid
-  email     String   @unique
-  name      String?
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Box {
+  id          String   @id @default(uuid()) @db.Uuid
+  noBox       String   @unique @map("no_box")
+  title       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@map("users")
+  @@map("boxes")
 }
 ```
 
 **Konvensi:**
-
 - ID selalu UUID (`@default(uuid()) @db.Uuid`)
 - Field `createdAt` dan `updatedAt` wajib ada
 - Gunakan `@@map("table_name")` untuk nama tabel explicit
@@ -353,7 +352,7 @@ model User {
 #### 1.2 Jalankan migration
 
 ```bash
-pnpm --filter @packages/db prisma:migrate
+pnpm --filter @packages/db prisma:migrate --name add_<entity>_model
 pnpm --filter @packages/db prisma:generate
 ```
 
@@ -364,58 +363,57 @@ pnpm --filter @packages/db prisma:generate
 #### 2.1 Buat file schema
 
 ```typescript
-// packages/validator/src/schemas/user.ts
+// packages/validator/src/schemas/box.ts
 
 import { z } from "zod"
 
-export const UserSchema = z.object({
+export const BoxSchema = z.object({
   id: z.string().uuid(),
-  email: z.string().email(),
-  name: z.string().nullable(),
+  noBox: z.string().min(1).max(100),
+  title: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 })
 
-export const CreateUserSchema = z.object({
-  email: z.string().email("Email tidak valid"),
-  name: z.string().min(1).max(100).nullable().optional(),
-  password: z.string().min(8, "Password minimal 8 karakter"),
+export const CreateBoxSchema = z.object({
+  noBox: z.string().min(1, "Nomor box wajib diisi").max(100),
+  title: z.string().max(200).nullable().optional(),
+  description: z.string().nullable().optional(),
 })
 
-export const UpdateUserSchema = z.object({
-  email: z.string().email("Email tidak valid").optional(),
-  name: z.string().min(1).max(100).nullable().optional(),
-  password: z.string().min(8).optional(),
+export const UpdateBoxSchema = z.object({
+  noBox: z.string().min(1).max(100).optional(),
+  title: z.string().max(200).nullable().optional(),
+  description: z.string().nullable().optional(),
 })
 
-export const UserQuerySchema = z.object({
+export const BoxQuerySchema = z.object({
   id: z.string().uuid().optional(),
-  email: z.string().optional(),
   search: z.string().optional(),
-  page: z.coerce.number().int().positive().optional(),
-  limit: z.coerce.number().int().positive().max(100).optional(),
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(10),
 })
 
-export type User = z.infer<typeof UserSchema>
-export type CreateUser = z.infer<typeof CreateUserSchema>
-export type UpdateUser = z.infer<typeof UpdateUserSchema>
-export type UserQuery = z.infer<typeof UserQuerySchema>
+export type Box = z.infer<typeof BoxSchema>
+export type CreateBox = z.infer<typeof CreateBoxSchema>
+export type UpdateBox = z.infer<typeof UpdateBoxSchema>
+export type BoxQuery = z.infer<typeof BoxQuerySchema>
 ```
 
 **Konvensi:**
-
 - 4 schema: `EntitySchema`, `CreateEntitySchema`, `UpdateEntitySchema`, `EntityQuerySchema`
 - Types di-infer dari schemas (`z.infer<typeof ...>`)
-- Query schema pakai `z.coerce.number()` karena HTTP query params selalu string
+- Query schema pakai `z.coerce.number()` untuk HTTP query params
 
-#### 2.2 Tambah exports di `packages/validator/src/index.ts`
+#### 2.2 Export di `packages/validator/src/index.ts`
 
 ```typescript
-// ====================== Schemas ======================
-export { UserSchema, CreateUserSchema, UpdateUserSchema, UserQuerySchema } from "@packages/validator/schemas/user"
+// ====================== Box Schemas ======================
+export { BoxSchema, CreateBoxSchema, UpdateBoxSchema, BoxQuerySchema } from "@packages/validator/schemas/box"
 
-// ====================== Types ======================
-export type { User, CreateUser, UpdateUser, UserQuery } from "@packages/validator/schemas/user"
+// ====================== Box Types ======================
+export type { Box, CreateBox, UpdateBox, BoxQuery } from "@packages/validator/schemas/box"
 ```
 
 ---
@@ -425,42 +423,40 @@ export type { User, CreateUser, UpdateUser, UserQuery } from "@packages/validato
 #### 3.1 Buat resource file
 
 ```typescript
-// packages/client/src/resources/users.ts
+// packages/client/src/resources/boxes.ts
 
 import { z } from "zod"
 import type { Http } from "../http"
-import { CreateUserSchema, UserSchema, UserQuerySchema, UpdateUserSchema, type CreateUser, type User, type UpdateUser } from "@packages/validator"
+import {
+  BoxSchema, CreateBoxSchema, UpdateBoxSchema, BoxQuerySchema,
+  type Box, type CreateBox, type UpdateBox,
+} from "@packages/validator"
 
-export interface UsersResource {
-  list(query?: z.input<typeof UserQuerySchema>): Promise<User[]>
-  get(id: string): Promise<User>
-  create(data: CreateUser): Promise<User>
-  update(id: string, data: UpdateUser): Promise<User>
-  remove(id: string): Promise<User>
+export interface BoxesResource {
+  list(query?: z.input<typeof BoxQuerySchema>): Promise<Box[]>
+  get(id: string): Promise<Box>
+  create(data: CreateBox): Promise<Box>
+  update(id: string, data: UpdateBox): Promise<Box>
+  remove(id: string): Promise<Box>
 }
 
-export function createUsersResource(http: Http): UsersResource {
-  const path = "/users"
-
+export function createBoxesResource(http: Http): BoxesResource {
+  const path = "/boxes"
   return {
     list(query) {
-      const parsed = UserQuerySchema.parse(query ?? {})
-      return http.request(z.array(UserSchema), path, { method: "GET", query: parsed as Record<string, unknown> })
+      const parsed = BoxQuerySchema.parse(query ?? {})
+      return http.request(z.array(BoxSchema), path, { method: "GET", query: parsed as Record<string, unknown> })
     },
-    get(id) {
-      return http.request(UserSchema, `${path}/${id}`, { method: "GET" })
-    },
+    get(id) { return http.request(BoxSchema, `${path}/${id}`, { method: "GET" }) },
     create(data) {
-      const parsed = CreateUserSchema.parse(data)
-      return http.request(UserSchema, path, { method: "POST", body: parsed })
+      const parsed = CreateBoxSchema.parse(data)
+      return http.request(BoxSchema, path, { method: "POST", body: parsed })
     },
     update(id, data) {
-      const parsed = UpdateUserSchema.parse(data)
-      return http.request(UserSchema, `${path}/${id}`, { method: "PATCH", body: parsed })
+      const parsed = UpdateBoxSchema.parse(data)
+      return http.request(BoxSchema, `${path}/${id}`, { method: "PATCH", body: parsed })
     },
-    remove(id) {
-      return http.request(UserSchema, `${path}/${id}`, { method: "DELETE" })
-    },
+    remove(id) { return http.request(BoxSchema, `${path}/${id}`, { method: "DELETE" }) },
   }
 }
 ```
@@ -468,198 +464,126 @@ export function createUsersResource(http: Http): UsersResource {
 #### 3.2 Tambah ke `packages/client/src/resources/index.ts`
 
 ```typescript
-import { createUsersResource, type UsersResource } from "./users"
+import { createBoxesResource, type BoxesResource } from "./boxes"
 
-export interface Resources {
-  users: UsersResource
-  // ... existing resources
-}
-
-export function createResources(http: Http): Resources {
-  return {
-    users: createUsersResource(http),
-    // ... existing resources
-  }
-}
+// Tambahkan ke interface Resources dan createResources()
+boxes: BoxesResource
 ```
 
-#### 3.3 Tambah export di `packages/client/src/index.ts`
+#### 3.3 Export type di `packages/client/src/index.ts`
 
 ```typescript
-export type { UsersResource } from "./resources/index"
+export type { BoxesResource } from "./resources/index"
 ```
 
 ---
 
 ### Langkah 4: API Backend (`apps/api`)
 
-#### 4.1 Buat NestJS module
+Buat folder `apps/api/src/modules/boxes/` dengan 4 file:
+
+#### 4.1 `box.module.ts`
 
 ```typescript
-// apps/api/src/modules/users/user.module.ts
-
 import { Module } from "@nestjs/common"
-import { UserController } from "./user.controller.js"
-import { UserService } from "./user.service.js"
+import { BoxController } from "./box.controller.js"
+import { BoxService } from "./box.service.js"
 
 @Module({
-  controllers: [UserController],
-  providers: [UserService],
-  exports: [UserService],
+  controllers: [BoxController],
+  providers: [BoxService],
+  exports: [BoxService],
 })
-export class UsersModule {}
+export class BoxesModule {}
 ```
 
-#### 4.2 Buat service
+#### 4.2 `box.service.ts`
 
 ```typescript
-// apps/api/src/modules/users/user.service.ts
-
 import { Injectable } from "@nestjs/common"
-import { prisma } from "@packages/db"
-import { NotFoundError, ConflictError } from "@packages/core"
-import { parseOffsetPagination, toPrismaArgs, calculatePaginationMeta } from "@packages/core"
-import type { CreateUser, UpdateUser, UserQuery } from "@packages/validator"
+import { prisma, type Box as BoxRecord } from "@packages/db"
+import { ConflictError, NotFoundError, paginatedResponse, parseOffsetPagination, toPrismaArgs, type PaginatedResponse } from "@packages/core"
+import type { CreateBox, Box, BoxQuery, UpdateBox } from "@packages/validator"
 
 @Injectable()
-export class UserService {
-  async findAll(query: UserQuery) {
+export class BoxService {
+  async findAll(query: BoxQuery): Promise<PaginatedResponse<Box>> {
     const { page, limit, offset } = parseOffsetPagination(query)
-    const where = query.search
-      ? { OR: [{ email: { contains: query.search, mode: "insensitive" as const } }, { name: { contains: query.search, mode: "insensitive" as const } }] }
+    const { skip, take } = toPrismaArgs({ page, limit, offset })
+    const keyword = query.search
+
+    const where = keyword
+      ? { noBox: { contains: keyword, mode: "insensitive" as const } }
       : {}
 
     const [items, total] = await Promise.all([
-      prisma.user.findMany({ where, ...toPrismaArgs({ page, limit, offset }), orderBy: { createdAt: "desc" } }),
-      prisma.user.count({ where }),
+      prisma.box.findMany({ where, skip, take, orderBy: { noBox: "asc" } }),
+      prisma.box.count({ where }),
     ])
 
-    return { items: items.map(this.serialize), meta: calculatePaginationMeta({ page, limit, total }) }
+    return paginatedResponse(items.map(serializeBox), { page, limit, total })
   }
 
-  async findById(id: string) {
-    const user = await prisma.user.findUnique({ where: { id } })
-    if (!user) throw new NotFoundError("User", id)
-    return this.serialize(user)
+  async findById(id: string): Promise<Box> {
+    const box = await prisma.box.findUnique({ where: { id } })
+    if (!box) throw new NotFoundError("Box")
+    return serializeBox(box)
   }
 
-  async create(data: CreateUser) {
-    const existing = await prisma.user.findUnique({ where: { email: data.email } })
-    if (existing) throw new ConflictError(`Email "${data.email}" sudah terdaftar`)
-    const user = await prisma.user.create({ data })
-    return this.serialize(user)
+  async create(data: CreateBox): Promise<Box> {
+    const noBox = data.noBox.trim()
+    const existing = await prisma.box.findFirst({ where: { noBox: { equals: noBox, mode: "insensitive" } } })
+    if (existing) throw new ConflictError(`Nomor box "${noBox}" sudah ada`)
+    return serializeBox(await prisma.box.create({ data: { noBox, title: data.title, description: data.description } }))
   }
 
-  async update(id: string, data: UpdateUser) {
-    await this.findById(id)
-    if (data.email) {
-      const existing = await prisma.user.findUnique({ where: { email: data.email } })
-      if (existing && existing.id !== id) throw new ConflictError(`Email "${data.email}" sudah terdaftar`)
+  async update(id: string, data: UpdateBox): Promise<Box> {
+    const existing = await prisma.box.findUnique({ where: { id } })
+    if (!existing) throw new NotFoundError("Box")
+    const noBox = data.noBox?.trim()
+    if (noBox && noBox !== existing.noBox) {
+      const clash = await prisma.box.findFirst({ where: { noBox: { equals: noBox, mode: "insensitive" }, id: { not: id } } })
+      if (clash) throw new ConflictError(`Nomor box "${noBox}" sudah ada`)
     }
-    const user = await prisma.user.update({ where: { id }, data })
-    return this.serialize(user)
+    return serializeBox(await prisma.box.update({ where: { id }, data: { ...(noBox ? { noBox } : {}), ...(data.title !== undefined ? { title: data.title } : {}), ...(data.description !== undefined ? { description: data.description } : {}) } }))
   }
 
-  async remove(id: string) {
-    await this.findById(id)
-    const user = await prisma.user.delete({ where: { id } })
-    return this.serialize(user)
+  async remove(id: string): Promise<Box> {
+    const existing = await prisma.box.findUnique({ where: { id } })
+    if (!existing) throw new NotFoundError("Box")
+    return serializeBox(await prisma.box.delete({ where: { id } }))
   }
+}
 
-  private serialize(user: { id: string; email: string; name: string | null; createdAt: Date; updatedAt: Date }) {
-    return { ...user, createdAt: user.createdAt.toISOString(), updatedAt: user.updatedAt.toISOString() }
-  }
+function serializeBox(box: BoxRecord): Box {
+  return { id: box.id, noBox: box.noBox, title: box.title, description: box.description, createdAt: box.createdAt.toISOString(), updatedAt: box.updatedAt.toISOString() }
 }
 ```
 
-**Catatan penting:** Method `serialize` mengubah `Date` objects dari Prisma menjadi ISO string agar sesuai dengan Zod schema.
+#### 4.3 `box.controller.ts`
 
-#### 4.3 Buat controller
+Pola sama dengan controller lain — pakai `@ZodQuery`, `@ZodBody`, `@ZodParams` + Swagger decorators. Lihat file controller lain sebagai referensi.
+
+#### 4.4 `box.swagger.ts`
 
 ```typescript
-// apps/api/src/modules/users/user.controller.ts
+import { zodToOpenApi, paginatedOpenApiResponse } from "@packages/documentation"
+import { BoxSchema, CreateBoxSchema, UpdateBoxSchema } from "@packages/validator"
 
-import { Controller, Get, Post, Patch, Delete, Param, Body, Query } from "@nestjs/common"
-import { ApiTags, ApiOperation, ApiOkResponse, ApiBody, ApiParam, ApiResponse } from "@nestjs/swagger"
-import { ZodBody, ZodQuery, ZodParams } from "../../common/zod.decorators.js"
-import { IdParamsSchema, UserQuerySchema, CreateUserSchema, UpdateUserSchema } from "@packages/validator"
-import { UserService } from "./user.service.js"
-import { userSchema, createUserSchema, updateUserSchema, paginatedUserSchema } from "./user.swagger.js"
-
-@ApiTags("Users")
-@Controller("users")
-export class UserController {
-  constructor(private readonly userService: UserService) {}
-
-  @Get()
-  @ApiOperation({ summary: "List users" })
-  @ApiOkResponse({ schema: paginatedUserSchema })
-  findAll(@ZodQuery({ zod: UserQuerySchema }) query: any) {
-    return this.userService.findAll(query)
-  }
-
-  @Post()
-  @ApiOperation({ summary: "Create user" })
-  @ApiBody({ schema: createUserSchema })
-  @ApiOkResponse({ schema: userSchema })
-  create(@ZodBody({ zod: CreateUserSchema }) data: any) {
-    return this.userService.create(data)
-  }
-
-  @Get(":id")
-  @ApiOperation({ summary: "Get user by ID" })
-  @ApiParam({ name: "id", format: "uuid" })
-  @ApiOkResponse({ schema: userSchema })
-  findOne(@ZodParams({ zod: IdParamsSchema }) params: any) {
-    return this.userService.findById(params.id)
-  }
-
-  @Patch(":id")
-  @ApiOperation({ summary: "Update user" })
-  @ApiParam({ name: "id", format: "uuid" })
-  @ApiBody({ schema: updateUserSchema })
-  @ApiOkResponse({ schema: userSchema })
-  update(@ZodParams({ zod: IdParamsSchema }) params: any, @ZodBody({ zod: UpdateUserSchema }) data: any) {
-    return this.userService.update(params.id, data)
-  }
-
-  @Delete(":id")
-  @ApiOperation({ summary: "Delete user" })
-  @ApiParam({ name: "id", format: "uuid" })
-  @ApiOkResponse({ schema: userSchema })
-  remove(@ZodParams({ zod: IdParamsSchema }) params: any) {
-    return this.userService.remove(params.id)
-  }
-}
+export const boxSchema = zodToOpenApi(BoxSchema)
+export const createBoxSchema = zodToOpenApi(CreateBoxSchema)
+export const updateBoxSchema = zodToOpenApi(UpdateBoxSchema)
+export const paginatedBoxSchema = paginatedOpenApiResponse(boxSchema)
 ```
 
-#### 4.4 Buat swagger schema
+#### 4.5 Daftarkan module di `apps/api/src/app.module.ts`
 
 ```typescript
-// apps/api/src/modules/users/user.swagger.ts
-
-import { zodToOpenApi } from "@packages/documentation"
-import { paginatedOpenApiResponse } from "@packages/documentation"
-import { UserSchema, CreateUserSchema, UpdateUserSchema } from "@packages/validator"
-
-export const userSchema = zodToOpenApi(UserSchema)
-export const createUserSchema = zodToOpenApi(CreateUserSchema)
-export const updateUserSchema = zodToOpenApi(UpdateUserSchema)
-export const paginatedUserSchema = paginatedOpenApiResponse(UserSchema)
-```
-
-#### 4.5 Tambah module ke `apps/api/src/app.module.ts`
-
-```typescript
-import { UsersModule } from "./modules/users/user.module.js"
+import { BoxesModule } from "./modules/boxes/box.module.js"
 
 @Module({
-  imports: [
-    // ... existing modules
-    UsersModule,
-  ],
+  imports: [/* ...existing */, BoxesModule],
 })
-export class AppModule {}
 ```
 
 ---
@@ -669,198 +593,257 @@ export class AppModule {}
 #### 5.1 Tambah factory di `packages/testing/src/factories.ts`
 
 ```typescript
-import type { CreateUser } from "@packages/validator"
+import type { CreateBox } from "@packages/validator"
 
-let userCounter = 0
+let boxCounter = 0
 
-export function createUserFixture(overrides: Partial<CreateUser> = {}): CreateUser {
-  userCounter++
-  const randomId = crypto.randomUUID().slice(0, 8)
+export interface BoxOverrides {
+  noBox?: string
+  title?: CreateBox["title"]
+  description?: CreateBox["description"]
+}
+
+export function createBoxFixture(overrides: BoxOverrides = {}): CreateBox {
+  boxCounter++
   return {
-    email: `user-${userCounter}-${randomId}@example.com`,
-    name: `User ${userCounter}`,
-    password: "password123",
-    ...overrides,
+    noBox: overrides.noBox ?? `BOX-${boxCounter}-${crypto.randomUUID().slice(0, 8)}`,
+    title: overrides.title,
+    description: overrides.description,
   }
 }
 
-export function resetUserCounter() {
-  userCounter = 0
+export function resetBoxCounter(): void { boxCounter = 0 }
+```
+
+#### 5.2 Tambah seed helper di `packages/testing/src/db.ts`
+
+```typescript
+export async function seedBox(overrides: BoxOverrides = {}, db: Db = defaultPrisma): Promise<Box> {
+  const data = createBoxFixture(overrides)
+  return serializeBox(await db.box.create({ data: { noBox: data.noBox, title: data.title ?? undefined, description: data.description ?? undefined } }))
 }
 ```
 
-#### 5.2 Tambah seed di `packages/testing/src/db.ts`
+#### 5.3 Export di `packages/testing/src/index.ts`
 
 ```typescript
-import type { User as UserRecord } from "@packages/db"
-
-export async function seedUser(data: Partial<UserRecord> = {}): Promise<Record<string, unknown>> {
-  const user = await prisma.user.create({
-    data: {
-      email: data.email ?? `test-${Date.now()}@example.com`,
-      name: data.name ?? "Test User",
-      password: data.password ?? "hashed-password",
-      ...data,
-    },
-  })
-  return serializeUser(user)
-}
-
-function serializeUser(user: UserRecord) {
-  return { ...user, createdAt: user.createdAt.toISOString(), updatedAt: user.updatedAt.toISOString() }
-}
-```
-
-#### 5.3 Update `cleanDatabase` default tables
-
-```typescript
-const DEFAULT_TABLES = ["roles", "users"] // tambahkan "users"
+export { createBoxFixture, resetBoxCounter } from "./factories.js"
+export type { BoxOverrides } from "./factories.js"
+export { seedBox, seedBoxes } from "./db.js"
 ```
 
 ---
 
 ### Langkah 6: Web Frontend (`apps/web`)
 
-#### 6.1 Tambah route constant di `apps/web/lib/constants.ts`
+Web menggunakan **generic components** — tidak perlu copy-paste. Cukup definisikan config objects.
+
+#### 6.1 Tambah route constant
 
 ```typescript
+// apps/web/lib/constants.ts
 export const ROUTES = {
-  role: "/dashboard/role",
-  user: "/dashboard/user",
-  subsidiary: "/dashboard/subsidiary",
-  docType: "/dashboard/doc-type",
+  // ...existing
+  box: "/dashboard/box",
 } as const
 ```
 
-#### 6.2 Buat feature folder
+#### 6.2 Buat feature hooks
 
 ```
-apps/web/features/doc-type/
-├── components/
-│   ├── form-doc-type.tsx    ← Form create/edit (copy dari form-role, sesuaikan fields)
-│   ├── table-doc-type.tsx   ← Data table (copy dari table-role, sesuaikan columns)
-│   └── index.ts             ← Barrel export
-├── hooks/
-│   ├── use-doc-type.ts      ← useDocType(id) hook
-│   ├── use-doc-types.ts     ← useDocTypes() hook
-│   └── index.ts             ← Barrel export
-└── index.ts                 ← Root barrel export
+apps/web/features/box/hooks/
+├── use-box.ts       ← useBox(id) — wrapper thin dari useEntityItem
+├── use-boxes.ts     ← useBoxes() — wrapper thin dari useEntityList
+└── index.ts
 ```
 
-#### 6.3 Buat route pages
-
-```
-apps/web/app/doc-type/
-├── page.tsx                 ← List page: <TableDataDocType />
-├── add/page.tsx             ← Add page: <FormDocType />
-└── [id]/
-    ├── edit/page.tsx        ← Edit page: load docType → <FormDocType mode="edit" />
-    └── view/page.tsx        ← View page: load docType → detail card
-```
-
-#### 6.4 Daftarkan di dashboard layout (`apps/web/app/dashboard/layout.tsx`)
-
-Tambahkan item menu ke `MenuAdmin` (atau `MenuUser` terguna role):
+Contoh `use-box.ts`:
 
 ```typescript
-export const MenuAdmin = [
-  {
-    title: "Data",
-    url: "#",
-    icon: <BiData />,
-    items: [
-      { title: "Role", url: "/dashboard/role" },
-      { title: "User", url: "/dashboard/user" },
-      { title: "Subsidiary", url: "/dashboard/subsidiary" },
-      { title: "Doc Type", url: "/dashboard/doc-type" }, // ← tambahkan
+"use client"
+import { useCallback } from "react"
+import type { Box } from "@packages/validator"
+import { api } from "@/lib/api"
+import { useEntityItem } from "@/lib/hooks"
+
+export function useBox(id: string | undefined) {
+  const getter = useCallback((boxId: string) => api.resources.boxes.get(boxId), [])
+  const { item, ...rest } = useEntityItem(id, getter, "box")
+  return { box: item, ...rest }
+}
+```
+
+#### 6.3 Buat feature components (config objects)
+
+```
+apps/web/features/box/components/
+├── form-box.tsx      ← Config + <EntityForm>
+├── table-box.tsx     ← Config + <EntityTable>
+└── index.ts
+```
+
+Contoh `form-box.tsx` — cukup config, tidak ada copy-paste:
+
+```typescript
+"use client"
+import { CreateBoxSchema, UpdateBoxSchema, type Box } from "@packages/validator"
+import { api } from "@/lib/api"
+import { ROUTES } from "@/lib/constants"
+import { EntityForm, type EntityFormConfig } from "@/components/entity"
+
+const config: EntityFormConfig = {
+  entityName: "Box",
+  entityNamePlural: "Boxes",
+  baseUrl: ROUTES.box,
+  createSchema: CreateBoxSchema,
+  updateSchema: UpdateBoxSchema,
+  createFn: (data) => api.resources.boxes.create(data as { noBox: string; title?: string | null; description?: string | null }),
+  updateFn: (id, data) => api.resources.boxes.update(id, data as { noBox?: string; title?: string | null; description?: string | null }),
+  fields: [
+    { name: "noBox", label: "No Box", description: "Nomor box (unik)", placeholder: "cth. BOX-001", required: true },
+    { name: "title", label: "Title", description: "Judul box (opsional)", placeholder: "cth. Arsip Dokumen 2026" },
+    { name: "description", label: "Deskripsi", description: "Penjelasan singkat box ini", render: "textarea", maxLength: 200 },
+  ],
+}
+
+export function FormBox({ mode, boxId, initialData }: {
+  mode?: "create" | "edit"
+  boxId?: string
+  initialData?: Pick<Box, "noBox" | "title" | "description">
+}) {
+  return <EntityForm config={config} mode={mode} entityId={boxId} initialData={initialData} />
+}
+```
+
+Contoh `table-box.tsx`:
+
+```typescript
+"use client"
+import { useMemo } from "react"
+import { DataTableColumn } from "@packages/ui/table/table-data"
+import { ColumnSortDataTable } from "@packages/ui/table/column-sortable"
+import type { Box } from "@packages/validator"
+import { Archive } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ROUTES } from "@/lib/constants"
+import { useBoxes } from "../hooks/use-boxes"
+import { EntityTable, type EntityTableConfig } from "@/components/entity"
+
+const columns: DataTableColumn<Box>[] = [
+  ColumnSortDataTable<Box>({ accessorKey: "noBox", label: "No Box" }),
+  ColumnSortDataTable<Box>({ accessorKey: "title", label: "Title" }),
+  ColumnSortDataTable<Box>({ accessorKey: "description", label: "Deskripsi" }),
+  ColumnSortDataTable<Box>({ accessorKey: "createdAt", label: "Created", align: "end", format: "date", sortFn: "datetime" }),
+  ColumnSortDataTable<Box>({ accessorKey: "updatedAt", label: "Updated", align: "end", format: "date", sortFn: "datetime" }),
+]
+
+export function TableDataBox() {
+  const router = useRouter()
+  const { boxes, isLoading, error, deleteBox } = useBoxes()
+
+  const config: EntityTableConfig<Box> = useMemo(() => ({
+    items: boxes, isLoading, error, removeItem: deleteBox, columns,
+    getRowId: (b) => b.id, getRowLabel: (b) => b.noBox,
+    entityName: "Box", entityNamePlural: "boxes", title: "Boxes",
+    icon: <Archive className="size-4 text-muted-foreground" />,
+    description: `${boxes.length} box(es) in your workspace`,
+    searchColumnId: ["noBox", "title", "description"],
+    searchPlaceholder: "Search boxes...",
+    columnLabels: { noBox: "No Box", title: "Title", description: "Deskripsi", createdAt: "Created", updatedAt: "Updated" },
+    noResultsMessage: isLoading ? "Memuat..." : (error ?? "No results."),
+    primaryAction: { title: "New Box", onClick: () => router.push(`${ROUTES.box}/add`) },
+    rowActions: (box) => [
+      { label: "Edit", onClick: () => router.push(`${ROUTES.box}/${box.id}/edit`) },
+      { label: "View", onClick: () => router.push(`${ROUTES.box}/${box.id}/view`) },
     ],
-  },
+  }), [boxes, isLoading, error, deleteBox, router])
+
+  return <EntityTable config={config} />
+}
+```
+
+#### 6.4 Buat route pages
+
+```
+apps/web/app/dashboard/box/
+├── page.tsx                 ← <TableDataBox />
+├── add/page.tsx             ← <FormBox />
+└── [id]/
+    ├── edit/page.tsx        ← <EntityEditPage> + <FormBox mode="edit" />
+    └── view/page.tsx        ← <EntityForm mode="view" />
+```
+
+Contoh view page — menggunakan `EntityForm mode="view"`:
+
+```typescript
+"use client"
+import { useParams } from "next/navigation"
+import { useBox } from "@/features/box/hooks"
+import { ROUTES } from "@/lib/constants"
+import { EntityForm, type EntityFormConfig } from "@/components/entity"
+
+const config: EntityFormConfig = {
+  entityName: "Box", entityNamePlural: "Boxes", baseUrl: ROUTES.box,
+  createSchema: { safeParse: () => ({ success: true }) },
+  updateSchema: { safeParse: () => ({ success: true }) },
+  createFn: async () => {}, updateFn: async () => {},
+  fields: [
+    { name: "noBox", label: "No Box" },
+    { name: "title", label: "Title" },
+    { name: "description", label: "Deskripsi" },
+  ],
+}
+
+export default function ViewBoxPage() {
+  const params = useParams<{ id: string }>()
+  const { box, isLoading, error } = useBox(params?.id)
+
+  if (isLoading) return <section className="flex min-h-svh items-center justify-center"><p>Memuat...</p></section>
+  if (error || !box) return <section className="flex min-h-svh items-center justify-center"><p className="text-destructive">{error ?? "Tidak ditemukan."}</p></section>
+
+  return <EntityForm config={config} mode="view" entityId={box.id} initialData={box} />
+}
+```
+
+#### 6.5 Tambah menu di dashboard layout
+
+```typescript
+// apps/web/app/dashboard/layout.tsx
+items: [
+  // ...existing
+  { title: "Box", url: "/dashboard/box" },
 ]
 ```
 
 ---
 
-### Langkah 7: Seed & Clean Default Data (`packages/db`)
-
-Tambahkan file seed & clean khusus entity agar bisa dijalankan satu-satu atau sekaligus.
-
-#### 7.1 Buat file seed
-
-```typescript
-// packages/db/scripts/seed/users.ts
-import { prisma } from "../../src/client.js"
-import { runScript } from "../lib/run-main.js"
-
-const DEFAULT_USERS = [
-  { email: "admin@documan.id", name: "Admin" },
-] as const
-
-export async function seedUsers(): Promise<void> {
-  let inserted = 0
-
-  for (const user of DEFAULT_USERS) {
-    const existing = await prisma.user.findUnique({
-      where: { email: user.email },
-    })
-
-    if (existing) continue
-
-    await prisma.user.create({ data: user })
-    inserted++
-  }
-
-  process.stdout.write(`Seed users selesai: ${inserted} user dibuat.\n`)
-}
-
-runScript("Seed users", import.meta.url, seedUsers)
-```
-
-#### 7.2 Buat file clean
-
-```typescript
-// packages/db/scripts/clean/users.ts
-import { cleanTable } from "../lib/clean-table.js"
-import { runScript } from "../lib/run-main.js"
-
-export async function cleanUsers(): Promise<void> {
-  await cleanTable("users")
-}
-
-runScript("Clean users", import.meta.url, cleanUsers)
-```
-
-#### 7.3 Daftarkan di `index.ts` & `package.json`
-
-- Tambahkan `seedUsers` ke array `SEEDERS` di `packages/db/scripts/seed/index.ts`
-- Tambahkan `"users"` ke `TABLES` di `packages/db/scripts/lib/clean-table.ts` (jika belum ada)
-- Tambahkan script `db:seed:users` & `db:clean:users` di `packages/db/package.json`
-
----
-
 ### Checklist Lengkap
 
-| #   | File                                                     | Aksi                                   |
-| --- | -------------------------------------------------------- | -------------------------------------- |
-| 1   | `packages/db/prisma/schema.prisma`                       | Tambah model                           |
-| 2   | `packages/validator/src/schemas/<entity>.ts`             | **Buat baru**                          |
-| 3   | `packages/validator/src/index.ts`                        | Tambah export                          |
-| 4   | `packages/client/src/resources/<entities>.ts`            | **Buat baru**                          |
-| 5   | `packages/client/src/resources/index.ts`                 | Tambah ke Resources                    |
-| 6   | `packages/client/src/index.ts`                           | Tambah export type                     |
-| 7   | `apps/api/src/modules/<entities>/<entity>.module.ts`     | **Buat baru**                          |
-| 8   | `apps/api/src/modules/<entities>/<entity>.service.ts`    | **Buat baru**                          |
-| 9   | `apps/api/src/modules/<entities>/<entity>.controller.ts` | **Buat baru**                          |
-| 10  | `apps/api/src/modules/<entities>/<entity>.swagger.ts`    | **Buat baru**                          |
-| 11  | `apps/api/src/app.module.ts`                             | Tambah import module                   |
-| 12  | `packages/testing/src/factories.ts`                      | Tambah factory                         |
-| 13  | `packages/testing/src/db.ts`                             | Tambah seed + serialize                |
-| 14  | `packages/testing/src/index.ts`                          | Tambah export                          |
-| 15  | `apps/web/lib/constants.ts`                              | Tambah ke ROUTES                       |
-| 16  | `apps/web/features/<entity>/`                            | **Buat baru** (components + hooks)     |
-| 17  | `apps/web/app/<entity>/`                                 | **Buat baru** (route pages)            |
-| 18  | `apps/web/app/dashboard/layout.tsx`                      | Tambah item ke `MenuAdmin`/`MenuUser`  |
-| 19  | `packages/db/scripts/seed/<entity>.ts`                   | **Buat baru** (seed default)           |
-| 20  | `packages/db/scripts/clean/<entity>.ts`                  | **Buat baru** (clean)                  |
-| 21  | `packages/db/scripts/seed/index.ts`                      | Tambah ke `SEEDERS`                    |
-| 22  | `packages/db/scripts/lib/clean-table.ts`                 | Tambah ke `TABLES`                     |
-| 23  | `packages/db/package.json`                               | Tambah script `db:seed:*`/`db:clean:*` |
+| # | File | Aksi |
+|---|------|------|
+| 1 | `packages/db/prisma/schema.prisma` | Tambah model |
+| 2 | `packages/validator/src/schemas/<entity>.ts` | **Buat baru** |
+| 3 | `packages/validator/src/index.ts` | Tambah export |
+| 4 | `packages/client/src/resources/<entities>.ts` | **Buat baru** |
+| 5 | `packages/client/src/resources/index.ts` | Tambah ke Resources |
+| 6 | `packages/client/src/index.ts` | Tambah export type |
+| 7 | `apps/api/src/modules/<entities>/<entity>.module.ts` | **Buat baru** |
+| 8 | `apps/api/src/modules/<entities>/<entity>.service.ts` | **Buat baru** |
+| 9 | `apps/api/src/modules/<entities>/<entity>.controller.ts` | **Buat baru** |
+| 10 | `apps/api/src/modules/<entities>/<entity>.swagger.ts` | **Buat baru** |
+| 11 | `apps/api/src/app.module.ts` | Tambah import module |
+| 12 | `packages/testing/src/factories.ts` | Tambah factory |
+| 13 | `packages/testing/src/db.ts` | Tambah seed + serialize |
+| 14 | `packages/testing/src/index.ts` | Tambah export |
+| 15 | `apps/web/lib/constants.ts` | Tambah ke ROUTES |
+| 16 | `apps/web/features/<entity>/hooks/` | **Buat baru** (useEntityItem wrapper) |
+| 17 | `apps/web/features/<entity>/components/` | **Buat baru** (config objects) |
+| 18 | `apps/web/app/dashboard/<entity>/` | **Buat baru** (route pages) |
+| 19 | `apps/web/app/dashboard/layout.tsx` | Tambah menu |
+| 20 | `packages/db/scripts/seed/<entity>.ts` | **Buat baru** |
+| 21 | `packages/db/scripts/clean/<entity>.ts` | **Buat baru** |
+| 22 | `packages/db/scripts/seed/index.ts` | Tambah ke SEEDERS |
+| 23 | `packages/db/scripts/lib/clean-table.ts` | Tambah ke TABLES |
+| 24 | `packages/db/package.json` | Tambah script |
+
+**Tips:** Web frontend sekarang pakai generic components (`EntityForm`, `EntityTable`, `EntityEditPage`). Cukup definisikan config objects — tidak perlu copy-paste form/table/view boilerplate.
