@@ -1,8 +1,6 @@
 "use client"
 
-import { useState } from "react"
 import { FieldInput } from "@packages/ui/form/field-input"
-import { FieldSelect } from "@packages/ui/form/field-select"
 import {
   CreateUserSchema,
   UpdateUserSchema,
@@ -24,9 +22,6 @@ export interface FormUserProps {
 export function FormUser({ mode = "create", userId, initialData }: FormUserProps) {
   const isEdit = mode === "edit"
   const { roles } = useRoleTitleMap()
-  const [selectedRoleId, setSelectedRoleId] = useState<string>(
-    initialData?.roleId ?? ""
-  )
 
   const config: EntityFormConfig = {
     entityName: "User",
@@ -52,41 +47,34 @@ export function FormUser({ mode = "create", userId, initialData }: FormUserProps
         placeholder: "cth. john@example.com",
         required: true,
       },
+      {
+        name: "roleId",
+        render: "select",
+        label: "Role",
+        description: "Pilih role untuk user ini",
+        placeholder: "Pilih role...",
+        required: true,
+        options: roles.map((role) => ({
+          label: role.title,
+          value: role.id,
+        })),
+      },
     ],
-    extraFields: (
-      <>
-        {!isEdit && (
-          <FieldInput
-            name="password"
-            type="password"
-            label="Password"
-            description="Minimal 8 karakter"
-            placeholder="Masukkan password"
-            required
-          />
-        )}
-
-        <FieldSelect
-          name="roleId"
-          label="Role"
-          description="Pilih role untuk user ini"
-          placeholder="Pilih role..."
-          emptyMessage="Tidak ada role tersedia."
-          options={roles.map((role) => ({
-            label: role.title,
-            value: role.id,
-          }))}
-          value={selectedRoleId}
-          onValueChange={(val) => setSelectedRoleId(val ?? "")}
-          required
-        />
-      </>
-    ),
+    extraFields: !isEdit ? (
+      <FieldInput
+        name="password"
+        type="password"
+        label="Password"
+        description="Minimal 8 karakter"
+        placeholder="Masukkan password"
+        required
+      />
+    ) : undefined,
     extractData: (formData) => {
       const username = (formData.get("username") as string)?.trim() ?? ""
       const email = (formData.get("email") as string)?.trim() ?? ""
       const password = (formData.get("password") as string) ?? ""
-      const roleId = selectedRoleId
+      const roleId = (formData.get("roleId") as string) ?? ""
       return {
         username,
         email,

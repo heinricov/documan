@@ -16,7 +16,7 @@ import {
   FieldError,
 } from "@packages/ui/components/field"
 
-type Option = string | { label: string; value: string }
+export type Option = string | { label: string; value: string }
 
 export function FieldSelect({
   label = "Label Select",

@@ -5,8 +5,6 @@ import { NavMenu } from "@packages/ui/layout/nav-menu"
 import { AuthGuard, HeaderUser, UserNav } from "@/features/auth/components"
 
 import { BiData } from "react-icons/bi"
-import { FcDocument } from "react-icons/fc"
-import { GrDocumentStore } from "react-icons/gr"
 import { HiDocumentCheck } from "react-icons/hi2"
 import { MdDashboard } from "react-icons/md"
 import { TbCubeSend } from "react-icons/tb"
@@ -77,7 +75,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <NavMenu lable="User" items={MenuUser} />
           </>
         }
-        FooterContent={<UserNav />}
+        FooterContent={""}
         UserContent={<HeaderUser />}
       >
         {children}

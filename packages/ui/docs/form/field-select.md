@@ -309,3 +309,104 @@ Komponen ini sebelumnya menggunakan `Combobox` dari `@packages/ui/components/com
 - Saat `error` diberikan, field menampilkan state invalid (`aria-invalid` + styling error).
 - Untuk controlled mode, gunakan `value` + `onValueChange`.
 - Untuk uncontrolled mode, gunakan `defaultValue`.
+
+---
+
+## Penggunaan di EntityForm
+
+`FieldSelect` bisa digunakan secara native di `EntityForm` tanpa perlu `extraFields`. Set field `render: "select"` dan sertakan `options`:
+
+```tsx
+import { EntityForm, type EntityFormConfig } from "@/components/entity"
+
+const config: EntityFormConfig = {
+  entityName: "User",
+  entityNamePlural: "Users",
+  baseUrl: "/dashboard/user",
+  createSchema: CreateUserSchema,
+  updateSchema: UpdateUserSchema,
+  createFn: (data) => api.resources.users.create(data),
+  updateFn: (id, data) => api.resources.users.update(id, data),
+  fields: [
+    { name: "username", label: "Username", required: true },
+    {
+      name: "roleId",
+      render: "select",
+      label: "Role",
+      description: "Pilih role untuk user",
+      placeholder: "Pilih role...",
+      required: true,
+      options: [
+        { label: "Administrator", value: "admin" },
+        { label: "Editor", value: "editor" },
+      ],
+    },
+  ],
+}
+
+// Digunakan di page:
+<EntityForm config={config} mode="create" />
+```
+
+### Props tambahan untuk `render: "select"`
+
+| Prop      | Tipe       | Keterangan                           |
+| --------- | ---------- | ------------------------------------ |
+| `options` | `Option[]` | **Wajib** saat `render: "select"`. Daftar opsi select. |
+
+`Option` type di-export dari `@packages/ui/form/field-select`:
+
+```ts
+type Option = string | { label: string; value: string }
+```
+
+### Contoh lengkap: Role select dengan data dinamis
+
+```tsx
+"use client"
+
+import { useEffect, useState } from "react"
+import { EntityForm, type EntityFormConfig } from "@/components/entity"
+import { api } from "@/lib/api"
+import type { Role } from "@packages/validator"
+
+export function FormUser() {
+  const [roles, setRoles] = useState<Role[]>([])
+
+  useEffect(() => {
+    api.resources.roles.list({ limit: 100 }).then(setRoles)
+  }, [])
+
+  const config: EntityFormConfig = {
+    entityName: "User",
+    entityNamePlural: "Users",
+    baseUrl: "/dashboard/user",
+    createSchema: CreateUserSchema,
+    updateSchema: UpdateUserSchema,
+    createFn: (data) => api.resources.users.create(data),
+    updateFn: (id, data) => api.resources.users.update(id, data),
+    fields: [
+      { name: "username", label: "Username", required: true },
+      {
+        name: "roleId",
+        render: "select",
+        label: "Role",
+        required: true,
+        options: roles.map((r) => ({ label: r.title, value: r.id })),
+      },
+    ],
+  }
+
+  return <EntityForm config={config} />
+}
+```
+
+### Semua field type yang didukung EntityForm
+
+| `render`   | Komponen         | Use case                        |
+| ---------- | ---------------- | ------------------------------- |
+| `"input"`  | `FieldInput`     | Default. Text, email, password, number. |
+| `"textarea"` | `FieldTextArea` | Long text (description, catatan). |
+| `"select"` | `FieldSelect`    | Dropdown pilihan (role, status, tipe). |
+
+Field tanpa `render` default ke `"input"`. Untuk select, **wajib** sertakan `options`.

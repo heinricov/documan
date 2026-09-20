@@ -1,29 +1,50 @@
 "use client"
 
 import { useParams } from "next/navigation"
-import { FileText } from "lucide-react"
-
 import { useDocType } from "@/features/doc-type/hooks"
 import { ROUTES } from "@/lib/constants"
-import { EntityDetailView, type EntityDetailViewConfig } from "@/components/entity"
+import { EntityForm, type EntityFormConfig } from "@/components/entity"
+
+const config: EntityFormConfig = {
+  entityName: "Doc Type",
+  entityNamePlural: "Doc Types",
+  baseUrl: ROUTES.docType,
+  createSchema: { safeParse: () => ({ success: true }) },
+  updateSchema: { safeParse: () => ({ success: true }) },
+  createFn: async () => {},
+  updateFn: async () => {},
+  fields: [
+    { name: "title", label: "Title" },
+    { name: "description", label: "Deskripsi" },
+  ],
+}
 
 export default function ViewDocTypePage() {
   const params = useParams<{ id: string }>()
   const { docType, isLoading, error } = useDocType(params?.id)
 
-  const config: EntityDetailViewConfig = {
-    item: docType,
-    isLoading,
-    error,
-    entityName: "doc type",
-    icon: <FileText className="size-4 text-muted-foreground" aria-hidden="true" />,
-    baseUrl: ROUTES.docType,
-    titleField: "title",
-    fields: [
-      { label: "Title", value: docType?.title },
-      { label: "Deskripsi", value: docType?.description?.trim() ? docType.description : "—" },
-    ],
+  if (isLoading) {
+    return (
+      <section className="flex min-h-svh w-full items-center justify-center bg-background px-4 py-10">
+        <p className="text-sm text-muted-foreground">Memuat doc type...</p>
+      </section>
+    )
   }
 
-  return <EntityDetailView config={config} />
+  if (error || !docType) {
+    return (
+      <section className="flex min-h-svh w-full flex-col items-center justify-center gap-4 bg-background px-4 py-10">
+        <p className="text-sm text-destructive">{error ?? "Doc type tidak ditemukan."}</p>
+      </section>
+    )
+  }
+
+  return (
+    <EntityForm
+      config={config}
+      mode="view"
+      entityId={docType.id}
+      initialData={docType}
+    />
+  )
 }

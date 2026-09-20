@@ -2,13 +2,17 @@
 
 import { useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
+import { Button } from "@packages/ui/components/button"
 import { FieldLayout, FieldSetGroup } from "@packages/ui/form/field-layout"
 import { FieldInput } from "@packages/ui/form/field-input"
 import { FieldTextArea } from "@packages/ui/form/field-textarea"
+import { FieldSelect, type Option } from "@packages/ui/form/field-select"
 import { toast } from "@packages/ui/components/toast"
+import { Pencil, ArrowLeft } from "lucide-react"
 
 import { getErrorMessage } from "@/lib/errors"
 import { mapSchemaErrors } from "@/lib/validation"
+import { formatDate } from "@/lib/format"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SafeParseable = { safeParse: (data: any) => any }
@@ -22,7 +26,11 @@ export interface EntityFormField {
   required?: boolean
   maxLength?: number
   /** Override default field rendering */
-  render?: "input" | "textarea"
+  render?: "input" | "textarea" | "select"
+  /** Options for select field (required when render === "select") */
+  options?: Option[]
+  /** Render custom ReactNode instead of default field (for view mode) */
+  customRender?: (value: unknown) => ReactNode
 }
 
 export interface EntityFormConfig {
@@ -50,7 +58,7 @@ export interface EntityFormConfig {
 
 export interface EntityFormProps {
   config: EntityFormConfig
-  mode?: "create" | "edit"
+  mode?: "create" | "edit" | "view"
   entityId?: string
   initialData?: Record<string, unknown>
 }
@@ -99,6 +107,90 @@ export function EntityForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const fieldNames = fields.map((f) => f.name)
+  const isView = mode === "view"
+  const firstFieldName = fields[0]?.name
+
+  if (isView) {
+    return (
+      <section className="flex min-h-svh w-full justify-center bg-background px-4 py-10 text-foreground sm:py-16">
+        <div className="mx-auto w-full max-w-xl space-y-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-xl font-semibold tracking-tight">
+                {firstFieldName && initialData?.[firstFieldName] != null
+                  ? String(initialData[firstFieldName])
+                  : entityName}
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Detail {entityName}
+              </p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button type="button" variant="outline" onClick={() => router.push(baseUrl)}>
+                <ArrowLeft aria-hidden="true" />
+                Kembali
+              </Button>
+              {entityId && (
+                <Button type="button" onClick={() => router.push(`${baseUrl}/${entityId}/edit`)}>
+                  <Pencil aria-hidden="true" />
+                  Edit
+                </Button>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+            <div className="p-6">
+              <FieldSetGroup
+                legend={`${entityName} Details`}
+                description="Data hanya untuk dilihat, tidak bisa diubah dari sini"
+              >
+                {fields.map((field) => {
+                  const value = initialData?.[field.name]
+                  const displayValue =
+                    field.customRender
+                      ? field.customRender(value)
+                      : value != null
+                        ? String(value)
+                        : "—"
+
+                  return (
+                    <div key={field.name} className="grid gap-1 py-2 sm:grid-cols-3 sm:gap-4">
+                      <dt className="text-sm font-medium text-muted-foreground">
+                        {field.label}
+                      </dt>
+                      <dd className="text-sm sm:col-span-2">{displayValue}</dd>
+                    </div>
+                  )
+                })}
+
+                {entityId && (
+                  <div className="grid gap-1 py-2 sm:grid-cols-3 sm:gap-4">
+                    <dt className="text-sm font-medium text-muted-foreground">ID</dt>
+                    <dd className="font-mono text-xs break-all sm:col-span-2">{entityId}</dd>
+                  </div>
+                )}
+
+                {typeof initialData?.createdAt === "string" && (
+                  <div className="grid gap-1 py-2 sm:grid-cols-3 sm:gap-4">
+                    <dt className="text-sm font-medium text-muted-foreground">Dibuat</dt>
+                    <dd className="text-sm sm:col-span-2">{formatDate(initialData.createdAt)}</dd>
+                  </div>
+                )}
+
+                {typeof initialData?.updatedAt === "string" && (
+                  <div className="grid gap-1 py-2 sm:grid-cols-3 sm:gap-4">
+                    <dt className="text-sm font-medium text-muted-foreground">Diperbarui</dt>
+                    <dd className="text-sm sm:col-span-2">{formatDate(initialData.updatedAt)}</dd>
+                  </div>
+                )}
+              </FieldSetGroup>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="flex min-h-svh w-full justify-center bg-background px-4 py-10 text-foreground sm:py-16">
@@ -135,7 +227,6 @@ export function EntityForm({
             return
           }
 
-          const firstFieldName = fields[0]?.name
           const displayName = firstFieldName ? String(rawData[firstFieldName] ?? "") : entityName
 
           setIsLoading(true)
@@ -181,6 +272,27 @@ export function EntityForm({
           ) : null}
 
           {fields.map((field) => {
+            if (field.render === "select") {
+              return (
+                <FieldSelect
+                  key={field.name}
+                  name={field.name}
+                  label={field.label}
+                  description={field.description}
+                  placeholder={field.placeholder}
+                  required={field.required}
+                  options={field.options ?? []}
+                  defaultValue={
+                    initialData?.[field.name] != null
+                      ? String(initialData[field.name])
+                      : ""
+                  }
+                  disabled={isLoading}
+                  error={errors[field.name]}
+                />
+              )
+            }
+
             const isTextarea = field.render === "textarea"
             const Component = isTextarea ? FieldTextArea : FieldInput
 

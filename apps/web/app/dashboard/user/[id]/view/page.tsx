@@ -1,44 +1,65 @@
 "use client"
 
 import { useParams } from "next/navigation"
-import { Users, Shield } from "lucide-react"
-
+import { Shield } from "lucide-react"
 import { useUser } from "@/features/user/hooks"
 import { useRoleTitleMap } from "@/lib/hooks"
 import { ROUTES } from "@/lib/constants"
-import { EntityDetailView, type EntityDetailViewConfig } from "@/components/entity"
+import { EntityForm, type EntityFormConfig } from "@/components/entity"
 
 export default function ViewUserPage() {
   const params = useParams<{ id: string }>()
   const { user, isLoading, error } = useUser(params?.id)
   const { getRoleTitle } = useRoleTitleMap()
 
-  const roleTitle = user ? getRoleTitle(user.roleId) : ""
+  if (isLoading) {
+    return (
+      <section className="flex min-h-svh w-full items-center justify-center bg-background px-4 py-10">
+        <p className="text-sm text-muted-foreground">Memuat user...</p>
+      </section>
+    )
+  }
 
-  const config: EntityDetailViewConfig = {
-    item: user,
-    isLoading,
-    error,
-    entityName: "user",
-    icon: <Users className="size-4 text-muted-foreground" aria-hidden="true" />,
+  if (error || !user) {
+    return (
+      <section className="flex min-h-svh w-full flex-col items-center justify-center gap-4 bg-background px-4 py-10">
+        <p className="text-sm text-destructive">{error ?? "User tidak ditemukan."}</p>
+      </section>
+    )
+  }
+
+  const config: EntityFormConfig = {
+    entityName: "User",
+    entityNamePlural: "Users",
     baseUrl: ROUTES.user,
-    titleField: "username",
+    createSchema: { safeParse: () => ({ success: true }) },
+    updateSchema: { safeParse: () => ({ success: true }) },
+    createFn: async () => {},
+    updateFn: async () => {},
     fields: [
-      { label: "Username", value: user?.username },
-      { label: "Email", value: user?.email },
+      { name: "username", label: "Username" },
+      { name: "email", label: "Email" },
       {
+        name: "roleId",
         label: "Role",
-        value: (
+        customRender: () => (
           <div className="flex items-center gap-2">
             <div className="mt-0.5 rounded-md border bg-muted/40 p-1">
               <Shield className="size-3 text-muted-foreground" aria-hidden="true" />
             </div>
-            {roleTitle}
+            {getRoleTitle(user.roleId)}
           </div>
         ),
       },
     ],
   }
 
-  return <EntityDetailView config={config} />
+  return (
+    <EntityForm
+      config={config}
+      mode="view"
+      entityId={user.id}
+      initialData={user}
+    />
+  )
 }
