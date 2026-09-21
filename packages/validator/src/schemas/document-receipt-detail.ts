@@ -3,7 +3,6 @@ import { z } from "zod"
 export const DocumentReceiptDetailSchema = z.object({
   id: z.string().uuid(),
   documentReceiptId: z.string().uuid(),
-  docTypeId: z.string().uuid(),
   subsidiaryId: z.string().uuid(),
   partnerId: z.string().uuid(),
   nomorDoc: z.string().nullable().optional(),
@@ -20,7 +19,6 @@ export const DocumentReceiptDetailSchema = z.object({
 
 export const CreateDocumentReceiptDetailSchema = z.object({
   documentReceiptId: z.string().uuid("Document Receipt ID tidak valid"),
-  docTypeId: z.string().uuid("Doc Type ID tidak valid"),
   subsidiaryId: z.string().uuid("Subsidiary ID tidak valid"),
   partnerId: z.string().uuid("Partner ID tidak valid"),
   nomorDoc: z.string().nullable().optional(),
@@ -35,7 +33,6 @@ export const CreateDocumentReceiptDetailSchema = z.object({
 
 export const UpdateDocumentReceiptDetailSchema = z.object({
   documentReceiptId: z.string().uuid().optional(),
-  docTypeId: z.string().uuid().optional(),
   subsidiaryId: z.string().uuid().optional(),
   partnerId: z.string().uuid().optional(),
   nomorDoc: z.string().nullable().optional(),
@@ -52,7 +49,6 @@ export const DocumentReceiptDetailQuerySchema = z.object({
   id: z.string().uuid().optional(),
   search: z.string().optional(),
   documentReceiptId: z.string().uuid().optional(),
-  docTypeId: z.string().uuid().optional(),
   subsidiaryId: z.string().uuid().optional(),
   partnerId: z.string().uuid().optional(),
   page: z.coerce.number().int().positive().default(1),

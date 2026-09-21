@@ -52,6 +52,7 @@ export function TableDataDocumentReceipt() {
         onClick: () => router.push(`${ROUTES.documentReceipt}/add`),
       },
       rowActions: (dr) => [
+        { label: "View Detail", onClick: () => router.push(`${ROUTES.documentReceipt}/${dr.id}/document-receipt-detail`) },
         { label: "Edit", onClick: () => router.push(`${ROUTES.documentReceipt}/${dr.id}/edit`) },
         { label: "View", onClick: () => router.push(`${ROUTES.documentReceipt}/${dr.id}/view`) },
       ],

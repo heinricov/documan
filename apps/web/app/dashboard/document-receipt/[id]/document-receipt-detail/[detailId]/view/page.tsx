@@ -13,7 +13,6 @@ const config: EntityFormConfig = {
   createFn: async () => {},
   updateFn: async () => {},
   fields: [
-    { name: "docTypeId", label: "Doc Type ID" },
     { name: "subsidiaryId", label: "Subsidiary ID" },
     { name: "partnerId", label: "Partner ID" },
     { name: "nomorDoc", label: "Nomor Dokumen" },

@@ -622,7 +622,6 @@ export async function seedDocumentReceiptDetail(
     await db.documentReceiptDetail.create({
       data: {
         documentReceiptId: data.documentReceiptId,
-        docTypeId: data.docTypeId,
         subsidiaryId: data.subsidiaryId,
         partnerId: data.partnerId,
         nomorDoc: data.nomorDoc,
@@ -651,7 +650,6 @@ export async function seedDocumentReceiptDetails(
         db.documentReceiptDetail.create({
           data: {
             documentReceiptId: item.documentReceiptId,
-            docTypeId: item.docTypeId,
             subsidiaryId: item.subsidiaryId,
             partnerId: item.partnerId,
             nomorDoc: item.nomorDoc,
@@ -672,7 +670,6 @@ export async function seedDocumentReceiptDetails(
 type DocumentReceiptDetailRecord = {
   id: string
   documentReceiptId: string
-  docTypeId: string
   subsidiaryId: string
   partnerId: string
   nomorDoc: string | null
@@ -691,7 +688,6 @@ function serializeDocumentReceiptDetail(item: DocumentReceiptDetailRecord): Docu
   return {
     id: item.id,
     documentReceiptId: item.documentReceiptId,
-    docTypeId: item.docTypeId,
     subsidiaryId: item.subsidiaryId,
     partnerId: item.partnerId,
     nomorDoc: item.nomorDoc,

@@ -26,7 +26,7 @@ export class DocumentReceiptDetailService {
   async findAll(query: DocumentReceiptDetailQuery): Promise<PaginatedResponse<DocumentReceiptDetail>> {
     const { page, limit, offset } = parseOffsetPagination(query)
     const { skip, take } = toPrismaArgs({ page, limit, offset })
-    const { id, search, documentReceiptId, docTypeId, subsidiaryId, partnerId } = query
+    const { id, search, documentReceiptId, subsidiaryId, partnerId } = query
 
     const where = {
       ...(id ? { id } : {}),
@@ -45,7 +45,6 @@ export class DocumentReceiptDetailService {
           }
         : {}),
       ...(documentReceiptId ? { documentReceiptId } : {}),
-      ...(docTypeId ? { docTypeId } : {}),
       ...(subsidiaryId ? { subsidiaryId } : {}),
       ...(partnerId ? { partnerId } : {}),
     }
@@ -58,7 +57,6 @@ export class DocumentReceiptDetailService {
         orderBy: { createdAt: "desc" },
         include: {
           documentReceipt: { select: { id: true, title: true } },
-          docType: { select: { id: true, title: true } },
           subsidiary: { select: { id: true, title: true } },
           partner: { select: { id: true, name: true } },
         },
@@ -74,7 +72,6 @@ export class DocumentReceiptDetailService {
       where: { id },
       include: {
         documentReceipt: { select: { id: true, title: true } },
-        docType: { select: { id: true, title: true } },
         subsidiary: { select: { id: true, title: true } },
         partner: { select: { id: true, name: true } },
       },
@@ -92,7 +89,6 @@ export class DocumentReceiptDetailService {
       await prisma.documentReceiptDetail.create({
         data: {
           documentReceiptId: data.documentReceiptId,
-          docTypeId: data.docTypeId,
           subsidiaryId: data.subsidiaryId,
           partnerId: data.partnerId,
           nomorDoc: data.nomorDoc,
@@ -106,7 +102,6 @@ export class DocumentReceiptDetailService {
         },
         include: {
           documentReceipt: { select: { id: true, title: true } },
-          docType: { select: { id: true, title: true } },
           subsidiary: { select: { id: true, title: true } },
           partner: { select: { id: true, name: true } },
         },
@@ -126,7 +121,6 @@ export class DocumentReceiptDetailService {
         where: { id },
         data: {
           ...(data.documentReceiptId !== undefined ? { documentReceiptId: data.documentReceiptId } : {}),
-          ...(data.docTypeId !== undefined ? { docTypeId: data.docTypeId } : {}),
           ...(data.subsidiaryId !== undefined ? { subsidiaryId: data.subsidiaryId } : {}),
           ...(data.partnerId !== undefined ? { partnerId: data.partnerId } : {}),
           ...(data.nomorDoc !== undefined ? { nomorDoc: data.nomorDoc } : {}),
@@ -140,7 +134,6 @@ export class DocumentReceiptDetailService {
         },
         include: {
           documentReceipt: { select: { id: true, title: true } },
-          docType: { select: { id: true, title: true } },
           subsidiary: { select: { id: true, title: true } },
           partner: { select: { id: true, name: true } },
         },
@@ -160,7 +153,6 @@ export class DocumentReceiptDetailService {
         where: { id },
         include: {
           documentReceipt: { select: { id: true, title: true } },
-          docType: { select: { id: true, title: true } },
           subsidiary: { select: { id: true, title: true } },
           partner: { select: { id: true, name: true } },
         },
@@ -172,7 +164,6 @@ export class DocumentReceiptDetailService {
 function serializeDocumentReceiptDetail(
   item: DocumentReceiptDetailRecord & {
     documentReceipt: { id: string; title: string }
-    docType: { id: string; title: string }
     subsidiary: { id: string; title: string }
     partner: { id: string; name: string }
   }
@@ -180,7 +171,6 @@ function serializeDocumentReceiptDetail(
   return {
     id: item.id,
     documentReceiptId: item.documentReceiptId,
-    docTypeId: item.docTypeId,
     subsidiaryId: item.subsidiaryId,
     partnerId: item.partnerId,
     nomorDoc: item.nomorDoc,

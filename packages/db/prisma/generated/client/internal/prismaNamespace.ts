@@ -1143,7 +1143,6 @@ export type DocumentReceiptScalarFieldEnum = (typeof DocumentReceiptScalarFieldE
 export const DocumentReceiptDetailScalarFieldEnum = {
   id: 'id',
   documentReceiptId: 'documentReceiptId',
-  docTypeId: 'docTypeId',
   subsidiaryId: 'subsidiaryId',
   partnerId: 'partnerId',
   nomorDoc: 'nomorDoc',

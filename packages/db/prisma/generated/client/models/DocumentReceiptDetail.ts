@@ -27,7 +27,6 @@ export type AggregateDocumentReceiptDetail = {
 export type DocumentReceiptDetailMinAggregateOutputType = {
   id: string | null
   documentReceiptId: string | null
-  docTypeId: string | null
   subsidiaryId: string | null
   partnerId: string | null
   nomorDoc: string | null
@@ -45,7 +44,6 @@ export type DocumentReceiptDetailMinAggregateOutputType = {
 export type DocumentReceiptDetailMaxAggregateOutputType = {
   id: string | null
   documentReceiptId: string | null
-  docTypeId: string | null
   subsidiaryId: string | null
   partnerId: string | null
   nomorDoc: string | null
@@ -63,7 +61,6 @@ export type DocumentReceiptDetailMaxAggregateOutputType = {
 export type DocumentReceiptDetailCountAggregateOutputType = {
   id: number
   documentReceiptId: number
-  docTypeId: number
   subsidiaryId: number
   partnerId: number
   nomorDoc: number
@@ -83,7 +80,6 @@ export type DocumentReceiptDetailCountAggregateOutputType = {
 export type DocumentReceiptDetailMinAggregateInputType = {
   id?: true
   documentReceiptId?: true
-  docTypeId?: true
   subsidiaryId?: true
   partnerId?: true
   nomorDoc?: true
@@ -101,7 +97,6 @@ export type DocumentReceiptDetailMinAggregateInputType = {
 export type DocumentReceiptDetailMaxAggregateInputType = {
   id?: true
   documentReceiptId?: true
-  docTypeId?: true
   subsidiaryId?: true
   partnerId?: true
   nomorDoc?: true
@@ -119,7 +114,6 @@ export type DocumentReceiptDetailMaxAggregateInputType = {
 export type DocumentReceiptDetailCountAggregateInputType = {
   id?: true
   documentReceiptId?: true
-  docTypeId?: true
   subsidiaryId?: true
   partnerId?: true
   nomorDoc?: true
@@ -210,7 +204,6 @@ export type DocumentReceiptDetailGroupByArgs<ExtArgs extends runtime.Types.Exten
 export type DocumentReceiptDetailGroupByOutputType = {
   id: string
   documentReceiptId: string
-  docTypeId: string
   subsidiaryId: string
   partnerId: string
   nomorDoc: string | null
@@ -249,7 +242,6 @@ export type DocumentReceiptDetailWhereInput = {
   NOT?: Prisma.DocumentReceiptDetailWhereInput | Prisma.DocumentReceiptDetailWhereInput[]
   id?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   documentReceiptId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
-  docTypeId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   subsidiaryId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   partnerId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   nomorDoc?: Prisma.StringNullableFilter<"DocumentReceiptDetail"> | string | null
@@ -263,7 +255,6 @@ export type DocumentReceiptDetailWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"DocumentReceiptDetail"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentReceiptDetail"> | Date | string
   documentReceipt?: Prisma.XOR<Prisma.DocumentReceiptScalarRelationFilter, Prisma.DocumentReceiptWhereInput>
-  docType?: Prisma.XOR<Prisma.DocTypeScalarRelationFilter, Prisma.DocTypeWhereInput>
   subsidiary?: Prisma.XOR<Prisma.SubsidiaryScalarRelationFilter, Prisma.SubsidiaryWhereInput>
   partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
 }
@@ -271,7 +262,6 @@ export type DocumentReceiptDetailWhereInput = {
 export type DocumentReceiptDetailOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   documentReceiptId?: Prisma.SortOrder
-  docTypeId?: Prisma.SortOrder
   subsidiaryId?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   nomorDoc?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -285,7 +275,6 @@ export type DocumentReceiptDetailOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   documentReceipt?: Prisma.DocumentReceiptOrderByWithRelationInput
-  docType?: Prisma.DocTypeOrderByWithRelationInput
   subsidiary?: Prisma.SubsidiaryOrderByWithRelationInput
   partner?: Prisma.PartnerOrderByWithRelationInput
 }
@@ -296,7 +285,6 @@ export type DocumentReceiptDetailWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.DocumentReceiptDetailWhereInput[]
   NOT?: Prisma.DocumentReceiptDetailWhereInput | Prisma.DocumentReceiptDetailWhereInput[]
   documentReceiptId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
-  docTypeId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   subsidiaryId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   partnerId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   nomorDoc?: Prisma.StringNullableFilter<"DocumentReceiptDetail"> | string | null
@@ -310,7 +298,6 @@ export type DocumentReceiptDetailWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"DocumentReceiptDetail"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentReceiptDetail"> | Date | string
   documentReceipt?: Prisma.XOR<Prisma.DocumentReceiptScalarRelationFilter, Prisma.DocumentReceiptWhereInput>
-  docType?: Prisma.XOR<Prisma.DocTypeScalarRelationFilter, Prisma.DocTypeWhereInput>
   subsidiary?: Prisma.XOR<Prisma.SubsidiaryScalarRelationFilter, Prisma.SubsidiaryWhereInput>
   partner?: Prisma.XOR<Prisma.PartnerScalarRelationFilter, Prisma.PartnerWhereInput>
 }, "id">
@@ -318,7 +305,6 @@ export type DocumentReceiptDetailWhereUniqueInput = Prisma.AtLeast<{
 export type DocumentReceiptDetailOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   documentReceiptId?: Prisma.SortOrder
-  docTypeId?: Prisma.SortOrder
   subsidiaryId?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   nomorDoc?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -342,7 +328,6 @@ export type DocumentReceiptDetailScalarWhereWithAggregatesInput = {
   NOT?: Prisma.DocumentReceiptDetailScalarWhereWithAggregatesInput | Prisma.DocumentReceiptDetailScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"DocumentReceiptDetail"> | string
   documentReceiptId?: Prisma.UuidWithAggregatesFilter<"DocumentReceiptDetail"> | string
-  docTypeId?: Prisma.UuidWithAggregatesFilter<"DocumentReceiptDetail"> | string
   subsidiaryId?: Prisma.UuidWithAggregatesFilter<"DocumentReceiptDetail"> | string
   partnerId?: Prisma.UuidWithAggregatesFilter<"DocumentReceiptDetail"> | string
   nomorDoc?: Prisma.StringNullableWithAggregatesFilter<"DocumentReceiptDetail"> | string | null
@@ -370,7 +355,6 @@ export type DocumentReceiptDetailCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   documentReceipt: Prisma.DocumentReceiptCreateNestedOneWithoutDetailsInput
-  docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptDetailsInput
   subsidiary: Prisma.SubsidiaryCreateNestedOneWithoutDocumentReceiptDetailsInput
   partner: Prisma.PartnerCreateNestedOneWithoutDocumentReceiptDetailsInput
 }
@@ -378,7 +362,6 @@ export type DocumentReceiptDetailCreateInput = {
 export type DocumentReceiptDetailUncheckedCreateInput = {
   id?: string
   documentReceiptId: string
-  docTypeId: string
   subsidiaryId: string
   partnerId: string
   nomorDoc?: string | null
@@ -406,7 +389,6 @@ export type DocumentReceiptDetailUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentReceipt?: Prisma.DocumentReceiptUpdateOneRequiredWithoutDetailsNestedInput
-  docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
   subsidiary?: Prisma.SubsidiaryUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
   partner?: Prisma.PartnerUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
 }
@@ -414,7 +396,6 @@ export type DocumentReceiptDetailUpdateInput = {
 export type DocumentReceiptDetailUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -432,7 +413,6 @@ export type DocumentReceiptDetailUncheckedUpdateInput = {
 export type DocumentReceiptDetailCreateManyInput = {
   id?: string
   documentReceiptId: string
-  docTypeId: string
   subsidiaryId: string
   partnerId: string
   nomorDoc?: string | null
@@ -464,7 +444,6 @@ export type DocumentReceiptDetailUpdateManyMutationInput = {
 export type DocumentReceiptDetailUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -492,7 +471,6 @@ export type DocumentReceiptDetailOrderByRelationAggregateInput = {
 export type DocumentReceiptDetailCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentReceiptId?: Prisma.SortOrder
-  docTypeId?: Prisma.SortOrder
   subsidiaryId?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   nomorDoc?: Prisma.SortOrder
@@ -510,7 +488,6 @@ export type DocumentReceiptDetailCountOrderByAggregateInput = {
 export type DocumentReceiptDetailMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentReceiptId?: Prisma.SortOrder
-  docTypeId?: Prisma.SortOrder
   subsidiaryId?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   nomorDoc?: Prisma.SortOrder
@@ -528,7 +505,6 @@ export type DocumentReceiptDetailMaxOrderByAggregateInput = {
 export type DocumentReceiptDetailMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   documentReceiptId?: Prisma.SortOrder
-  docTypeId?: Prisma.SortOrder
   subsidiaryId?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   nomorDoc?: Prisma.SortOrder
@@ -582,48 +558,6 @@ export type DocumentReceiptDetailUncheckedUpdateManyWithoutSubsidiaryNestedInput
   connect?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
   update?: Prisma.DocumentReceiptDetailUpdateWithWhereUniqueWithoutSubsidiaryInput | Prisma.DocumentReceiptDetailUpdateWithWhereUniqueWithoutSubsidiaryInput[]
   updateMany?: Prisma.DocumentReceiptDetailUpdateManyWithWhereWithoutSubsidiaryInput | Prisma.DocumentReceiptDetailUpdateManyWithWhereWithoutSubsidiaryInput[]
-  deleteMany?: Prisma.DocumentReceiptDetailScalarWhereInput | Prisma.DocumentReceiptDetailScalarWhereInput[]
-}
-
-export type DocumentReceiptDetailCreateNestedManyWithoutDocTypeInput = {
-  create?: Prisma.XOR<Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput> | Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput[] | Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput[]
-  connectOrCreate?: Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput | Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput[]
-  createMany?: Prisma.DocumentReceiptDetailCreateManyDocTypeInputEnvelope
-  connect?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-}
-
-export type DocumentReceiptDetailUncheckedCreateNestedManyWithoutDocTypeInput = {
-  create?: Prisma.XOR<Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput> | Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput[] | Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput[]
-  connectOrCreate?: Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput | Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput[]
-  createMany?: Prisma.DocumentReceiptDetailCreateManyDocTypeInputEnvelope
-  connect?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-}
-
-export type DocumentReceiptDetailUpdateManyWithoutDocTypeNestedInput = {
-  create?: Prisma.XOR<Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput> | Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput[] | Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput[]
-  connectOrCreate?: Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput | Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput[]
-  upsert?: Prisma.DocumentReceiptDetailUpsertWithWhereUniqueWithoutDocTypeInput | Prisma.DocumentReceiptDetailUpsertWithWhereUniqueWithoutDocTypeInput[]
-  createMany?: Prisma.DocumentReceiptDetailCreateManyDocTypeInputEnvelope
-  set?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  disconnect?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  delete?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  connect?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  update?: Prisma.DocumentReceiptDetailUpdateWithWhereUniqueWithoutDocTypeInput | Prisma.DocumentReceiptDetailUpdateWithWhereUniqueWithoutDocTypeInput[]
-  updateMany?: Prisma.DocumentReceiptDetailUpdateManyWithWhereWithoutDocTypeInput | Prisma.DocumentReceiptDetailUpdateManyWithWhereWithoutDocTypeInput[]
-  deleteMany?: Prisma.DocumentReceiptDetailScalarWhereInput | Prisma.DocumentReceiptDetailScalarWhereInput[]
-}
-
-export type DocumentReceiptDetailUncheckedUpdateManyWithoutDocTypeNestedInput = {
-  create?: Prisma.XOR<Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput> | Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput[] | Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput[]
-  connectOrCreate?: Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput | Prisma.DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput[]
-  upsert?: Prisma.DocumentReceiptDetailUpsertWithWhereUniqueWithoutDocTypeInput | Prisma.DocumentReceiptDetailUpsertWithWhereUniqueWithoutDocTypeInput[]
-  createMany?: Prisma.DocumentReceiptDetailCreateManyDocTypeInputEnvelope
-  set?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  disconnect?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  delete?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  connect?: Prisma.DocumentReceiptDetailWhereUniqueInput | Prisma.DocumentReceiptDetailWhereUniqueInput[]
-  update?: Prisma.DocumentReceiptDetailUpdateWithWhereUniqueWithoutDocTypeInput | Prisma.DocumentReceiptDetailUpdateWithWhereUniqueWithoutDocTypeInput[]
-  updateMany?: Prisma.DocumentReceiptDetailUpdateManyWithWhereWithoutDocTypeInput | Prisma.DocumentReceiptDetailUpdateManyWithWhereWithoutDocTypeInput[]
   deleteMany?: Prisma.DocumentReceiptDetailScalarWhereInput | Prisma.DocumentReceiptDetailScalarWhereInput[]
 }
 
@@ -724,14 +658,12 @@ export type DocumentReceiptDetailCreateWithoutSubsidiaryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   documentReceipt: Prisma.DocumentReceiptCreateNestedOneWithoutDetailsInput
-  docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptDetailsInput
   partner: Prisma.PartnerCreateNestedOneWithoutDocumentReceiptDetailsInput
 }
 
 export type DocumentReceiptDetailUncheckedCreateWithoutSubsidiaryInput = {
   id?: string
   documentReceiptId: string
-  docTypeId: string
   partnerId: string
   nomorDoc?: string | null
   nomorFaktur?: string | null
@@ -777,7 +709,6 @@ export type DocumentReceiptDetailScalarWhereInput = {
   NOT?: Prisma.DocumentReceiptDetailScalarWhereInput | Prisma.DocumentReceiptDetailScalarWhereInput[]
   id?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   documentReceiptId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
-  docTypeId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   subsidiaryId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   partnerId?: Prisma.UuidFilter<"DocumentReceiptDetail"> | string
   nomorDoc?: Prisma.StringNullableFilter<"DocumentReceiptDetail"> | string | null
@@ -790,66 +721,6 @@ export type DocumentReceiptDetailScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"DocumentReceiptDetail"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DocumentReceiptDetail"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocumentReceiptDetail"> | Date | string
-}
-
-export type DocumentReceiptDetailCreateWithoutDocTypeInput = {
-  id?: string
-  nomorDoc?: string | null
-  nomorFaktur?: string | null
-  nomorPl?: string | null
-  nomorDo?: string | null
-  nomorInv?: string | null
-  nomorPv?: string | null
-  nomorNota?: string | null
-  description?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  documentReceipt: Prisma.DocumentReceiptCreateNestedOneWithoutDetailsInput
-  subsidiary: Prisma.SubsidiaryCreateNestedOneWithoutDocumentReceiptDetailsInput
-  partner: Prisma.PartnerCreateNestedOneWithoutDocumentReceiptDetailsInput
-}
-
-export type DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput = {
-  id?: string
-  documentReceiptId: string
-  subsidiaryId: string
-  partnerId: string
-  nomorDoc?: string | null
-  nomorFaktur?: string | null
-  nomorPl?: string | null
-  nomorDo?: string | null
-  nomorInv?: string | null
-  nomorPv?: string | null
-  nomorNota?: string | null
-  description?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DocumentReceiptDetailCreateOrConnectWithoutDocTypeInput = {
-  where: Prisma.DocumentReceiptDetailWhereUniqueInput
-  create: Prisma.XOR<Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput>
-}
-
-export type DocumentReceiptDetailCreateManyDocTypeInputEnvelope = {
-  data: Prisma.DocumentReceiptDetailCreateManyDocTypeInput | Prisma.DocumentReceiptDetailCreateManyDocTypeInput[]
-  skipDuplicates?: boolean
-}
-
-export type DocumentReceiptDetailUpsertWithWhereUniqueWithoutDocTypeInput = {
-  where: Prisma.DocumentReceiptDetailWhereUniqueInput
-  update: Prisma.XOR<Prisma.DocumentReceiptDetailUpdateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedUpdateWithoutDocTypeInput>
-  create: Prisma.XOR<Prisma.DocumentReceiptDetailCreateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedCreateWithoutDocTypeInput>
-}
-
-export type DocumentReceiptDetailUpdateWithWhereUniqueWithoutDocTypeInput = {
-  where: Prisma.DocumentReceiptDetailWhereUniqueInput
-  data: Prisma.XOR<Prisma.DocumentReceiptDetailUpdateWithoutDocTypeInput, Prisma.DocumentReceiptDetailUncheckedUpdateWithoutDocTypeInput>
-}
-
-export type DocumentReceiptDetailUpdateManyWithWhereWithoutDocTypeInput = {
-  where: Prisma.DocumentReceiptDetailScalarWhereInput
-  data: Prisma.XOR<Prisma.DocumentReceiptDetailUpdateManyMutationInput, Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutDocTypeInput>
 }
 
 export type DocumentReceiptDetailCreateWithoutPartnerInput = {
@@ -865,14 +736,12 @@ export type DocumentReceiptDetailCreateWithoutPartnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   documentReceipt: Prisma.DocumentReceiptCreateNestedOneWithoutDetailsInput
-  docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptDetailsInput
   subsidiary: Prisma.SubsidiaryCreateNestedOneWithoutDocumentReceiptDetailsInput
 }
 
 export type DocumentReceiptDetailUncheckedCreateWithoutPartnerInput = {
   id?: string
   documentReceiptId: string
-  docTypeId: string
   subsidiaryId: string
   nomorDoc?: string | null
   nomorFaktur?: string | null
@@ -924,14 +793,12 @@ export type DocumentReceiptDetailCreateWithoutDocumentReceiptInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptDetailsInput
   subsidiary: Prisma.SubsidiaryCreateNestedOneWithoutDocumentReceiptDetailsInput
   partner: Prisma.PartnerCreateNestedOneWithoutDocumentReceiptDetailsInput
 }
 
 export type DocumentReceiptDetailUncheckedCreateWithoutDocumentReceiptInput = {
   id?: string
-  docTypeId: string
   subsidiaryId: string
   partnerId: string
   nomorDoc?: string | null
@@ -975,7 +842,6 @@ export type DocumentReceiptDetailUpdateManyWithWhereWithoutDocumentReceiptInput 
 export type DocumentReceiptDetailCreateManySubsidiaryInput = {
   id?: string
   documentReceiptId: string
-  docTypeId: string
   partnerId: string
   nomorDoc?: string | null
   nomorFaktur?: string | null
@@ -1002,14 +868,12 @@ export type DocumentReceiptDetailUpdateWithoutSubsidiaryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentReceipt?: Prisma.DocumentReceiptUpdateOneRequiredWithoutDetailsNestedInput
-  docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
   partner?: Prisma.PartnerUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
 }
 
 export type DocumentReceiptDetailUncheckedUpdateWithoutSubsidiaryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nomorFaktur?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1026,75 +890,6 @@ export type DocumentReceiptDetailUncheckedUpdateWithoutSubsidiaryInput = {
 export type DocumentReceiptDetailUncheckedUpdateManyWithoutSubsidiaryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
-  partnerId?: Prisma.StringFieldUpdateOperationsInput | string
-  nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorFaktur?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorPl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorInv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorPv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorNota?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type DocumentReceiptDetailCreateManyDocTypeInput = {
-  id?: string
-  documentReceiptId: string
-  subsidiaryId: string
-  partnerId: string
-  nomorDoc?: string | null
-  nomorFaktur?: string | null
-  nomorPl?: string | null
-  nomorDo?: string | null
-  nomorInv?: string | null
-  nomorPv?: string | null
-  nomorNota?: string | null
-  description?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type DocumentReceiptDetailUpdateWithoutDocTypeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorFaktur?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorPl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorInv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorPv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorNota?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  documentReceipt?: Prisma.DocumentReceiptUpdateOneRequiredWithoutDetailsNestedInput
-  subsidiary?: Prisma.SubsidiaryUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
-  partner?: Prisma.PartnerUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
-}
-
-export type DocumentReceiptDetailUncheckedUpdateWithoutDocTypeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
-  partnerId?: Prisma.StringFieldUpdateOperationsInput | string
-  nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorFaktur?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorPl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorInv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorPv?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nomorNota?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type DocumentReceiptDetailUncheckedUpdateManyWithoutDocTypeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nomorFaktur?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1111,7 +906,6 @@ export type DocumentReceiptDetailUncheckedUpdateManyWithoutDocTypeInput = {
 export type DocumentReceiptDetailCreateManyPartnerInput = {
   id?: string
   documentReceiptId: string
-  docTypeId: string
   subsidiaryId: string
   nomorDoc?: string | null
   nomorFaktur?: string | null
@@ -1138,14 +932,12 @@ export type DocumentReceiptDetailUpdateWithoutPartnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentReceipt?: Prisma.DocumentReceiptUpdateOneRequiredWithoutDetailsNestedInput
-  docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
   subsidiary?: Prisma.SubsidiaryUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
 }
 
 export type DocumentReceiptDetailUncheckedUpdateWithoutPartnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nomorFaktur?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1162,7 +954,6 @@ export type DocumentReceiptDetailUncheckedUpdateWithoutPartnerInput = {
 export type DocumentReceiptDetailUncheckedUpdateManyWithoutPartnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   documentReceiptId?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nomorFaktur?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1178,7 +969,6 @@ export type DocumentReceiptDetailUncheckedUpdateManyWithoutPartnerInput = {
 
 export type DocumentReceiptDetailCreateManyDocumentReceiptInput = {
   id?: string
-  docTypeId: string
   subsidiaryId: string
   partnerId: string
   nomorDoc?: string | null
@@ -1205,14 +995,12 @@ export type DocumentReceiptDetailUpdateWithoutDocumentReceiptInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
   subsidiary?: Prisma.SubsidiaryUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
   partner?: Prisma.PartnerUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput
 }
 
 export type DocumentReceiptDetailUncheckedUpdateWithoutDocumentReceiptInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1229,7 +1017,6 @@ export type DocumentReceiptDetailUncheckedUpdateWithoutDocumentReceiptInput = {
 
 export type DocumentReceiptDetailUncheckedUpdateManyWithoutDocumentReceiptInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   subsidiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   partnerId?: Prisma.StringFieldUpdateOperationsInput | string
   nomorDoc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1249,7 +1036,6 @@ export type DocumentReceiptDetailUncheckedUpdateManyWithoutDocumentReceiptInput 
 export type DocumentReceiptDetailSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentReceiptId?: boolean
-  docTypeId?: boolean
   subsidiaryId?: boolean
   partnerId?: boolean
   nomorDoc?: boolean
@@ -1263,7 +1049,6 @@ export type DocumentReceiptDetailSelect<ExtArgs extends runtime.Types.Extensions
   createdAt?: boolean
   updatedAt?: boolean
   documentReceipt?: boolean | Prisma.DocumentReceiptDefaultArgs<ExtArgs>
-  docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   subsidiary?: boolean | Prisma.SubsidiaryDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentReceiptDetail"]>
@@ -1271,7 +1056,6 @@ export type DocumentReceiptDetailSelect<ExtArgs extends runtime.Types.Extensions
 export type DocumentReceiptDetailSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentReceiptId?: boolean
-  docTypeId?: boolean
   subsidiaryId?: boolean
   partnerId?: boolean
   nomorDoc?: boolean
@@ -1285,7 +1069,6 @@ export type DocumentReceiptDetailSelectCreateManyAndReturn<ExtArgs extends runti
   createdAt?: boolean
   updatedAt?: boolean
   documentReceipt?: boolean | Prisma.DocumentReceiptDefaultArgs<ExtArgs>
-  docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   subsidiary?: boolean | Prisma.SubsidiaryDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentReceiptDetail"]>
@@ -1293,7 +1076,6 @@ export type DocumentReceiptDetailSelectCreateManyAndReturn<ExtArgs extends runti
 export type DocumentReceiptDetailSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   documentReceiptId?: boolean
-  docTypeId?: boolean
   subsidiaryId?: boolean
   partnerId?: boolean
   nomorDoc?: boolean
@@ -1307,7 +1089,6 @@ export type DocumentReceiptDetailSelectUpdateManyAndReturn<ExtArgs extends runti
   createdAt?: boolean
   updatedAt?: boolean
   documentReceipt?: boolean | Prisma.DocumentReceiptDefaultArgs<ExtArgs>
-  docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   subsidiary?: boolean | Prisma.SubsidiaryDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentReceiptDetail"]>
@@ -1315,7 +1096,6 @@ export type DocumentReceiptDetailSelectUpdateManyAndReturn<ExtArgs extends runti
 export type DocumentReceiptDetailSelectScalar = {
   id?: boolean
   documentReceiptId?: boolean
-  docTypeId?: boolean
   subsidiaryId?: boolean
   partnerId?: boolean
   nomorDoc?: boolean
@@ -1330,22 +1110,19 @@ export type DocumentReceiptDetailSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DocumentReceiptDetailOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentReceiptId" | "docTypeId" | "subsidiaryId" | "partnerId" | "nomorDoc" | "nomorFaktur" | "nomorPl" | "nomorDo" | "nomorInv" | "nomorPv" | "nomorNota" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["documentReceiptDetail"]>
+export type DocumentReceiptDetailOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "documentReceiptId" | "subsidiaryId" | "partnerId" | "nomorDoc" | "nomorFaktur" | "nomorPl" | "nomorDo" | "nomorInv" | "nomorPv" | "nomorNota" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["documentReceiptDetail"]>
 export type DocumentReceiptDetailInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   documentReceipt?: boolean | Prisma.DocumentReceiptDefaultArgs<ExtArgs>
-  docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   subsidiary?: boolean | Prisma.SubsidiaryDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
 }
 export type DocumentReceiptDetailIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   documentReceipt?: boolean | Prisma.DocumentReceiptDefaultArgs<ExtArgs>
-  docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   subsidiary?: boolean | Prisma.SubsidiaryDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
 }
 export type DocumentReceiptDetailIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   documentReceipt?: boolean | Prisma.DocumentReceiptDefaultArgs<ExtArgs>
-  docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   subsidiary?: boolean | Prisma.SubsidiaryDefaultArgs<ExtArgs>
   partner?: boolean | Prisma.PartnerDefaultArgs<ExtArgs>
 }
@@ -1354,14 +1131,12 @@ export type $DocumentReceiptDetailPayload<ExtArgs extends runtime.Types.Extensio
   name: "DocumentReceiptDetail"
   objects: {
     documentReceipt: Prisma.$DocumentReceiptPayload<ExtArgs>
-    docType: Prisma.$DocTypePayload<ExtArgs>
     subsidiary: Prisma.$SubsidiaryPayload<ExtArgs>
     partner: Prisma.$PartnerPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     documentReceiptId: string
-    docTypeId: string
     subsidiaryId: string
     partnerId: string
     nomorDoc: string | null
@@ -1769,7 +1544,6 @@ readonly fields: DocumentReceiptDetailFieldRefs;
 export interface Prisma__DocumentReceiptDetailClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   documentReceipt<T extends Prisma.DocumentReceiptDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentReceiptDefaultArgs<ExtArgs>>): Prisma.Prisma__DocumentReceiptClient<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  docType<T extends Prisma.DocTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__DocTypeClient<runtime.Types.Result.GetResult<Prisma.$DocTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subsidiary<T extends Prisma.SubsidiaryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubsidiaryDefaultArgs<ExtArgs>>): Prisma.Prisma__SubsidiaryClient<runtime.Types.Result.GetResult<Prisma.$SubsidiaryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   partner<T extends Prisma.PartnerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PartnerDefaultArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1803,7 +1577,6 @@ export interface Prisma__DocumentReceiptDetailClient<T, Null = never, ExtArgs ex
 export interface DocumentReceiptDetailFieldRefs {
   readonly id: Prisma.FieldRef<"DocumentReceiptDetail", 'String'>
   readonly documentReceiptId: Prisma.FieldRef<"DocumentReceiptDetail", 'String'>
-  readonly docTypeId: Prisma.FieldRef<"DocumentReceiptDetail", 'String'>
   readonly subsidiaryId: Prisma.FieldRef<"DocumentReceiptDetail", 'String'>
   readonly partnerId: Prisma.FieldRef<"DocumentReceiptDetail", 'String'>
   readonly nomorDoc: Prisma.FieldRef<"DocumentReceiptDetail", 'String'>

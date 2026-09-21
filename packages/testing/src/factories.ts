@@ -314,7 +314,6 @@ let documentReceiptDetailCounter = 0
 
 export interface DocumentReceiptDetailOverrides {
   documentReceiptId?: string
-  docTypeId?: string
   subsidiaryId?: string
   partnerId?: string
   nomorDoc?: CreateDocumentReceiptDetail["nomorDoc"]
@@ -337,7 +336,6 @@ export function createDocumentReceiptDetailFixture(
 
   return {
     documentReceiptId: overrides.documentReceiptId ?? crypto.randomUUID(),
-    docTypeId: overrides.docTypeId ?? crypto.randomUUID(),
     subsidiaryId: overrides.subsidiaryId ?? crypto.randomUUID(),
     partnerId: overrides.partnerId ?? crypto.randomUUID(),
     nomorDoc: overrides.nomorDoc ?? `DOC-${documentReceiptDetailCounter}-${crypto.randomUUID().slice(0, 8)}`,

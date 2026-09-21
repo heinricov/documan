@@ -19,7 +19,7 @@ export interface FormDocumentReceiptDetailProps {
   documentReceiptDetailId?: string
   initialData?: Pick<
     DocumentReceiptDetail,
-    | "documentReceiptId" | "docTypeId" | "subsidiaryId" | "partnerId"
+    | "documentReceiptId" | "subsidiaryId" | "partnerId"
     | "nomorDoc" | "nomorFaktur" | "nomorPl" | "nomorDo"
     | "nomorInv" | "nomorPv" | "nomorNota" | "description"
   >
@@ -31,7 +31,6 @@ export function FormDocumentReceiptDetail({
   documentReceiptDetailId,
   initialData,
 }: FormDocumentReceiptDetailProps) {
-  const [docTypeOptions, setDocTypeOptions] = useState<Option[]>([])
   const [subsidiaryOptions, setSubsidiaryOptions] = useState<Option[]>([])
   const [partnerOptions, setPartnerOptions] = useState<Option[]>([])
 
@@ -40,15 +39,13 @@ export function FormDocumentReceiptDetail({
 
     async function load() {
       try {
-        const [docTypes, subsidiaries, partners] = await Promise.all([
-          api.resources.docTypes.list({ limit: 100 }),
+        const [subsidiaries, partners] = await Promise.all([
           api.resources.subsidiaries.list({ limit: 100 }),
           api.resources.partners.list({ limit: 100 }),
         ])
 
         if (!active) return
 
-        setDocTypeOptions(docTypes.map((d) => ({ value: d.id, label: d.title })))
         setSubsidiaryOptions(subsidiaries.map((s) => ({ value: s.id, label: s.title })))
         setPartnerOptions(partners.map((p) => ({ value: p.id, label: p.name })))
       } catch {
@@ -78,14 +75,6 @@ export function FormDocumentReceiptDetail({
     updateFn: (id, data) =>
       api.resources.documentReceiptDetails.update(id, data as Parameters<typeof api.resources.documentReceiptDetails.update>[1]),
     fields: [
-      {
-        name: "docTypeId",
-        label: "Doc Type",
-        description: "Jenis dokumen",
-        render: "select",
-        options: docTypeOptions,
-        required: true,
-      },
       {
         name: "subsidiaryId",
         label: "Subsidiary",

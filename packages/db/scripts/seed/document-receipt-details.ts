@@ -33,13 +33,12 @@ export async function seedDocumentReceiptDetails(): Promise<void> {
 
   // Ambil data referensi
   const docReceipts = await prisma.documentReceipt.findMany({ take: 1 })
-  const docTypes = await prisma.docType.findMany({ take: 1 })
   const subsidiaries = await prisma.subsidiary.findMany({ take: 1 })
   const partners = await prisma.partner.findMany({ take: 1 })
 
-  if (!docReceipts[0] || !docTypes[0] || !subsidiaries[0] || !partners[0]) {
+  if (!docReceipts[0] || !subsidiaries[0] || !partners[0]) {
     process.stdout.write(
-      "Seed document_receipt_details dilewati: pastikan document_receipts, doc_types, subsidiaries, dan partners sudah di-seed.\n"
+      "Seed document_receipt_details dilewati: pastikan document_receipts, subsidiaries, dan partners sudah di-seed.\n"
     )
     return
   }
@@ -54,7 +53,6 @@ export async function seedDocumentReceiptDetails(): Promise<void> {
     await prisma.documentReceiptDetail.create({
       data: {
         documentReceiptId: docReceipts[0].id,
-        docTypeId: docTypes[0].id,
         subsidiaryId: subsidiaries[0].id,
         partnerId: partners[0].id,
         nomorDoc: item.nomorDoc,

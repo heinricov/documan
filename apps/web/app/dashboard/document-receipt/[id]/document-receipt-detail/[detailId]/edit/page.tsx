@@ -21,7 +21,6 @@ export default function EditDocumentReceiptDetailPage() {
         documentReceiptId={params?.id}
         documentReceiptDetailId={item.id}
         initialData={{
-          docTypeId: item.docTypeId,
           subsidiaryId: item.subsidiaryId,
           partnerId: item.partnerId,
           nomorDoc: item.nomorDoc,
