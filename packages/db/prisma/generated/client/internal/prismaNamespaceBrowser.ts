@@ -58,7 +58,8 @@ export const ModelName = {
   Partner: 'Partner',
   Box: 'Box',
   DocumentReceipt: 'DocumentReceipt',
-  DocumentReceiptDetail: 'DocumentReceiptDetail'
+  DocumentReceiptDetail: 'DocumentReceiptDetail',
+  RefreshToken: 'RefreshToken'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -180,6 +181,18 @@ export const DocumentReceiptDetailScalarFieldEnum = {
 } as const
 
 export type DocumentReceiptDetailScalarFieldEnum = (typeof DocumentReceiptDetailScalarFieldEnum)[keyof typeof DocumentReceiptDetailScalarFieldEnum]
+
+
+export const RefreshTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
 export const SortOrder = {

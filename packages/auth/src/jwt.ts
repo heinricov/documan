@@ -42,7 +42,7 @@ export interface AuthTokenPayload {
 export interface JwtOptions {
   /** Secret override — default dari env JWT_SECRET */
   secret?: string
-  /** Expiry — default dari env JWT_EXPIRES_IN ?? "15m" */
+  /** Expiry — default dari env ACCESS_TOKEN_EXPIRES_IN ?? "15m" */
   expiresIn?: string
   /** Issuer — default dari env JWT_ISSUER ?? "documan" */
   issuer?: string
@@ -86,12 +86,12 @@ function toSecretKey(secret: string): Uint8Array {
 
 /**
  * ============================================================
- *  Sign / Verify
+ *  Access Token (Short-lived)
  * ============================================================
  */
 
 /**
- * Membuat JWT token dari payload.
+ * Membuat JWT access token dari payload.
  *
  * @example
  * ```ts
@@ -112,7 +112,7 @@ export async function signToken(
   options: JwtOptions = {}
 ): Promise<string> {
   const secret = options.secret ?? getJwtSecret()
-  const expiresIn = options.expiresIn ?? process.env.JWT_EXPIRES_IN ?? envDefaults.JWT_EXPIRES_IN
+  const expiresIn = options.expiresIn ?? process.env.ACCESS_TOKEN_EXPIRES_IN ?? envDefaults.ACCESS_TOKEN_EXPIRES_IN
   const issuer = options.issuer ?? process.env.JWT_ISSUER ?? envDefaults.JWT_ISSUER
 
   const { userId, role, ...rest } = payload
@@ -132,7 +132,7 @@ export async function signToken(
 }
 
 /**
- * Memverifikasi JWT token dan mengembalikan payload.
+ * Memverifikasi JWT access token dan mengembalikan payload.
  * Melempar AuthError jika tidak valid / expired.
  *
  * @example
@@ -172,6 +172,84 @@ export async function verifyToken<T extends object = object>(
 }
 
 /**
+ * ============================================================
+ *  Refresh Token (Long-lived, HttpOnly cookie)
+ * ============================================================
+ */
+
+/**
+ * Membuat JWT refresh token dari payload.
+ * Refresh token menggunakan secret yang sama tapi expiry lebih lama (default 7d).
+ */
+export async function signRefreshToken(
+  payload: AuthTokenPayload,
+  options: JwtOptions = {}
+): Promise<string> {
+  const secret = options.secret ?? getJwtSecret()
+  const expiresIn = options.expiresIn ?? process.env.REFRESH_TOKEN_EXPIRES_IN ?? envDefaults.REFRESH_TOKEN_EXPIRES_IN
+  const issuer = options.issuer ?? process.env.JWT_ISSUER ?? envDefaults.JWT_ISSUER
+
+  const { userId, role, ...rest } = payload
+
+  const claims: Record<string, unknown> = { ...rest, type: "refresh" }
+  if (role) {
+    claims.role = role
+  }
+
+  return new SignJWT(claims)
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(userId)
+    .setIssuedAt()
+    .setExpirationTime(expiresIn)
+    .setIssuer(issuer)
+    .sign(toSecretKey(secret))
+}
+
+/**
+ * Memverifikasi JWT refresh token dan mengembalikan payload.
+ */
+export async function verifyRefreshToken<T extends object = object>(
+  token: string,
+  options: VerifyOptions = {}
+): Promise<VerifyResult<T>> {
+  const secret = options.secret ?? getJwtSecret()
+  const issuer = options.issuer ?? process.env.JWT_ISSUER ?? envDefaults.JWT_ISSUER
+
+  try {
+    const { payload } = await jwtVerify(token, toSecretKey(secret), {
+      issuer,
+    })
+
+    // Ensure it's a refresh token
+    if (payload.type !== "refresh") {
+      throw new AuthError("INVALID_TOKEN", "Token is not a refresh token.")
+    }
+
+    return payload as VerifyResult<T>
+  } catch (error) {
+    if (error instanceof AuthError) throw error
+
+    const message = error instanceof Error ? error.message : "Invalid token"
+    const expired =
+      message.toLowerCase().includes("expired") ||
+      message.toLowerCase().includes("exp timestamp")
+
+    throw new AuthError(
+      expired ? "TOKEN_EXPIRED" : "INVALID_TOKEN",
+      expired
+        ? "Refresh token has expired. Please login again."
+        : "Invalid or malformed refresh token."
+    )
+  }
+}
+
+/**
+ * ============================================================
+ *  Common Helpers
+ * ============================================================
+ */
+
+/**
  * Ambil userId dari token yang sudah diverifikasi.
  * Berguna untuk endpoint yang butuh current user.
  *
@@ -188,6 +266,22 @@ export async function getUserId(
 
   if (!payload.sub) {
     throw new AuthError("INVALID_TOKEN", "Token does not contain a subject.")
+  }
+
+  return payload.sub
+}
+
+/**
+ * Ambil userId dari refresh token yang sudah diverifikasi.
+ */
+export async function getUserIdFromRefreshToken(
+  token: string,
+  options?: VerifyOptions
+): Promise<string> {
+  const payload = await verifyRefreshToken(token, options)
+
+  if (!payload.sub) {
+    throw new AuthError("INVALID_TOKEN", "Refresh token does not contain a subject.")
   }
 
   return payload.sub

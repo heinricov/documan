@@ -3,9 +3,9 @@ import { z } from "zod"
 export class ApiError extends Error {
   readonly status: number
   readonly data: unknown
-  readonly code?: string
+  readonly code?: string | number
 
-  constructor(status: number, message: string, data?: unknown, code?: string) {
+  constructor(status: number, message: string, data?: unknown, code?: string | number) {
     super(message)
     this.name = "ApiError"
     this.status = status
@@ -37,14 +37,44 @@ export class ResponseValidationError extends Error {
 }
 
 export interface HttpOptions {
-  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+  method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE"
   body?: unknown
   headers?: Record<string, string>
   query?: Record<string, unknown>
   signal?: AbortSignal
 }
 
-export interface Http {
+/**
+ * Callback untuk mendapatkan access token (untuk Authorization header).
+ * Returns token atau null.
+ */
+export type GetToken = () => Promise<string | null>
+
+/**
+ * Callback yang dipanggil saat 401 Unauthorized dengan valid Authorization header.
+ * Biasanya: clear token + redirect ke login.
+ */
+export type OnUnauthorized = () => void
+
+/**
+ * Callback untuk silent refresh — dipanggil saat 401.
+ * Returns new access token jika berhasil, null jika gagal (mis. refresh token expired).
+ */
+export type OnRefresh = () => Promise<string | null>
+
+export interface HttpClientConfig {
+  baseUrl: string
+  getToken?: GetToken
+  onUnauthorized?: OnUnauthorized
+  onRefresh?: OnRefresh
+}
+
+/**
+ * Type alias for the HTTP client interface
+ */
+export type Http = HttpClient
+
+export interface HttpClient {
   request<T>(
     schema: z.ZodType<T>,
     path: string,
@@ -52,41 +82,17 @@ export interface Http {
   ): Promise<T>
 }
 
-/**
- * Unwrap format standar @packages/core:
- * - Sukses  → kembalikan `data`
- * - Error   → throw ApiError dengan pesan dari `error.message`
- */
-function unwrapResponse(raw: unknown): unknown {
-  if (raw === null || typeof raw !== "object") return raw
+function unwrapResponse(data: unknown): unknown {
+  if (!data || typeof data !== "object") return data
 
-  const obj = raw as Record<string, unknown>
-
-  // Format error standar
-  if (obj.success === false && obj.error && typeof obj.error === "object") {
-    const err = obj.error as Record<string, unknown>
-    const message =
-      typeof err.message === "string" ? err.message : "Request failed"
-    const code = typeof err.code === "string" ? err.code : undefined
-    // Kita throw di luar, jadi di sini cukup return null + biarkan caller handle
-    // Tapi lebih bersih throw langsung di request()
-    return { __apiError: true, message, code, details: err.details }
-  }
-
-  // Format sukses standar
-  if (obj.success === true && "data" in obj) {
-    return obj.data
-  }
-
-  // Fallback: response tidak berformat (misal health check)
-  return raw
+  const obj = data as Record<string, unknown>
+  if (obj.success === true && "data" in obj) return obj.data
+  return data
 }
 
-export function createHttp(
-  baseUrl: string,
-  getToken?: () => Promise<string | null>,
-  onUnauthorized?: () => void
-): Http {
+export function createHttp(config: HttpClientConfig): HttpClient {
+  const { baseUrl, getToken, onUnauthorized, onRefresh } = config
+
   function buildUrl(path: string, query?: Record<string, unknown>): string {
     const url = new URL(path, baseUrl)
 
@@ -128,6 +134,8 @@ export function createHttp(
         },
         body: body !== undefined ? JSON.stringify(body) : undefined,
         signal,
+        // Important: include credentials so HttpOnly cookies are sent
+        credentials: "include",
       })
     } catch (error) {
       throw new NetworkError(
@@ -136,9 +144,42 @@ export function createHttp(
       )
     }
 
+    // Silent refresh on 401 with Authorization header
+    if (
+      response.status === 401 &&
+      authHeader.Authorization &&
+      onRefresh
+    ) {
+      const newToken = await onRefresh()
+      if (newToken) {
+        // Retry request with new token
+        const retryResponse = await fetch(buildUrl(path, query), {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${newToken}`,
+            ...headers,
+          },
+          body: body !== undefined ? JSON.stringify(body) : undefined,
+          signal,
+          credentials: "include",
+        })
+
+        if (retryResponse.ok) {
+          response = retryResponse
+        } else if (retryResponse.status === 401 && onUnauthorized) {
+          // Refresh failed - call onUnauthorized
+          onUnauthorized()
+        }
+      } else if (onUnauthorized) {
+        // Refresh failed completely
+        onUnauthorized()
+      }
+    }
+
     // Token interceptor: 401 + request membawa Authorization header
     // → token tidak valid / sudah expired. Panggil onUnauthorized
-    // (mis. clear token + redirect ke login di sisi web).
     // Catatan: 401 dari login (tanpa token) TIDAK memicu ini.
     if (onUnauthorized && response.status === 401 && authHeader.Authorization) {
       onUnauthorized()
@@ -190,7 +231,7 @@ export function createHttp(
         response.status,
         apiError.message ?? "Request failed",
         rawData,
-        apiError.code
+        apiError.code ? Number(apiError.code) : undefined
       )
     }
 

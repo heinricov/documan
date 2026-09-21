@@ -34,9 +34,9 @@ export const loginSchema = {
 export const authResponseSchema = {
   type: "object",
   properties: {
-    token: {
+    accessToken: {
       type: "string",
-      description: "JWT token untuk autentikasi",
+      description: "JWT access token untuk autentikasi (short-lived)",
       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     },
     user: {
@@ -50,6 +50,17 @@ export const authResponseSchema = {
         createdAt: { type: "string", format: "date-time" },
         updatedAt: { type: "string", format: "date-time" },
       },
+    },
+  },
+}
+
+export const refreshResponseSchema = {
+  type: "object",
+  properties: {
+    accessToken: {
+      type: "string",
+      description: "JWT access token baru (short-lived)",
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     },
   },
 }

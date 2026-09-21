@@ -5,7 +5,7 @@ import type { Resources } from "./resources/index"
 export interface ClientOptions {
   baseUrl?: string
   /**
-   * Fungsi async yang mengembalikan JWT token.
+   * Fungsi async yang mengembalikan JWT access token.
    * Jika diset, setiap request otomatis mengirim header
    * `Authorization: Bearer <token>`.
    *
@@ -25,6 +25,12 @@ export interface ClientOptions {
    * TIDAK dipanggil untuk 401 tanpa token (mis. login dengan password salah).
    */
   onUnauthorized?: () => void
+  /**
+   * Dipanggil saat 401 untuk mencoba silent refresh.
+   * Harus mengembalikan access token baru atau null jika gagal.
+   * Refresh token dikirim otomatis via HttpOnly cookie.
+   */
+  onRefresh?: () => Promise<string | null>
 }
 
 export interface Client {
@@ -43,7 +49,12 @@ export function createClient(options: ClientOptions = {}): Client {
     )
   }
 
-  const http = createHttp(baseUrl, options.getToken, options.onUnauthorized)
+  const http = createHttp({
+    baseUrl,
+    getToken: options.getToken,
+    onUnauthorized: options.onUnauthorized,
+    onRefresh: options.onRefresh,
+  })
   const resources = createResources(http)
 
   return { resources }

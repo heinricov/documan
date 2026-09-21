@@ -1,5 +1,6 @@
 import { NestFactory } from "@nestjs/core"
 import helmet from "helmet"
+import cookieParser from "cookie-parser"
 import type { Request, Response, NextFunction } from "express"
 import { loadEnv, validateEnv, envDefaults } from "@configs/environment"
 import { setupSwagger } from "@packages/documentation"
@@ -66,6 +67,9 @@ async function bootstrap() {
     origin: corsOrigins(),
     credentials: true,
   })
+
+  // Cookie parser for HttpOnly refresh token cookie
+  app.use(cookieParser())
 
   // Security headers
   app.use(helmet())

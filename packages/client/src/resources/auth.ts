@@ -8,16 +8,22 @@ import {
 } from "@packages/validator"
 
 /**
- * Auth response type — token + user data
+ * Auth response type — accessToken + user data
  */
 export interface AuthResult {
-  token: string
+  accessToken: string
   user: User
+}
+
+export interface RefreshResult {
+  accessToken: string
 }
 
 export interface AuthResource {
   login(data: LoginBody): Promise<AuthResult>
   me(): Promise<User>
+  refresh(): Promise<RefreshResult>
+  logout(): Promise<{ message: string }>
 }
 
 export function createAuthResource(http: Http): AuthResource {
@@ -37,6 +43,18 @@ export function createAuthResource(http: Http): AuthResource {
       return http.request(UserSchema, `${path}/me`, {
         method: "GET",
       })
+    },
+
+    refresh() {
+      return http.request(z.any(), `${path}/refresh`, {
+        method: "POST",
+      }) as Promise<RefreshResult>
+    },
+
+    logout() {
+      return http.request(z.any(), `${path}/logout`, {
+        method: "POST",
+      }) as Promise<{ message: string }>
     },
   }
 }

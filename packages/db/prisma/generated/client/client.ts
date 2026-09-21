@@ -81,3 +81,8 @@ export type DocumentReceipt = Prisma.DocumentReceiptModel
  * 
  */
 export type DocumentReceiptDetail = Prisma.DocumentReceiptDetailModel
+/**
+ * Model RefreshToken
+ * 
+ */
+export type RefreshToken = Prisma.RefreshTokenModel

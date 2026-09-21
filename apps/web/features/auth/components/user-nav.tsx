@@ -20,8 +20,8 @@ export function UserNav() {
   const router = useRouter()
   const { user, logout } = useAuth()
 
-  function handleLogout() {
-    logout()
+  async function handleLogout() {
+    await logout()
     router.push("/auth/login")
     router.refresh()
   }

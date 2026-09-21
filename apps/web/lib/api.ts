@@ -1,35 +1,58 @@
 import { createClient } from "@packages/client"
 
-const TOKEN_KEY = "documan_token"
+// In-memory token storage (no localStorage)
+let accessToken: string | null = null
 
-function getToken(): Promise<string | null> {
-  if (typeof window === "undefined") return Promise.resolve(null)
-  return Promise.resolve(localStorage.getItem(TOKEN_KEY))
+export function getToken(): Promise<string | null> {
+  return Promise.resolve(accessToken)
 }
 
 export function setToken(token: string): void {
-  if (typeof window === "undefined") return
-  localStorage.setItem(TOKEN_KEY, token)
+  accessToken = token
 }
 
 export function clearToken(): void {
-  if (typeof window === "undefined") return
-  localStorage.removeItem(TOKEN_KEY)
+  accessToken = null
 }
 
-export function getStoredToken(): string | null {
-  if (typeof window === "undefined") return null
-  return localStorage.getItem(TOKEN_KEY)
+/**
+ * Silent refresh - called by HTTP client on 401.
+ * Calls POST /auth/refresh which reads refresh token from HttpOnly cookie.
+ */
+export async function silentRefresh(): Promise<string | null> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+      method: "POST",
+      credentials: "include", // Important: include HttpOnly cookie
+    })
+
+    if (!response.ok) {
+      return null
+    }
+
+    const data = await response.json()
+    const newAccessToken = data?.accessToken ?? data?.data?.accessToken
+
+    if (newAccessToken) {
+      accessToken = newAccessToken
+      return newAccessToken
+    }
+
+    return null
+  } catch {
+    return null
+  }
 }
 
 export const api = createClient({
   getToken,
-  // Token interceptor global: 401 dengan Authorization → token invalid/expired.
-  // Hapus token & arahkan ke halaman login (login page sudah handle redirect jika sudah login).
+  // Called when 401 AND refresh failed (or no refresh token)
   onUnauthorized: () => {
     clearToken()
     if (typeof window !== "undefined") {
       window.location.assign("/auth/login")
     }
   },
+  // Silent refresh on 401
+  onRefresh: silentRefresh,
 })

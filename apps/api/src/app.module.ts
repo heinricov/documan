@@ -15,7 +15,7 @@ import { RateLimitGuard } from './common/guards/rate-limit.guard.js';
 import { AuthGuard } from './common/guards/auth.guard.js';
 import { RolesGuard } from './common/guards/roles.guard.js';
 import { RATE_LIMIT_STORE } from './common/rate-limit/store.js';
-import { InMemoryRateLimitStore } from './common/rate-limit/in-memory-store.js';
+import { createRateLimitStoreSync } from './common/rate-limit/factory.js';
 
 @Module({
   imports: [HealthModule, AuthModule, RolesModule, UsersModule, SubsidiariesModule, DocTypesModule, PartnersModule, BoxesModule, DocumentReceiptsModule, DocumentReceiptDetailsModule],
@@ -35,7 +35,7 @@ import { InMemoryRateLimitStore } from './common/rate-limit/in-memory-store.js';
     },
     {
       provide: RATE_LIMIT_STORE,
-      useClass: InMemoryRateLimitStore,
+      useFactory: () => createRateLimitStoreSync(),
     },
   ],
 })
