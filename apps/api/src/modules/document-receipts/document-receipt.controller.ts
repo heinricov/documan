@@ -19,7 +19,7 @@ import {
   type UpdateDocumentReceipt,
 } from "@packages/validator"
 import { ZodBody, ZodParams, ZodQuery } from "../../common/zod.decorators.js"
-import { Roles } from "../../common/auth.js"
+import { CurrentUser, Roles } from "../../common/auth.js"
 import {
   createDocumentReceiptSchema,
   paginatedDocumentReceiptSchema,
@@ -60,8 +60,17 @@ export class DocumentReceiptController {
   @ApiBody({ schema: createDocumentReceiptSchema })
   @ApiOkResponse({ description: "Document receipt berhasil dibuat", schema: documentReceiptSchema })
   @ApiResponse({ status: 400, description: "Validasi gagal" })
-  create(@ZodBody({ zod: CreateDocumentReceiptSchema }) body: CreateDocumentReceipt) {
-    return this.documentReceiptService.create(body)
+  create(
+    @CurrentUser("userId") userId: string,
+    @ZodBody({ zod: CreateDocumentReceiptSchema }) body: CreateDocumentReceipt
+  ) {
+    return this.documentReceiptService.create({
+      title: body.title,
+      description: body.description,
+      docTypeId: body.docTypeId,
+      boxId: body.boxId,
+      userId,
+    })
   }
 
   @Get(":id")

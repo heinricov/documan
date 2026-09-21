@@ -73,7 +73,7 @@ export class DocumentReceiptService {
     return serializeDocumentReceipt(item)
   }
 
-  async create(data: CreateDocumentReceipt): Promise<DocumentReceipt> {
+  async create(data: CreateDocumentReceipt & { userId: string }): Promise<DocumentReceipt> {
     return serializeDocumentReceipt(
       await prisma.documentReceipt.create({
         data: {

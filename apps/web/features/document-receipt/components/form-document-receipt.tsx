@@ -27,7 +27,6 @@ export function FormDocumentReceipt({
   documentReceiptId,
   initialData,
 }: FormDocumentReceiptProps) {
-  const [userOptions, setUserOptions] = useState<Option[]>([])
   const [docTypeOptions, setDocTypeOptions] = useState<Option[]>([])
   const [boxOptions, setBoxOptions] = useState<Option[]>([])
 
@@ -36,15 +35,13 @@ export function FormDocumentReceipt({
 
     async function load() {
       try {
-        const [users, docTypes, boxes] = await Promise.all([
-          api.resources.users.list({ limit: 100 }),
+        const [docTypes, boxes] = await Promise.all([
           api.resources.docTypes.list({ limit: 100 }),
           api.resources.boxes.list({ limit: 100 }),
         ])
 
         if (!active) return
 
-        setUserOptions(users.map((u) => ({ value: u.id, label: u.username })))
         setDocTypeOptions(docTypes.map((d) => ({ value: d.id, label: d.title })))
         setBoxOptions(boxes.map((b) => ({ value: b.id, label: b.noBox })))
       } catch {
@@ -70,7 +67,6 @@ export function FormDocumentReceipt({
         data as {
           title: string
           description?: string | null
-          userId: string
           docTypeId: string
           boxId: string
         }
@@ -101,14 +97,6 @@ export function FormDocumentReceipt({
         placeholder: "cth. Dokumen invoice dari partner X",
         render: "textarea",
         maxLength: 200,
-      },
-      {
-        name: "userId",
-        label: "User",
-        description: "User yang menangani",
-        render: "select",
-        options: userOptions,
-        required: true,
       },
       {
         name: "docTypeId",

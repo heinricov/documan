@@ -14,7 +14,6 @@ export const DocumentReceiptSchema = z.object({
 export const CreateDocumentReceiptSchema = z.object({
   title: z.string().min(1, "Title wajib diisi").max(200),
   description: z.string().nullable().optional(),
-  userId: z.string().uuid("User ID tidak valid"),
   docTypeId: z.string().uuid("Doc Type ID tidak valid"),
   boxId: z.string().uuid("Box ID tidak valid"),
 })

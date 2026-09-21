@@ -278,13 +278,17 @@ export interface DocumentReceiptOverrides {
   boxId?: string
 }
 
+export interface DocumentReceiptFixture extends CreateDocumentReceipt {
+  userId: string
+}
+
 /**
  * Membuat fixture data DocumentReceipt yang valid.
  * `title` digenerate unik otomatis jika tidak di-supply.
  */
 export function createDocumentReceiptFixture(
   overrides: DocumentReceiptOverrides = {}
-): CreateDocumentReceipt {
+): DocumentReceiptFixture {
   documentReceiptCounter++
 
   return {
