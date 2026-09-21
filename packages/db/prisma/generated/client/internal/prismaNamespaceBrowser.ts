@@ -57,7 +57,8 @@ export const ModelName = {
   DocType: 'DocType',
   Partner: 'Partner',
   Box: 'Box',
-  DocumentReceipt: 'DocumentReceipt'
+  DocumentReceipt: 'DocumentReceipt',
+  DocumentReceiptDetail: 'DocumentReceiptDetail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -159,6 +160,27 @@ export const DocumentReceiptScalarFieldEnum = {
 } as const
 
 export type DocumentReceiptScalarFieldEnum = (typeof DocumentReceiptScalarFieldEnum)[keyof typeof DocumentReceiptScalarFieldEnum]
+
+
+export const DocumentReceiptDetailScalarFieldEnum = {
+  id: 'id',
+  documentReceiptId: 'documentReceiptId',
+  docTypeId: 'docTypeId',
+  subsidiaryId: 'subsidiaryId',
+  partnerId: 'partnerId',
+  nomorDoc: 'nomorDoc',
+  nomorFaktur: 'nomorFaktur',
+  nomorPl: 'nomorPl',
+  nomorDo: 'nomorDo',
+  nomorInv: 'nomorInv',
+  nomorPv: 'nomorPv',
+  nomorNota: 'nomorNota',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentReceiptDetailScalarFieldEnum = (typeof DocumentReceiptDetailScalarFieldEnum)[keyof typeof DocumentReceiptDetailScalarFieldEnum]
 
 
 export const SortOrder = {

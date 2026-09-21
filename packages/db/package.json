@@ -15,10 +15,12 @@
     "db:seed": "tsx scripts/seed/index.ts",
     "db:seed:roles": "tsx scripts/seed/roles.ts",
     "db:seed:users": "tsx scripts/seed/users.ts",
+    "db:seed:subsidiaries": "tsx scripts/seed/subsidiaries.ts",
     "db:seed:doc-types": "tsx scripts/seed/doc-types.ts",
     "db:seed:partners": "tsx scripts/seed/partners.ts",
     "db:seed:boxes": "tsx scripts/seed/boxes.ts",
     "db:seed:document-receipts": "tsx scripts/seed/document-receipts.ts",
+    "db:seed:document-receipt-details": "tsx scripts/seed/document-receipt-details.ts",
     "db:clean": "tsx scripts/clean/index.ts",
     "db:clean:roles": "tsx scripts/clean/roles.ts",
     "db:clean:users": "tsx scripts/clean/users.ts",
@@ -26,7 +28,8 @@
     "db:clean:doc-types": "tsx scripts/clean/doc-types.ts",
     "db:clean:partners": "tsx scripts/clean/partners.ts",
     "db:clean:boxes": "tsx scripts/clean/boxes.ts",
-    "db:clean:document-receipts": "tsx scripts/clean/document-receipts.ts"
+    "db:clean:document-receipts": "tsx scripts/clean/document-receipts.ts",
+    "db:clean:document-receipt-details": "tsx scripts/clean/document-receipt-details.ts"
   },
   "exports": {
     ".": "./src/index.ts",

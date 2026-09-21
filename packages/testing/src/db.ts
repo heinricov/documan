@@ -1,6 +1,6 @@
 import { prisma as defaultPrisma } from "@packages/db"
-import type { Role, User, Subsidiary, DocType, Partner, Box, DocumentReceipt } from "@packages/validator"
-import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides, createPartnerFixture, type PartnerOverrides, createBoxFixture, type BoxOverrides, createDocumentReceiptFixture, type DocumentReceiptOverrides } from "./factories.js"
+import type { Role, User, Subsidiary, DocType, Partner, Box, DocumentReceipt, DocumentReceiptDetail } from "@packages/validator"
+import { createRoleFixture, type RoleOverrides, createUserFixture, type UserOverrides, createSubsidiaryFixture, type SubsidiaryOverrides, createDocTypeFixture, type DocTypeOverrides, createPartnerFixture, type PartnerOverrides, createBoxFixture, type BoxOverrides, createDocumentReceiptFixture, type DocumentReceiptOverrides, createDocumentReceiptDetailFixture, type DocumentReceiptDetailOverrides } from "./factories.js"
 
 /**
  * ============================================================
@@ -605,4 +605,108 @@ function serializeDocumentReceipt(item: DocumentReceiptRecord): DocumentReceipt 
 
 function serializeDocumentReceiptList(items: DocumentReceiptRecord[]): DocumentReceipt[] {
   return items.map(serializeDocumentReceipt)
+}
+
+/**
+ * ============================================================
+ *  DocumentReceiptDetail Seed
+ * ============================================================
+ */
+
+export async function seedDocumentReceiptDetail(
+  overrides: DocumentReceiptDetailOverrides = {},
+  db: Db = defaultPrisma
+): Promise<DocumentReceiptDetail> {
+  const data = createDocumentReceiptDetailFixture(overrides)
+  return serializeDocumentReceiptDetail(
+    await db.documentReceiptDetail.create({
+      data: {
+        documentReceiptId: data.documentReceiptId,
+        docTypeId: data.docTypeId,
+        subsidiaryId: data.subsidiaryId,
+        partnerId: data.partnerId,
+        nomorDoc: data.nomorDoc,
+        nomorFaktur: data.nomorFaktur,
+        nomorPl: data.nomorPl,
+        nomorDo: data.nomorDo,
+        nomorInv: data.nomorInv,
+        nomorPv: data.nomorPv,
+        nomorNota: data.nomorNota,
+        description: data.description,
+      },
+    })
+  )
+}
+
+export async function seedDocumentReceiptDetails(
+  items: DocumentReceiptDetailOverrides[] = [],
+  db: Db = defaultPrisma
+): Promise<DocumentReceiptDetail[]> {
+  const fixtures = items.length > 0 ? items : [{}]
+  const data = fixtures.map((fixture) => createDocumentReceiptDetailFixture(fixture))
+
+  return serializeDocumentReceiptDetailList(
+    await db.$transaction(
+      data.map((item) =>
+        db.documentReceiptDetail.create({
+          data: {
+            documentReceiptId: item.documentReceiptId,
+            docTypeId: item.docTypeId,
+            subsidiaryId: item.subsidiaryId,
+            partnerId: item.partnerId,
+            nomorDoc: item.nomorDoc,
+            nomorFaktur: item.nomorFaktur,
+            nomorPl: item.nomorPl,
+            nomorDo: item.nomorDo,
+            nomorInv: item.nomorInv,
+            nomorPv: item.nomorPv,
+            nomorNota: item.nomorNota,
+            description: item.description,
+          },
+        })
+      )
+    )
+  )
+}
+
+type DocumentReceiptDetailRecord = {
+  id: string
+  documentReceiptId: string
+  docTypeId: string
+  subsidiaryId: string
+  partnerId: string
+  nomorDoc: string | null
+  nomorFaktur: string | null
+  nomorPl: string | null
+  nomorDo: string | null
+  nomorInv: string | null
+  nomorPv: string | null
+  nomorNota: string | null
+  description: string | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+function serializeDocumentReceiptDetail(item: DocumentReceiptDetailRecord): DocumentReceiptDetail {
+  return {
+    id: item.id,
+    documentReceiptId: item.documentReceiptId,
+    docTypeId: item.docTypeId,
+    subsidiaryId: item.subsidiaryId,
+    partnerId: item.partnerId,
+    nomorDoc: item.nomorDoc,
+    nomorFaktur: item.nomorFaktur,
+    nomorPl: item.nomorPl,
+    nomorDo: item.nomorDo,
+    nomorInv: item.nomorInv,
+    nomorPv: item.nomorPv,
+    nomorNota: item.nomorNota,
+    description: item.description,
+    createdAt: item.createdAt.toISOString(),
+    updatedAt: item.updatedAt.toISOString(),
+  }
+}
+
+function serializeDocumentReceiptDetailList(items: DocumentReceiptDetailRecord[]): DocumentReceiptDetail[] {
+  return items.map(serializeDocumentReceiptDetail)
 }

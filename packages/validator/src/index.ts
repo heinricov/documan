@@ -141,3 +141,19 @@ export type {
   UpdateDocumentReceipt,
   DocumentReceiptQuery,
 } from "@packages/validator/schemas/document-receipt"
+
+// ====================== DocumentReceiptDetail Schemas ======================
+export {
+  DocumentReceiptDetailSchema,
+  CreateDocumentReceiptDetailSchema,
+  UpdateDocumentReceiptDetailSchema,
+  DocumentReceiptDetailQuerySchema,
+} from "@packages/validator/schemas/document-receipt-detail"
+
+// ====================== DocumentReceiptDetail Types ======================
+export type {
+  DocumentReceiptDetail,
+  CreateDocumentReceiptDetail,
+  UpdateDocumentReceiptDetail,
+  DocumentReceiptDetailQuery,
+} from "@packages/validator/schemas/document-receipt-detail"

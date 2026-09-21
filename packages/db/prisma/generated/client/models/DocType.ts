@@ -183,6 +183,7 @@ export type DocTypeWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
   documentReceipts?: Prisma.DocumentReceiptListRelationFilter
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailListRelationFilter
 }
 
 export type DocTypeOrderByWithRelationInput = {
@@ -192,6 +193,7 @@ export type DocTypeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   documentReceipts?: Prisma.DocumentReceiptOrderByRelationAggregateInput
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailOrderByRelationAggregateInput
 }
 
 export type DocTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -204,6 +206,7 @@ export type DocTypeWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DocType"> | Date | string
   documentReceipts?: Prisma.DocumentReceiptListRelationFilter
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailListRelationFilter
 }, "id" | "title">
 
 export type DocTypeOrderByWithAggregationInput = {
@@ -235,6 +238,7 @@ export type DocTypeCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   documentReceipts?: Prisma.DocumentReceiptCreateNestedManyWithoutDocTypeInput
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailCreateNestedManyWithoutDocTypeInput
 }
 
 export type DocTypeUncheckedCreateInput = {
@@ -244,6 +248,7 @@ export type DocTypeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   documentReceipts?: Prisma.DocumentReceiptUncheckedCreateNestedManyWithoutDocTypeInput
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUncheckedCreateNestedManyWithoutDocTypeInput
 }
 
 export type DocTypeUpdateInput = {
@@ -253,6 +258,7 @@ export type DocTypeUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentReceipts?: Prisma.DocumentReceiptUpdateManyWithoutDocTypeNestedInput
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUpdateManyWithoutDocTypeNestedInput
 }
 
 export type DocTypeUncheckedUpdateInput = {
@@ -262,6 +268,7 @@ export type DocTypeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documentReceipts?: Prisma.DocumentReceiptUncheckedUpdateManyWithoutDocTypeNestedInput
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutDocTypeNestedInput
 }
 
 export type DocTypeCreateManyInput = {
@@ -331,12 +338,27 @@ export type DocTypeUpdateOneRequiredWithoutDocumentReceiptsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DocTypeUpdateToOneWithWhereWithoutDocumentReceiptsInput, Prisma.DocTypeUpdateWithoutDocumentReceiptsInput>, Prisma.DocTypeUncheckedUpdateWithoutDocumentReceiptsInput>
 }
 
+export type DocTypeCreateNestedOneWithoutDocumentReceiptDetailsInput = {
+  create?: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptDetailsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptDetailsInput>
+  connectOrCreate?: Prisma.DocTypeCreateOrConnectWithoutDocumentReceiptDetailsInput
+  connect?: Prisma.DocTypeWhereUniqueInput
+}
+
+export type DocTypeUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptDetailsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptDetailsInput>
+  connectOrCreate?: Prisma.DocTypeCreateOrConnectWithoutDocumentReceiptDetailsInput
+  upsert?: Prisma.DocTypeUpsertWithoutDocumentReceiptDetailsInput
+  connect?: Prisma.DocTypeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocTypeUpdateToOneWithWhereWithoutDocumentReceiptDetailsInput, Prisma.DocTypeUpdateWithoutDocumentReceiptDetailsInput>, Prisma.DocTypeUncheckedUpdateWithoutDocumentReceiptDetailsInput>
+}
+
 export type DocTypeCreateWithoutDocumentReceiptsInput = {
   id?: string
   title: string
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailCreateNestedManyWithoutDocTypeInput
 }
 
 export type DocTypeUncheckedCreateWithoutDocumentReceiptsInput = {
@@ -345,6 +367,7 @@ export type DocTypeUncheckedCreateWithoutDocumentReceiptsInput = {
   description?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUncheckedCreateNestedManyWithoutDocTypeInput
 }
 
 export type DocTypeCreateOrConnectWithoutDocumentReceiptsInput = {
@@ -369,6 +392,7 @@ export type DocTypeUpdateWithoutDocumentReceiptsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUpdateManyWithoutDocTypeNestedInput
 }
 
 export type DocTypeUncheckedUpdateWithoutDocumentReceiptsInput = {
@@ -377,6 +401,59 @@ export type DocTypeUncheckedUpdateWithoutDocumentReceiptsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutDocTypeNestedInput
+}
+
+export type DocTypeCreateWithoutDocumentReceiptDetailsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptCreateNestedManyWithoutDocTypeInput
+}
+
+export type DocTypeUncheckedCreateWithoutDocumentReceiptDetailsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedCreateNestedManyWithoutDocTypeInput
+}
+
+export type DocTypeCreateOrConnectWithoutDocumentReceiptDetailsInput = {
+  where: Prisma.DocTypeWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptDetailsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptDetailsInput>
+}
+
+export type DocTypeUpsertWithoutDocumentReceiptDetailsInput = {
+  update: Prisma.XOR<Prisma.DocTypeUpdateWithoutDocumentReceiptDetailsInput, Prisma.DocTypeUncheckedUpdateWithoutDocumentReceiptDetailsInput>
+  create: Prisma.XOR<Prisma.DocTypeCreateWithoutDocumentReceiptDetailsInput, Prisma.DocTypeUncheckedCreateWithoutDocumentReceiptDetailsInput>
+  where?: Prisma.DocTypeWhereInput
+}
+
+export type DocTypeUpdateToOneWithWhereWithoutDocumentReceiptDetailsInput = {
+  where?: Prisma.DocTypeWhereInput
+  data: Prisma.XOR<Prisma.DocTypeUpdateWithoutDocumentReceiptDetailsInput, Prisma.DocTypeUncheckedUpdateWithoutDocumentReceiptDetailsInput>
+}
+
+export type DocTypeUpdateWithoutDocumentReceiptDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUpdateManyWithoutDocTypeNestedInput
+}
+
+export type DocTypeUncheckedUpdateWithoutDocumentReceiptDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceipts?: Prisma.DocumentReceiptUncheckedUpdateManyWithoutDocTypeNestedInput
 }
 
 
@@ -386,10 +463,12 @@ export type DocTypeUncheckedUpdateWithoutDocumentReceiptsInput = {
 
 export type DocTypeCountOutputType = {
   documentReceipts: number
+  documentReceiptDetails: number
 }
 
 export type DocTypeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   documentReceipts?: boolean | DocTypeCountOutputTypeCountDocumentReceiptsArgs
+  documentReceiptDetails?: boolean | DocTypeCountOutputTypeCountDocumentReceiptDetailsArgs
 }
 
 /**
@@ -409,6 +488,13 @@ export type DocTypeCountOutputTypeCountDocumentReceiptsArgs<ExtArgs extends runt
   where?: Prisma.DocumentReceiptWhereInput
 }
 
+/**
+ * DocTypeCountOutputType without action
+ */
+export type DocTypeCountOutputTypeCountDocumentReceiptDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentReceiptDetailWhereInput
+}
+
 
 export type DocTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -417,6 +503,7 @@ export type DocTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdAt?: boolean
   updatedAt?: boolean
   documentReceipts?: boolean | Prisma.DocType$documentReceiptsArgs<ExtArgs>
+  documentReceiptDetails?: boolean | Prisma.DocType$documentReceiptDetailsArgs<ExtArgs>
   _count?: boolean | Prisma.DocTypeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["docType"]>
 
@@ -447,6 +534,7 @@ export type DocTypeSelectScalar = {
 export type DocTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["docType"]>
 export type DocTypeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   documentReceipts?: boolean | Prisma.DocType$documentReceiptsArgs<ExtArgs>
+  documentReceiptDetails?: boolean | Prisma.DocType$documentReceiptDetailsArgs<ExtArgs>
   _count?: boolean | Prisma.DocTypeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocTypeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -456,6 +544,7 @@ export type $DocTypePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "DocType"
   objects: {
     documentReceipts: Prisma.$DocumentReceiptPayload<ExtArgs>[]
+    documentReceiptDetails: Prisma.$DocumentReceiptDetailPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -858,6 +947,7 @@ readonly fields: DocTypeFieldRefs;
 export interface Prisma__DocTypeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   documentReceipts<T extends Prisma.DocType$documentReceiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocType$documentReceiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  documentReceiptDetails<T extends Prisma.DocType$documentReceiptDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocType$documentReceiptDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1306,6 +1396,30 @@ export type DocType$documentReceiptsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.DocumentReceiptScalarFieldEnum | Prisma.DocumentReceiptScalarFieldEnum[]
+}
+
+/**
+ * DocType.documentReceiptDetails
+ */
+export type DocType$documentReceiptDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentReceiptDetail
+   */
+  select?: Prisma.DocumentReceiptDetailSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DocumentReceiptDetail
+   */
+  omit?: Prisma.DocumentReceiptDetailOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentReceiptDetailInclude<ExtArgs> | null
+  where?: Prisma.DocumentReceiptDetailWhereInput
+  orderBy?: Prisma.DocumentReceiptDetailOrderByWithRelationInput | Prisma.DocumentReceiptDetailOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentReceiptDetailWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentReceiptDetailScalarFieldEnum | Prisma.DocumentReceiptDetailScalarFieldEnum[]
 }
 
 /**

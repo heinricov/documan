@@ -52,3 +52,8 @@ export type Box = Prisma.BoxModel
  * 
  */
 export type DocumentReceipt = Prisma.DocumentReceiptModel
+/**
+ * Model DocumentReceiptDetail
+ * 
+ */
+export type DocumentReceiptDetail = Prisma.DocumentReceiptDetailModel

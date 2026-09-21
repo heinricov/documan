@@ -209,6 +209,7 @@ export type DocumentReceiptWhereInput = {
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   docType?: Prisma.XOR<Prisma.DocTypeScalarRelationFilter, Prisma.DocTypeWhereInput>
   box?: Prisma.XOR<Prisma.BoxScalarRelationFilter, Prisma.BoxWhereInput>
+  details?: Prisma.DocumentReceiptDetailListRelationFilter
 }
 
 export type DocumentReceiptOrderByWithRelationInput = {
@@ -223,6 +224,7 @@ export type DocumentReceiptOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   docType?: Prisma.DocTypeOrderByWithRelationInput
   box?: Prisma.BoxOrderByWithRelationInput
+  details?: Prisma.DocumentReceiptDetailOrderByRelationAggregateInput
 }
 
 export type DocumentReceiptWhereUniqueInput = Prisma.AtLeast<{
@@ -240,6 +242,7 @@ export type DocumentReceiptWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   docType?: Prisma.XOR<Prisma.DocTypeScalarRelationFilter, Prisma.DocTypeWhereInput>
   box?: Prisma.XOR<Prisma.BoxScalarRelationFilter, Prisma.BoxWhereInput>
+  details?: Prisma.DocumentReceiptDetailListRelationFilter
 }, "id">
 
 export type DocumentReceiptOrderByWithAggregationInput = {
@@ -279,6 +282,7 @@ export type DocumentReceiptCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutDocumentReceiptsInput
   docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptsInput
   box: Prisma.BoxCreateNestedOneWithoutDocumentReceiptsInput
+  details?: Prisma.DocumentReceiptDetailCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptUncheckedCreateInput = {
@@ -290,6 +294,7 @@ export type DocumentReceiptUncheckedCreateInput = {
   boxId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptUpdateInput = {
@@ -301,6 +306,7 @@ export type DocumentReceiptUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentReceiptsNestedInput
   docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptsNestedInput
   box?: Prisma.BoxUpdateOneRequiredWithoutDocumentReceiptsNestedInput
+  details?: Prisma.DocumentReceiptDetailUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptUncheckedUpdateInput = {
@@ -312,6 +318,7 @@ export type DocumentReceiptUncheckedUpdateInput = {
   boxId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptCreateManyInput = {
@@ -385,6 +392,11 @@ export type DocumentReceiptMinOrderByAggregateInput = {
   boxId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type DocumentReceiptScalarRelationFilter = {
+  is?: Prisma.DocumentReceiptWhereInput
+  isNot?: Prisma.DocumentReceiptWhereInput
 }
 
 export type DocumentReceiptCreateNestedManyWithoutUserInput = {
@@ -513,6 +525,20 @@ export type DocumentReceiptUncheckedUpdateManyWithoutBoxNestedInput = {
   deleteMany?: Prisma.DocumentReceiptScalarWhereInput | Prisma.DocumentReceiptScalarWhereInput[]
 }
 
+export type DocumentReceiptCreateNestedOneWithoutDetailsInput = {
+  create?: Prisma.XOR<Prisma.DocumentReceiptCreateWithoutDetailsInput, Prisma.DocumentReceiptUncheckedCreateWithoutDetailsInput>
+  connectOrCreate?: Prisma.DocumentReceiptCreateOrConnectWithoutDetailsInput
+  connect?: Prisma.DocumentReceiptWhereUniqueInput
+}
+
+export type DocumentReceiptUpdateOneRequiredWithoutDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.DocumentReceiptCreateWithoutDetailsInput, Prisma.DocumentReceiptUncheckedCreateWithoutDetailsInput>
+  connectOrCreate?: Prisma.DocumentReceiptCreateOrConnectWithoutDetailsInput
+  upsert?: Prisma.DocumentReceiptUpsertWithoutDetailsInput
+  connect?: Prisma.DocumentReceiptWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentReceiptUpdateToOneWithWhereWithoutDetailsInput, Prisma.DocumentReceiptUpdateWithoutDetailsInput>, Prisma.DocumentReceiptUncheckedUpdateWithoutDetailsInput>
+}
+
 export type DocumentReceiptCreateWithoutUserInput = {
   id?: string
   title: string
@@ -521,6 +547,7 @@ export type DocumentReceiptCreateWithoutUserInput = {
   updatedAt?: Date | string
   docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptsInput
   box: Prisma.BoxCreateNestedOneWithoutDocumentReceiptsInput
+  details?: Prisma.DocumentReceiptDetailCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptUncheckedCreateWithoutUserInput = {
@@ -531,6 +558,7 @@ export type DocumentReceiptUncheckedCreateWithoutUserInput = {
   boxId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptCreateOrConnectWithoutUserInput = {
@@ -581,6 +609,7 @@ export type DocumentReceiptCreateWithoutDocTypeInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDocumentReceiptsInput
   box: Prisma.BoxCreateNestedOneWithoutDocumentReceiptsInput
+  details?: Prisma.DocumentReceiptDetailCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptUncheckedCreateWithoutDocTypeInput = {
@@ -591,6 +620,7 @@ export type DocumentReceiptUncheckedCreateWithoutDocTypeInput = {
   boxId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptCreateOrConnectWithoutDocTypeInput = {
@@ -627,6 +657,7 @@ export type DocumentReceiptCreateWithoutBoxInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDocumentReceiptsInput
   docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptsInput
+  details?: Prisma.DocumentReceiptDetailCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptUncheckedCreateWithoutBoxInput = {
@@ -637,6 +668,7 @@ export type DocumentReceiptUncheckedCreateWithoutBoxInput = {
   docTypeId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedCreateNestedManyWithoutDocumentReceiptInput
 }
 
 export type DocumentReceiptCreateOrConnectWithoutBoxInput = {
@@ -665,6 +697,66 @@ export type DocumentReceiptUpdateManyWithWhereWithoutBoxInput = {
   data: Prisma.XOR<Prisma.DocumentReceiptUpdateManyMutationInput, Prisma.DocumentReceiptUncheckedUpdateManyWithoutBoxInput>
 }
 
+export type DocumentReceiptCreateWithoutDetailsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutDocumentReceiptsInput
+  docType: Prisma.DocTypeCreateNestedOneWithoutDocumentReceiptsInput
+  box: Prisma.BoxCreateNestedOneWithoutDocumentReceiptsInput
+}
+
+export type DocumentReceiptUncheckedCreateWithoutDetailsInput = {
+  id?: string
+  title: string
+  description?: string | null
+  userId: string
+  docTypeId: string
+  boxId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DocumentReceiptCreateOrConnectWithoutDetailsInput = {
+  where: Prisma.DocumentReceiptWhereUniqueInput
+  create: Prisma.XOR<Prisma.DocumentReceiptCreateWithoutDetailsInput, Prisma.DocumentReceiptUncheckedCreateWithoutDetailsInput>
+}
+
+export type DocumentReceiptUpsertWithoutDetailsInput = {
+  update: Prisma.XOR<Prisma.DocumentReceiptUpdateWithoutDetailsInput, Prisma.DocumentReceiptUncheckedUpdateWithoutDetailsInput>
+  create: Prisma.XOR<Prisma.DocumentReceiptCreateWithoutDetailsInput, Prisma.DocumentReceiptUncheckedCreateWithoutDetailsInput>
+  where?: Prisma.DocumentReceiptWhereInput
+}
+
+export type DocumentReceiptUpdateToOneWithWhereWithoutDetailsInput = {
+  where?: Prisma.DocumentReceiptWhereInput
+  data: Prisma.XOR<Prisma.DocumentReceiptUpdateWithoutDetailsInput, Prisma.DocumentReceiptUncheckedUpdateWithoutDetailsInput>
+}
+
+export type DocumentReceiptUpdateWithoutDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDocumentReceiptsNestedInput
+  docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptsNestedInput
+  box?: Prisma.BoxUpdateOneRequiredWithoutDocumentReceiptsNestedInput
+}
+
+export type DocumentReceiptUncheckedUpdateWithoutDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
+  boxId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type DocumentReceiptCreateManyUserInput = {
   id?: string
   title: string
@@ -683,6 +775,7 @@ export type DocumentReceiptUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptsNestedInput
   box?: Prisma.BoxUpdateOneRequiredWithoutDocumentReceiptsNestedInput
+  details?: Prisma.DocumentReceiptDetailUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptUncheckedUpdateWithoutUserInput = {
@@ -693,6 +786,7 @@ export type DocumentReceiptUncheckedUpdateWithoutUserInput = {
   boxId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptUncheckedUpdateManyWithoutUserInput = {
@@ -723,6 +817,7 @@ export type DocumentReceiptUpdateWithoutDocTypeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentReceiptsNestedInput
   box?: Prisma.BoxUpdateOneRequiredWithoutDocumentReceiptsNestedInput
+  details?: Prisma.DocumentReceiptDetailUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptUncheckedUpdateWithoutDocTypeInput = {
@@ -733,6 +828,7 @@ export type DocumentReceiptUncheckedUpdateWithoutDocTypeInput = {
   boxId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptUncheckedUpdateManyWithoutDocTypeInput = {
@@ -763,6 +859,7 @@ export type DocumentReceiptUpdateWithoutBoxInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentReceiptsNestedInput
   docType?: Prisma.DocTypeUpdateOneRequiredWithoutDocumentReceiptsNestedInput
+  details?: Prisma.DocumentReceiptDetailUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptUncheckedUpdateWithoutBoxInput = {
@@ -773,6 +870,7 @@ export type DocumentReceiptUncheckedUpdateWithoutBoxInput = {
   docTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  details?: Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutDocumentReceiptNestedInput
 }
 
 export type DocumentReceiptUncheckedUpdateManyWithoutBoxInput = {
@@ -785,6 +883,35 @@ export type DocumentReceiptUncheckedUpdateManyWithoutBoxInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type DocumentReceiptCountOutputType
+ */
+
+export type DocumentReceiptCountOutputType = {
+  details: number
+}
+
+export type DocumentReceiptCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  details?: boolean | DocumentReceiptCountOutputTypeCountDetailsArgs
+}
+
+/**
+ * DocumentReceiptCountOutputType without action
+ */
+export type DocumentReceiptCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentReceiptCountOutputType
+   */
+  select?: Prisma.DocumentReceiptCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * DocumentReceiptCountOutputType without action
+ */
+export type DocumentReceiptCountOutputTypeCountDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentReceiptDetailWhereInput
+}
 
 
 export type DocumentReceiptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -799,6 +926,8 @@ export type DocumentReceiptSelect<ExtArgs extends runtime.Types.Extensions.Inter
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   box?: boolean | Prisma.BoxDefaultArgs<ExtArgs>
+  details?: boolean | Prisma.DocumentReceipt$detailsArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentReceiptCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["documentReceipt"]>
 
 export type DocumentReceiptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -845,6 +974,8 @@ export type DocumentReceiptInclude<ExtArgs extends runtime.Types.Extensions.Inte
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   docType?: boolean | Prisma.DocTypeDefaultArgs<ExtArgs>
   box?: boolean | Prisma.BoxDefaultArgs<ExtArgs>
+  details?: boolean | Prisma.DocumentReceipt$detailsArgs<ExtArgs>
+  _count?: boolean | Prisma.DocumentReceiptCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DocumentReceiptIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -863,6 +994,7 @@ export type $DocumentReceiptPayload<ExtArgs extends runtime.Types.Extensions.Int
     user: Prisma.$UserPayload<ExtArgs>
     docType: Prisma.$DocTypePayload<ExtArgs>
     box: Prisma.$BoxPayload<ExtArgs>
+    details: Prisma.$DocumentReceiptDetailPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1270,6 +1402,7 @@ export interface Prisma__DocumentReceiptClient<T, Null = never, ExtArgs extends 
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   docType<T extends Prisma.DocTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__DocTypeClient<runtime.Types.Result.GetResult<Prisma.$DocTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   box<T extends Prisma.BoxDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BoxDefaultArgs<ExtArgs>>): Prisma.Prisma__BoxClient<runtime.Types.Result.GetResult<Prisma.$BoxPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  details<T extends Prisma.DocumentReceipt$detailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DocumentReceipt$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1705,6 +1838,30 @@ export type DocumentReceiptDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many DocumentReceipts to delete.
    */
   limit?: number
+}
+
+/**
+ * DocumentReceipt.details
+ */
+export type DocumentReceipt$detailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentReceiptDetail
+   */
+  select?: Prisma.DocumentReceiptDetailSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DocumentReceiptDetail
+   */
+  omit?: Prisma.DocumentReceiptDetailOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentReceiptDetailInclude<ExtArgs> | null
+  where?: Prisma.DocumentReceiptDetailWhereInput
+  orderBy?: Prisma.DocumentReceiptDetailOrderByWithRelationInput | Prisma.DocumentReceiptDetailOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentReceiptDetailWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentReceiptDetailScalarFieldEnum | Prisma.DocumentReceiptDetailScalarFieldEnum[]
 }
 
 /**

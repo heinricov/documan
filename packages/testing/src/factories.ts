@@ -1,4 +1,4 @@
-import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType, CreatePartner, CreateBox, CreateDocumentReceipt } from "@packages/validator"
+import type { CreateRole, CreateUser, CreateSubsidiary, CreateDocType, CreatePartner, CreateBox, CreateDocumentReceipt, CreateDocumentReceiptDetail } from "@packages/validator"
 
 /**
  * ============================================================
@@ -302,4 +302,55 @@ export function createDocumentReceiptFixture(
 
 export function resetDocumentReceiptCounter(): void {
   documentReceiptCounter = 0
+}
+
+/**
+ * ============================================================
+ *  DocumentReceiptDetail Factory
+ * ============================================================
+ */
+
+let documentReceiptDetailCounter = 0
+
+export interface DocumentReceiptDetailOverrides {
+  documentReceiptId?: string
+  docTypeId?: string
+  subsidiaryId?: string
+  partnerId?: string
+  nomorDoc?: CreateDocumentReceiptDetail["nomorDoc"]
+  nomorFaktur?: CreateDocumentReceiptDetail["nomorFaktur"]
+  nomorPl?: CreateDocumentReceiptDetail["nomorPl"]
+  nomorDo?: CreateDocumentReceiptDetail["nomorDo"]
+  nomorInv?: CreateDocumentReceiptDetail["nomorInv"]
+  nomorPv?: CreateDocumentReceiptDetail["nomorPv"]
+  nomorNota?: CreateDocumentReceiptDetail["nomorNota"]
+  description?: CreateDocumentReceiptDetail["description"]
+}
+
+/**
+ * Membuat fixture data DocumentReceiptDetail yang valid.
+ */
+export function createDocumentReceiptDetailFixture(
+  overrides: DocumentReceiptDetailOverrides = {}
+): CreateDocumentReceiptDetail {
+  documentReceiptDetailCounter++
+
+  return {
+    documentReceiptId: overrides.documentReceiptId ?? crypto.randomUUID(),
+    docTypeId: overrides.docTypeId ?? crypto.randomUUID(),
+    subsidiaryId: overrides.subsidiaryId ?? crypto.randomUUID(),
+    partnerId: overrides.partnerId ?? crypto.randomUUID(),
+    nomorDoc: overrides.nomorDoc ?? `DOC-${documentReceiptDetailCounter}-${crypto.randomUUID().slice(0, 8)}`,
+    nomorFaktur: overrides.nomorFaktur,
+    nomorPl: overrides.nomorPl,
+    nomorDo: overrides.nomorDo,
+    nomorInv: overrides.nomorInv,
+    nomorPv: overrides.nomorPv,
+    nomorNota: overrides.nomorNota,
+    description: overrides.description,
+  }
+}
+
+export function resetDocumentReceiptDetailCounter(): void {
+  documentReceiptDetailCounter = 0
 }

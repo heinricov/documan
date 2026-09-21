@@ -403,7 +403,8 @@ export const ModelName = {
   DocType: 'DocType',
   Partner: 'Partner',
   Box: 'Box',
-  DocumentReceipt: 'DocumentReceipt'
+  DocumentReceipt: 'DocumentReceipt',
+  DocumentReceiptDetail: 'DocumentReceiptDetail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "user" | "subsidiary" | "docType" | "partner" | "box" | "documentReceipt"
+    modelProps: "role" | "user" | "subsidiary" | "docType" | "partner" | "box" | "documentReceipt" | "documentReceiptDetail"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -941,6 +942,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DocumentReceiptDetail: {
+      payload: Prisma.$DocumentReceiptDetailPayload<ExtArgs>
+      fields: Prisma.DocumentReceiptDetailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DocumentReceiptDetailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DocumentReceiptDetailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>
+        }
+        findFirst: {
+          args: Prisma.DocumentReceiptDetailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DocumentReceiptDetailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>
+        }
+        findMany: {
+          args: Prisma.DocumentReceiptDetailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>[]
+        }
+        create: {
+          args: Prisma.DocumentReceiptDetailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>
+        }
+        createMany: {
+          args: Prisma.DocumentReceiptDetailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DocumentReceiptDetailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>[]
+        }
+        delete: {
+          args: Prisma.DocumentReceiptDetailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>
+        }
+        update: {
+          args: Prisma.DocumentReceiptDetailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>
+        }
+        deleteMany: {
+          args: Prisma.DocumentReceiptDetailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DocumentReceiptDetailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DocumentReceiptDetailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>[]
+        }
+        upsert: {
+          args: Prisma.DocumentReceiptDetailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentReceiptDetailPayload>
+        }
+        aggregate: {
+          args: Prisma.DocumentReceiptDetailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDocumentReceiptDetail>
+        }
+        groupBy: {
+          args: Prisma.DocumentReceiptDetailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentReceiptDetailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DocumentReceiptDetailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DocumentReceiptDetailCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1063,6 +1138,27 @@ export const DocumentReceiptScalarFieldEnum = {
 } as const
 
 export type DocumentReceiptScalarFieldEnum = (typeof DocumentReceiptScalarFieldEnum)[keyof typeof DocumentReceiptScalarFieldEnum]
+
+
+export const DocumentReceiptDetailScalarFieldEnum = {
+  id: 'id',
+  documentReceiptId: 'documentReceiptId',
+  docTypeId: 'docTypeId',
+  subsidiaryId: 'subsidiaryId',
+  partnerId: 'partnerId',
+  nomorDoc: 'nomorDoc',
+  nomorFaktur: 'nomorFaktur',
+  nomorPl: 'nomorPl',
+  nomorDo: 'nomorDo',
+  nomorInv: 'nomorInv',
+  nomorPv: 'nomorPv',
+  nomorNota: 'nomorNota',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentReceiptDetailScalarFieldEnum = (typeof DocumentReceiptDetailScalarFieldEnum)[keyof typeof DocumentReceiptDetailScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1294,6 +1390,7 @@ export type GlobalOmitConfig = {
   partner?: Prisma.PartnerOmit
   box?: Prisma.BoxOmit
   documentReceipt?: Prisma.DocumentReceiptOmit
+  documentReceiptDetail?: Prisma.DocumentReceiptDetailOmit
 }
 
 /* Types for Logging */

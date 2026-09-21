@@ -190,6 +190,7 @@ export type PartnerWhereInput = {
   type?: Prisma.StringFilter<"Partner"> | string
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailListRelationFilter
 }
 
 export type PartnerOrderByWithRelationInput = {
@@ -199,6 +200,7 @@ export type PartnerOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailOrderByRelationAggregateInput
 }
 
 export type PartnerWhereUniqueInput = Prisma.AtLeast<{
@@ -211,6 +213,7 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"Partner"> | string
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailListRelationFilter
 }, "id" | "name">
 
 export type PartnerOrderByWithAggregationInput = {
@@ -244,6 +247,7 @@ export type PartnerCreateInput = {
   type: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUncheckedCreateInput = {
@@ -253,6 +257,7 @@ export type PartnerUncheckedCreateInput = {
   type: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUncheckedCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUpdateInput = {
@@ -262,6 +267,7 @@ export type PartnerUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerUncheckedUpdateInput = {
@@ -271,6 +277,7 @@ export type PartnerUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReceiptDetails?: Prisma.DocumentReceiptDetailUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerCreateManyInput = {
@@ -327,6 +334,106 @@ export type PartnerMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type PartnerScalarRelationFilter = {
+  is?: Prisma.PartnerWhereInput
+  isNot?: Prisma.PartnerWhereInput
+}
+
+export type PartnerCreateNestedOneWithoutDocumentReceiptDetailsInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutDocumentReceiptDetailsInput, Prisma.PartnerUncheckedCreateWithoutDocumentReceiptDetailsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutDocumentReceiptDetailsInput
+  connect?: Prisma.PartnerWhereUniqueInput
+}
+
+export type PartnerUpdateOneRequiredWithoutDocumentReceiptDetailsNestedInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutDocumentReceiptDetailsInput, Prisma.PartnerUncheckedCreateWithoutDocumentReceiptDetailsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutDocumentReceiptDetailsInput
+  upsert?: Prisma.PartnerUpsertWithoutDocumentReceiptDetailsInput
+  connect?: Prisma.PartnerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PartnerUpdateToOneWithWhereWithoutDocumentReceiptDetailsInput, Prisma.PartnerUpdateWithoutDocumentReceiptDetailsInput>, Prisma.PartnerUncheckedUpdateWithoutDocumentReceiptDetailsInput>
+}
+
+export type PartnerCreateWithoutDocumentReceiptDetailsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  type: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PartnerUncheckedCreateWithoutDocumentReceiptDetailsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  type: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PartnerCreateOrConnectWithoutDocumentReceiptDetailsInput = {
+  where: Prisma.PartnerWhereUniqueInput
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutDocumentReceiptDetailsInput, Prisma.PartnerUncheckedCreateWithoutDocumentReceiptDetailsInput>
+}
+
+export type PartnerUpsertWithoutDocumentReceiptDetailsInput = {
+  update: Prisma.XOR<Prisma.PartnerUpdateWithoutDocumentReceiptDetailsInput, Prisma.PartnerUncheckedUpdateWithoutDocumentReceiptDetailsInput>
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutDocumentReceiptDetailsInput, Prisma.PartnerUncheckedCreateWithoutDocumentReceiptDetailsInput>
+  where?: Prisma.PartnerWhereInput
+}
+
+export type PartnerUpdateToOneWithWhereWithoutDocumentReceiptDetailsInput = {
+  where?: Prisma.PartnerWhereInput
+  data: Prisma.XOR<Prisma.PartnerUpdateWithoutDocumentReceiptDetailsInput, Prisma.PartnerUncheckedUpdateWithoutDocumentReceiptDetailsInput>
+}
+
+export type PartnerUpdateWithoutDocumentReceiptDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PartnerUncheckedUpdateWithoutDocumentReceiptDetailsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type PartnerCountOutputType
+ */
+
+export type PartnerCountOutputType = {
+  documentReceiptDetails: number
+}
+
+export type PartnerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceiptDetails?: boolean | PartnerCountOutputTypeCountDocumentReceiptDetailsArgs
+}
+
+/**
+ * PartnerCountOutputType without action
+ */
+export type PartnerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PartnerCountOutputType
+   */
+  select?: Prisma.PartnerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PartnerCountOutputType without action
+ */
+export type PartnerCountOutputTypeCountDocumentReceiptDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DocumentReceiptDetailWhereInput
+}
 
 
 export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -336,6 +443,8 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   type?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  documentReceiptDetails?: boolean | Prisma.Partner$documentReceiptDetailsArgs<ExtArgs>
+  _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["partner"]>
 
 export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -366,10 +475,18 @@ export type PartnerSelectScalar = {
 }
 
 export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "type" | "createdAt" | "updatedAt", ExtArgs["result"]["partner"]>
+export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documentReceiptDetails?: boolean | Prisma.Partner$documentReceiptDetailsArgs<ExtArgs>
+  _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type PartnerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PartnerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Partner"
-  objects: {}
+  objects: {
+    documentReceiptDetails: Prisma.$DocumentReceiptDetailPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -771,6 +888,7 @@ readonly fields: PartnerFieldRefs;
  */
 export interface Prisma__PartnerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  documentReceiptDetails<T extends Prisma.Partner$documentReceiptDetailsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$documentReceiptDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentReceiptDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -823,6 +941,10 @@ export type PartnerFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  /**
    * Filter, which Partner to fetch.
    */
   where: Prisma.PartnerWhereUniqueInput
@@ -841,6 +963,10 @@ export type PartnerFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  /**
    * Filter, which Partner to fetch.
    */
   where: Prisma.PartnerWhereUniqueInput
@@ -858,6 +984,10 @@ export type PartnerFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Partner
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
   /**
    * Filter, which Partner to fetch.
    */
@@ -907,6 +1037,10 @@ export type PartnerFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  /**
    * Filter, which Partner to fetch.
    */
   where?: Prisma.PartnerWhereInput
@@ -954,6 +1088,10 @@ export type PartnerFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Partner
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
   /**
    * Filter, which Partners to fetch.
    */
@@ -1003,6 +1141,10 @@ export type PartnerCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  /**
    * The data needed to create a Partner.
    */
   data: Prisma.XOR<Prisma.PartnerCreateInput, Prisma.PartnerUncheckedCreateInput>
@@ -1050,6 +1192,10 @@ export type PartnerUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Partner
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
   /**
    * The data needed to update a Partner.
    */
@@ -1117,6 +1263,10 @@ export type PartnerUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  /**
    * The filter to search for the Partner to update in case it exists.
    */
   where: Prisma.PartnerWhereUniqueInput
@@ -1143,6 +1293,10 @@ export type PartnerDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  /**
    * Filter which Partner to delete.
    */
   where: Prisma.PartnerWhereUniqueInput
@@ -1163,6 +1317,30 @@ export type PartnerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Partner.documentReceiptDetails
+ */
+export type Partner$documentReceiptDetailsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DocumentReceiptDetail
+   */
+  select?: Prisma.DocumentReceiptDetailSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DocumentReceiptDetail
+   */
+  omit?: Prisma.DocumentReceiptDetailOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DocumentReceiptDetailInclude<ExtArgs> | null
+  where?: Prisma.DocumentReceiptDetailWhereInput
+  orderBy?: Prisma.DocumentReceiptDetailOrderByWithRelationInput | Prisma.DocumentReceiptDetailOrderByWithRelationInput[]
+  cursor?: Prisma.DocumentReceiptDetailWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DocumentReceiptDetailScalarFieldEnum | Prisma.DocumentReceiptDetailScalarFieldEnum[]
+}
+
+/**
  * Partner without action
  */
 export type PartnerDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1174,4 +1352,8 @@ export type PartnerDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Partner
    */
   omit?: Prisma.PartnerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
 }

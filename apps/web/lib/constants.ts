@@ -6,4 +6,5 @@ export const ROUTES = {
   partner: "/dashboard/partner",
   box: "/dashboard/box",
   documentReceipt: "/dashboard/document-receipt",
+  documentReceiptDetail: "/dashboard/document-receipt-detail",
 } as const
