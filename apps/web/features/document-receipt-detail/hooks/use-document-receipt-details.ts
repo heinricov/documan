@@ -10,10 +10,10 @@ export type UseDocumentReceiptDetailsResult = {
   deleteItem: (item: DocumentReceiptDetail) => Promise<void>
 } & Pick<ReturnType<typeof useEntityList<DocumentReceiptDetail>>, "isLoading" | "error">
 
-export function useDocumentReceiptDetails(): UseDocumentReceiptDetailsResult {
+export function useDocumentReceiptDetails(documentReceiptId?: string): UseDocumentReceiptDetailsResult {
   const listGetter = useCallback(
-    () => api.resources.documentReceiptDetails.list({ limit: 100 }),
-    []
+    () => api.resources.documentReceiptDetails.list({ documentReceiptId, limit: 100 }),
+    [documentReceiptId]
   )
   const removeGetter = useCallback(
     (id: string) => api.resources.documentReceiptDetails.remove(id),

@@ -2,19 +2,17 @@
 
 import { useParams } from "next/navigation"
 import { useDocumentReceiptDetail } from "@/features/document-receipt-detail/hooks"
-import { ROUTES } from "@/lib/constants"
 import { EntityForm, type EntityFormConfig } from "@/components/entity"
 
 const config: EntityFormConfig = {
   entityName: "Document Receipt Detail",
   entityNamePlural: "Document Receipt Details",
-  baseUrl: ROUTES.documentReceiptDetail,
+  baseUrl: "",
   createSchema: { safeParse: () => ({ success: true }) },
   updateSchema: { safeParse: () => ({ success: true }) },
   createFn: async () => {},
   updateFn: async () => {},
   fields: [
-    { name: "documentReceiptId", label: "Document Receipt ID" },
     { name: "docTypeId", label: "Doc Type ID" },
     { name: "subsidiaryId", label: "Subsidiary ID" },
     { name: "partnerId", label: "Partner ID" },
@@ -30,8 +28,8 @@ const config: EntityFormConfig = {
 }
 
 export default function ViewDocumentReceiptDetailPage() {
-  const params = useParams<{ id: string }>()
-  const { item, isLoading, error } = useDocumentReceiptDetail(params?.id)
+  const params = useParams<{ id: string; detailId: string }>()
+  const { item, isLoading, error } = useDocumentReceiptDetail(params?.detailId)
 
   if (isLoading) {
     return (

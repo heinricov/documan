@@ -8,7 +8,6 @@ import { BiData } from "react-icons/bi"
 import { HiDocumentCheck } from "react-icons/hi2"
 import { MdDashboard } from "react-icons/md"
 import { TbCubeSend } from "react-icons/tb"
-import { FiFileText } from "react-icons/fi"
 
 const MainMenu = [
   {
@@ -57,11 +56,6 @@ export const MenuUser = [
     title: "Document Receipt",
     url: "/dashboard/document-receipt",
     icon: <HiDocumentCheck />,
-  },
-  {
-    title: "Document Receipt Detail",
-    url: "/dashboard/document-receipt-detail",
-    icon: <FiFileText />,
   },
   {
     title: "Send Document",

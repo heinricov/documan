@@ -15,6 +15,7 @@ export type FormDocumentReceiptDetailMode = "create" | "edit"
 
 export interface FormDocumentReceiptDetailProps {
   mode?: FormDocumentReceiptDetailMode
+  documentReceiptId?: string
   documentReceiptDetailId?: string
   initialData?: Pick<
     DocumentReceiptDetail,
@@ -26,10 +27,10 @@ export interface FormDocumentReceiptDetailProps {
 
 export function FormDocumentReceiptDetail({
   mode,
+  documentReceiptId,
   documentReceiptDetailId,
   initialData,
 }: FormDocumentReceiptDetailProps) {
-  const [docReceiptOptions, setDocReceiptOptions] = useState<Option[]>([])
   const [docTypeOptions, setDocTypeOptions] = useState<Option[]>([])
   const [subsidiaryOptions, setSubsidiaryOptions] = useState<Option[]>([])
   const [partnerOptions, setPartnerOptions] = useState<Option[]>([])
@@ -39,8 +40,7 @@ export function FormDocumentReceiptDetail({
 
     async function load() {
       try {
-        const [docReceipts, docTypes, subsidiaries, partners] = await Promise.all([
-          api.resources.documentReceipts.list({ limit: 100 }),
+        const [docTypes, subsidiaries, partners] = await Promise.all([
           api.resources.docTypes.list({ limit: 100 }),
           api.resources.subsidiaries.list({ limit: 100 }),
           api.resources.partners.list({ limit: 100 }),
@@ -48,7 +48,6 @@ export function FormDocumentReceiptDetail({
 
         if (!active) return
 
-        setDocReceiptOptions(docReceipts.map((dr) => ({ value: dr.id, label: dr.title })))
         setDocTypeOptions(docTypes.map((d) => ({ value: d.id, label: d.title })))
         setSubsidiaryOptions(subsidiaries.map((s) => ({ value: s.id, label: s.title })))
         setPartnerOptions(partners.map((p) => ({ value: p.id, label: p.name })))
@@ -64,10 +63,14 @@ export function FormDocumentReceiptDetail({
     }
   }, [])
 
+  const baseUrl = documentReceiptId
+    ? `${ROUTES.documentReceipt}/${documentReceiptId}/document-receipt-detail`
+    : ROUTES.documentReceiptDetail
+
   const config: EntityFormConfig = {
     entityName: "Document Receipt Detail",
     entityNamePlural: "Document Receipt Details",
-    baseUrl: ROUTES.documentReceiptDetail,
+    baseUrl,
     createSchema: CreateDocumentReceiptDetailSchema,
     updateSchema: UpdateDocumentReceiptDetailSchema,
     createFn: (data) =>
@@ -75,14 +78,6 @@ export function FormDocumentReceiptDetail({
     updateFn: (id, data) =>
       api.resources.documentReceiptDetails.update(id, data as Parameters<typeof api.resources.documentReceiptDetails.update>[1]),
     fields: [
-      {
-        name: "documentReceiptId",
-        label: "Document Receipt",
-        description: "Document receipt induk",
-        render: "select",
-        options: docReceiptOptions,
-        required: true,
-      },
       {
         name: "docTypeId",
         label: "Doc Type",
@@ -159,12 +154,16 @@ export function FormDocumentReceiptDetail({
     ],
   }
 
+  const defaultValues = documentReceiptId
+    ? { documentReceiptId, ...initialData }
+    : initialData
+
   return (
     <EntityForm
       config={config}
       mode={mode}
       entityId={documentReceiptDetailId}
-      initialData={initialData}
+      initialData={defaultValues}
     />
   )
 }

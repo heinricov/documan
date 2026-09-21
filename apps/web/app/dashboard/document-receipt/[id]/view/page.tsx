@@ -4,6 +4,7 @@ import { useParams } from "next/navigation"
 import { useDocumentReceipt } from "@/features/document-receipt/hooks"
 import { ROUTES } from "@/lib/constants"
 import { EntityForm, type EntityFormConfig } from "@/components/entity"
+import { TableDataDocumentReceiptDetail } from "@/features/document-receipt-detail/components"
 
 const config: EntityFormConfig = {
   entityName: "Document Receipt",
@@ -45,11 +46,15 @@ export default function ViewDocumentReceiptPage() {
   }
 
   return (
-    <EntityForm
-      config={config}
-      mode="view"
-      entityId={documentReceipt.id}
-      initialData={documentReceipt}
-    />
+    <div className="space-y-6">
+      <EntityForm
+        config={config}
+        mode="view"
+        entityId={documentReceipt.id}
+        initialData={documentReceipt}
+      />
+
+      <TableDataDocumentReceiptDetail documentReceiptId={documentReceipt.id} />
+    </div>
   )
 }

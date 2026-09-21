@@ -7,7 +7,6 @@ import type { DocumentReceiptDetail } from "@packages/validator"
 import { FileSpreadsheet } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-import { ROUTES } from "@/lib/constants"
 import { useDocumentReceiptDetails } from "../hooks/use-document-receipt-details"
 import { EntityTable, type EntityTableConfig } from "@/components/entity"
 
@@ -23,9 +22,13 @@ const columns: DataTableColumn<DocumentReceiptDetail>[] = [
   ColumnSortDataTable<DocumentReceiptDetail>({ accessorKey: "createdAt", label: "Created", align: "end", format: "date", sortFn: "datetime" }),
 ]
 
-export function TableDataDocumentReceiptDetail() {
+export interface TableDataDocumentReceiptDetailProps {
+  documentReceiptId?: string
+}
+
+export function TableDataDocumentReceiptDetail({ documentReceiptId }: TableDataDocumentReceiptDetailProps) {
   const router = useRouter()
-  const { items, isLoading, error, deleteItem } = useDocumentReceiptDetails()
+  const { items, isLoading, error, deleteItem } = useDocumentReceiptDetails(documentReceiptId)
 
   const config: EntityTableConfig<DocumentReceiptDetail> = useMemo(
     () => ({
@@ -40,7 +43,7 @@ export function TableDataDocumentReceiptDetail() {
       entityNamePlural: "document receipt details",
       title: "Document Receipt Details",
       icon: <FileSpreadsheet className="size-4 text-muted-foreground" aria-hidden="true" />,
-      description: `${items.length} ${items.length === 1 ? "detail" : "details"} in your workspace`,
+      description: `${items.length} ${items.length === 1 ? "detail" : "details"} in receipt`,
       searchColumnId: ["nomorDoc", "nomorFaktur", "nomorPl", "nomorDo", "nomorInv", "nomorPv", "nomorNota", "description"],
       searchPlaceholder: "Search document receipt details...",
       columnLabels: {
@@ -57,16 +60,18 @@ export function TableDataDocumentReceiptDetail() {
       noResultsMessage: isLoading
         ? "Memuat document receipt details..."
         : (error ?? "No document receipt details match your search."),
-      primaryAction: {
-        title: "New Detail",
-        onClick: () => router.push(`${ROUTES.documentReceiptDetail}/add`),
-      },
+      primaryAction: documentReceiptId
+        ? {
+            title: "New Detail",
+            onClick: () => router.push(`/dashboard/document-receipt/${documentReceiptId}/document-receipt-detail/add`),
+          }
+        : undefined,
       rowActions: (drd) => [
-        { label: "Edit", onClick: () => router.push(`${ROUTES.documentReceiptDetail}/${drd.id}/edit`) },
-        { label: "View", onClick: () => router.push(`${ROUTES.documentReceiptDetail}/${drd.id}/view`) },
+        { label: "Edit", onClick: () => router.push(`/dashboard/document-receipt/${drd.documentReceiptId}/document-receipt-detail/${drd.id}/edit`) },
+        { label: "View", onClick: () => router.push(`/dashboard/document-receipt/${drd.documentReceiptId}/document-receipt-detail/${drd.id}/view`) },
       ],
     }),
-    [items, isLoading, error, deleteItem, router]
+    [items, isLoading, error, deleteItem, router, documentReceiptId]
   )
 
   return <EntityTable config={config} />
